@@ -65,11 +65,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): JsonResponse
     {
-        if(method_exists($request->user()->currentAccessToken(), 'delete')) {
-            $request->user()->currentAccessToken()->delete();
-        } else {
-            auth()->guard('web')->logout();
-        }
+        $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logged out']);
     }
