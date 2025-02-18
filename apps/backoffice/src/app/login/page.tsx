@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import toast, { Toaster } from "react-hot-toast"
 import { login } from "@/app/actions/auth"
 import Link from "next/link"
@@ -20,7 +20,6 @@ type LoginFormData = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
     const router = useRouter()
-    const callbackUrl = useSearchParams().get('callbackUrl') || '/dashboard';
 
     const {
         register,
@@ -31,21 +30,24 @@ export default function LoginPage() {
     })
 
     useEffect(() => {
-        const token = localStorage.getItem("authToken");
+        const token = document.cookie
+            .split("; ")
+            .find(row => row.startsWith("authToken="))
+            ?.split("=")[1];
+
         if (token) {
             router.push("/dashboard");
         }
     }, [router]);
 
     const onSubmit = async (data: LoginFormData) => {
+        const result = await login(data);
 
-        const result = await login(data)
-
-        if (result.success) {
-            toast.success("¡Bienvenido! Has iniciado sesión correctamente");
-            router.push(callbackUrl);
+        if (result.success && "token" in result) {
+            document.cookie = `authToken=${result.token}; path=/; Secure; SameSite=Strict`;
+            router.push("/dashboard");
         } else {
-            toast.error("Error al iniciar sesión");
+            toast.error(result.message)
             if (result.errors && typeof result.errors === "object") {
                 Object.entries(result.errors).forEach(([field, messages]) => {
                     if (Array.isArray(messages)) {
@@ -94,7 +96,7 @@ export default function LoginPage() {
                     </div>
 
                     <div>
-                        <input type="hidden" name="redirectTo" value={callbackUrl} />
+                        <input type="hidden" name="redirectTo" />
                         <button
                             type="submit"
                             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

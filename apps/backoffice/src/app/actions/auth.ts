@@ -39,7 +39,7 @@ export async function login(formData: z.infer<typeof loginSchema>) {
         } else {
             return {
                 success: false,
-                message: data.message || "Login failed",
+                message: data.message || "Error de inicio de sesion",
                 errors: data.errors || [],
             }
         }
@@ -47,14 +47,14 @@ export async function login(formData: z.infer<typeof loginSchema>) {
         if (error instanceof z.ZodError) {
             return {
                 success: false,
-                message: "Validation error",
+                message: "Error de validación",
                 errors: error.errors.map((e) => e.message),
             }
         }
         console.error("Login error:", error)
         return {
             success: false,
-            message: "An unexpected error occurred",
+            message: "Se produjo un error inesperado",
             errors: [],
         }
     }
