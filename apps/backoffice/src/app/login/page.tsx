@@ -31,13 +31,9 @@ export default function LoginPage() {
     })
 
     useEffect(() => {
-        const token = document.cookie
-            .split("; ")
-            .find(row => row.startsWith("authToken="))
-            ?.split("=")[1];
-
+        const token = localStorage.getItem("authToken");
         if (token) {
-            router.push("/dashboard")
+            router.push("/dashboard");
         }
     }, [router]);
 
@@ -45,12 +41,18 @@ export default function LoginPage() {
 
         const result = await login(data)
 
-        if (result.success && "token" in result) {
-            document.cookie = `authToken=${result.token}; path=/; Secure; SameSite=Strict`;
-
+        if (result.success) {
+            toast.success("¡Bienvenido! Has iniciado sesión correctamente");
             router.push(callbackUrl);
         } else {
-            toast.error(result.message)
+            toast.error("Error al iniciar sesión");
+            if (result.errors && typeof result.errors === "object") {
+                Object.entries(result.errors).forEach(([field, messages]) => {
+                    if (Array.isArray(messages)) {
+                        messages.forEach((message) => console.error(message));
+                    }
+                });
+            }
         }
     }
 

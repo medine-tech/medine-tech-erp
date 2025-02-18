@@ -20,9 +20,6 @@
 # production
 /build
 
-# turbo
-/.turbo
-
 # misc
 .DS_Store
 *.pem
@@ -34,8 +31,8 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
-!.env.example
+.env
+!.env
 
 # vercel
 .vercel
