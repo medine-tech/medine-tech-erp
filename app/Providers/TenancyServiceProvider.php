@@ -12,6 +12,7 @@ use Stancl\Tenancy\Events;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -99,10 +100,16 @@ class TenancyServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        BelongsToTenant::$tenantIdColumn = 'company_id';
         $this->bootEvents();
         $this->mapRoutes();
 
         $this->makeTenancyMiddlewareHighestPriority();
+    }
+
+    public function map()
+    {
+        $this->group(base_path('routes/tenant.php'));
     }
 
     protected function bootEvents()

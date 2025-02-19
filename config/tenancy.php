@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
+use MedineTech\Companies\Infrastructure\Persistence\Eloquent\CompanyModel;
 use Stancl\Tenancy\Database\Models\Domain;
 use Stancl\Tenancy\Database\Models\Tenant;
 
 return [
-    'tenant_model' => \MedineTech\Companies\Infrastructure\Persistence\Eloquent\CompanyModel::class,
+    'tenant_model' => CompanyModel::class,
     'id_generator' => Stancl\Tenancy\UUIDGenerator::class,
 
     'domain_model' => Domain::class,
-
+    'tenant_route_identifier' => 'company',
     /**
      * The list of domains hosting your central app.
      *
@@ -51,7 +52,7 @@ return [
          * Tenant database names are created like this:
          * prefix + tenant_id + suffix.
          */
-        'prefix' => 'company',
+        'prefix' => 'tenant',
         'suffix' => '',
 
         /**
@@ -88,7 +89,7 @@ return [
      * You can clear cache selectively by specifying the tag.
      */
     'cache' => [
-        'tag_base' => 'company', // This tag_base, followed by the tenant_id, will form a tag that will be applied on each cache call.
+        'tag_base' => 'tenant', // This tag_base, followed by the tenant_id, will form a tag that will be applied on each cache call.
     ],
 
     /**
@@ -99,7 +100,7 @@ return [
         /**
          * Each disk listed in the 'disks' array will be suffixed by the suffix_base, followed by the tenant_id.
          */
-        'suffix_base' => 'company',
+        'suffix_base' => 'tenant',
         'disks' => [
             'local',
             'public',
@@ -148,7 +149,7 @@ return [
      * either using the Redis facade or by injecting it as a dependency.
      */
     'redis' => [
-        'prefix_base' => 'company', // Each key in Redis will be prepended by this prefix_base, followed by the tenant id.
+        'prefix_base' => 'tenant', // Each key in Redis will be prepended by this prefix_base, followed by the tenant id.
         'prefixed_connections' => [ // Redis connections whose keys are prefixed, to separate one tenant's keys from another.
             // 'default',
         ],
@@ -171,11 +172,7 @@ return [
         // Stancl\Tenancy\Features\ViteBundler::class,
     ],
 
-    'middleware' => [
-        'initialize_tenancy_by_request_data' => [
-            'parameter_name' => 'company_id',
-        ],
-    ],
+
     /**
      * Should tenancy routes be registered.
      *
