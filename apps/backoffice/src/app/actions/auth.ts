@@ -39,7 +39,7 @@ export async function login(formData: z.infer<typeof loginSchema>) {
         } else {
             return {
                 success: false,
-                message: data.message || "Error de inicio de sesión",
+                message: "Credenciales inválidas",
                 errors: data.errors || [],
             }
         }
