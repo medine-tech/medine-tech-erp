@@ -1,26 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getAuthToken, logout } from "@/app/actions/auth";
+import { logout } from "@/app/actions/auth";
 
 export default function DashboardPage() {
     const router = useRouter();
-
-    useEffect(() => {
-        async function checkAuth() {
-            try {
-                const token = await getAuthToken();
-                if (!token) {
-                    router.push("/login");
-                }
-            } catch (error) {
-                console.error("Error checking auth:", error);
-            }
-        }
-
-        checkAuth();
-    }, [router]);
 
     const handleLogout = async () => {
         await logout();
