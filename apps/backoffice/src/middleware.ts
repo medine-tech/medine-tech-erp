@@ -1,12 +1,14 @@
 import { NextResponse, NextRequest } from "next/server";
 
 const publicRoutes = ["/login"];
+const blockedPaths = ["/dashboard"];
 
 export function middleware(req: NextRequest) {
-    const token = req.cookies.get("authToken")?.value;
+    const token = req.cookies.get("auth_token")?.value;
 
-    const isPublicRoute = publicRoutes.some((route) => req.nextUrl.pathname.startsWith(route));
-
+    const isPublicRoute = publicRoutes.some((route) =>
+        req.nextUrl.pathname.startsWith(route)
+    );
 
     if (isPublicRoute) {
         if (token) {
@@ -18,12 +20,23 @@ export function middleware(req: NextRequest) {
 
     if (!token) {
         const loginUrl = new URL("/login", req.url);
-        loginUrl.searchParams.set("callbackUrl", req.url);
+        const callbackUrl = validateCallbackUrl(req.nextUrl.pathname);
+        loginUrl.searchParams.set("callbackUrl", callbackUrl);
 
         return NextResponse.redirect(loginUrl);
     }
 
     return NextResponse.next();
+
+}
+
+function validateCallbackUrl(pathname: string): string {
+
+    if (blockedPaths.includes(pathname)) {
+        return "/dashboard";
+    }
+
+    return pathname;
 }
 
 export const config = {
