@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use MedineTech\Companies\Infrastructure\Persistence\Eloquent\CompanyModel;
+
 
 class User extends Authenticatable
 {
@@ -45,5 +47,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function companies()
+    {
+        return $this->belongsToMany(
+            \MedineTech\Companies\Infrastructure\Persistence\Eloquent\CompanyModel::class,
+            'user_companies',
+            'user_id',
+            'company_id'
+        );
     }
 }
