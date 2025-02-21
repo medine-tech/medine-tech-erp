@@ -7,7 +7,6 @@ interface Company {
     id: string;
     created_at: string;
     updated_at: string;
-    data: any;
     pivot: {
         user_id: number;
         company_id: string;
@@ -16,7 +15,6 @@ interface Company {
 
 export async function CompanyList() {
     const companiesData = await getCompanies();
-    // Se extrae el array de compañías de la respuesta
     const companiesList: Company[] = companiesData.data.data || [];
 
     return (
