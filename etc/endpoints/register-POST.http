@@ -3,7 +3,7 @@ accept: application/json
 content-type: application/json
 
 {
-    "name": "Medine Developer",
+    "name": "Example Developer",
     "email": "email@medine.tech",
     "password": "password",
     "password_confirmation": "password"
