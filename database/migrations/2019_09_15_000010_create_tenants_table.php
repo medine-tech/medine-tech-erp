@@ -16,8 +16,7 @@ class CreateTenantsTable extends Migration
     public function up(): void
     {
         Schema::create('companies', function (Blueprint $table) {
-            $table->string('id')->primary();
-
+            $table->char('uuid', 36)->primary();
             // your custom columns may go here
 
             $table->timestamps();
