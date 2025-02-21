@@ -1,5 +1,3 @@
-// /app/dashboard/page.tsx
-
 import { CompanyList } from "@/app/components/ui/dashboard/company-list";
 import { DashboardHeader } from "@/app/components/ui/dashboard/dashboard-header";
 

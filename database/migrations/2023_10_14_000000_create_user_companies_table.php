@@ -10,7 +10,7 @@ class CreateUserCompaniesTable extends Migration
     {
         Schema::create('user_companies', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id');
-            $table->char('company_id', 36);
+            $table->uuid('company_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('company_id')->references('uuid')->on('companies')->onDelete('cascade');
             $table->primary(['user_id', 'company_id']);

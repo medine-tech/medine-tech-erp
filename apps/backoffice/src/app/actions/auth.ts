@@ -1,7 +1,7 @@
 "use server"
 
-import { cookies } from "next/headers"
-import { z } from "zod"
+import {cookies} from "next/headers"
+import {z} from "zod"
 
 const loginSchema = z.object({
     email: z.string().email(),
@@ -82,26 +82,4 @@ export async function logout() {
 export async function getAuthToken() {
     const cookieStore = await cookies()
     return cookieStore.get("auth_token")?.value
-}
-
-export async function getCompanies() {
-    try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/companies`, {
-            method: "GET",
-            headers: {
-                "accept": "application/json",
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${await getAuthToken()}`,
-            },
-        })
-        if (!response.ok) {
-            throw new Error("Error fetching companies")
-        }
-        const companies = await response.json()
-        return companies;
-    }catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
-        return Response.json({error: errorMessage}, {status: 500});
-    }
-
 }

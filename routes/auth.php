@@ -6,7 +6,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\CompanyControllers;
+use App\Http\Controllers\Companies\CompaniesGetController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisteredUserController::class, 'store'])
@@ -37,6 +37,6 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth:sanctum')
     ->name('logout');
 
-Route::get('/companies', [CompanyControllers::class, 'companies'])
+Route::get('/companies', CompaniesGetController::class)
     ->middleware('auth:sanctum')
-    ->name('comapanies.name');
+    ->name('companies');

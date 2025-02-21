@@ -1,7 +1,5 @@
-// /app/components/ui/dashboard/company-list.tsx
-
 import { Card, CardHeader, CardTitle } from "@/app/components/ui/card";
-import { getCompanies } from "@/app/actions/auth";
+import { getCompanies } from "@/app/actions/companies";
 
 interface Company {
     id: string;
