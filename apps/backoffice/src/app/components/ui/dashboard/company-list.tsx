@@ -1,40 +1,35 @@
-import { Users } from "lucide-react"
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle
-} from "@/app/components/ui/card"
+// /app/components/ui/dashboard/company-list.tsx
+
+import { Card, CardHeader, CardTitle } from "@/app/components/ui/card";
+import { getCompanies } from "@/app/actions/auth";
 
 interface Company {
-    id: number
-    name: string
-    employees: number
+    id: string;
+    created_at: string;
+    updated_at: string;
+    data: any;
+    pivot: {
+        user_id: number;
+        company_id: string;
+    };
 }
 
-interface CompanyListProps {
-    companies: Company[]
-}
+export async function CompanyList() {
+    const companiesData = await getCompanies();
+    // Se extrae el array de compañías de la respuesta
+    const companiesList: Company[] = companiesData.data.data || [];
 
-export function CompanyList({ companies }: CompanyListProps) {
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {companies.map((company) => (
+            {companiesList.map((company) => (
                 <Card key={company.id} className="hover:bg-muted/50 transition-colors">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-lg font-medium">{company.name}</CardTitle>
+                        <CardTitle className="text-lg font-medium">
+                            {company.pivot.company_id}
+                        </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <div className="grid gap-2">
-                            <div className="flex items-center text-sm text-muted-foreground">
-                                <Users className="mr-2 h-4 w-4" />
-                                {company.employees} employees
-                            </div>
-                        </div>
-                    </CardContent>
                 </Card>
             ))}
         </div>
-    )
+    );
 }
-
