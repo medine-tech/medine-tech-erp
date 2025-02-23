@@ -1,23 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { auth } from "@/app/(auth)/actions/auth";
+
 const publicRoutes = ["/login"];
 const blockedPaths = ["/dashboard"];
 
-export function middleware(req: NextRequest): NextResponse {
-	const token = req.cookies.get("auth_token")?.value;
-
+export async function middleware(req: NextRequest): Promise<NextResponse> {
+	const session = await auth();
 	const pathname = req.nextUrl.pathname;
 	const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route)) || pathname === "/";
 
+	console.log("session", session);
+
 	if (isPublicRoute) {
-		if (token) {
+		if (session) {
 			return NextResponse.redirect(new URL("/dashboard", req.url));
 		}
 
 		return NextResponse.next();
 	}
 
-	if (!token) {
+	if (!session) {
 		const loginUrl = new URL("/login", req.url);
 		const callbackUrl = validateCallbackUrl(pathname);
 		loginUrl.searchParams.set("callbackUrl", callbackUrl);
