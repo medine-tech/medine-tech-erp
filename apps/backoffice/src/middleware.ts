@@ -6,7 +6,8 @@ const blockedPaths = ["/dashboard"];
 export function middleware(req: NextRequest): NextResponse {
 	const token = req.cookies.get("auth_token")?.value;
 
-	const isPublicRoute = publicRoutes.some((route) => req.nextUrl.pathname.startsWith(route));
+	const pathname = req.nextUrl.pathname;
+	const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route)) || pathname === "/";
 
 	if (isPublicRoute) {
 		if (token) {
@@ -18,7 +19,7 @@ export function middleware(req: NextRequest): NextResponse {
 
 	if (!token) {
 		const loginUrl = new URL("/login", req.url);
-		const callbackUrl = validateCallbackUrl(req.nextUrl.pathname);
+		const callbackUrl = validateCallbackUrl(pathname);
 		loginUrl.searchParams.set("callbackUrl", callbackUrl);
 
 		return NextResponse.redirect(loginUrl);
