@@ -29,18 +29,31 @@ export const {
 				password: { label: "Contraseña", type: "password" },
 			},
 			async authorize(credentials) {
-				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
-					method: "POST",
-					headers: {
-						accept: "application/json",
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(credentials),
-				});
+				try {
+					const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
+						method: "POST",
+						headers: {
+							accept: "application/json",
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(credentials),
+					});
 
-				if (!response.ok) {
+					if (!response.ok) {
+						return null;
+					}
+
+					const data = await response.json();
+
+					return {
+						id: data.token,
+						token: data.token,
+					};
+				} catch (error) {
+					console.error("Authentication error:", error);
 					return null;
 				}
+			}
 
 				const data = await response.json();
 
