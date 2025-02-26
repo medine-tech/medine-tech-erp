@@ -22,3 +22,4 @@ yarn-error.log
 /.vscode
 /.zed
 http-client.private.env.json
+/.turbo
