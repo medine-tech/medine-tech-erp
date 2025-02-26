@@ -51,16 +51,9 @@ export const {
 					};
 				} catch (error) {
 					console.error("Authentication error:", error);
+
 					return null;
 				}
-			}
-
-				const data = await response.json();
-
-				return {
-					id: data.token,
-					token: data.token,
-				};
 			},
 		}),
 	],
