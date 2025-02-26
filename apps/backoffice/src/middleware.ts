@@ -10,8 +10,6 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 	const pathname = req.nextUrl.pathname;
 	const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route)) || pathname === "/";
 
-	console.log("session", session);
-
 	if (isPublicRoute) {
 		if (session) {
 			return NextResponse.redirect(new URL("/dashboard", req.url));

@@ -11,25 +11,11 @@ export const {
 		signIn: "/login",
 	},
 	callbacks: {
-		async jwt({ token, user }) {
-			console.log("jwt");
-			if (user) {
-				console.log("inside 1");
-				token.id = user.id;
-				token.token = user.token;
-			}
-
-			return token;
-		},
 		async session({ session, token }) {
-			console.log("session");
-			if (token) {
-				console.log("inside 2");
-				session.user = {
-					id: token.id,
-					token: token.token,
-				};
-			}
+			session.user = {
+				id: String(token.id),
+				token: token.token,
+			};
 
 			// Return the session object so it can be used by downstream code.
 			return session;
@@ -43,12 +29,6 @@ export const {
 				password: { label: "Contraseña", type: "password" },
 			},
 			async authorize(credentials) {
-				console.log(credentials, "credentials0");
-				if (!credentials) {
-					return null;
-				}
-
-				console.log(credentials, "credentials");
 				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
 					method: "POST",
 					headers: {
@@ -63,8 +43,6 @@ export const {
 				}
 
 				const data = await response.json();
-
-				console.log(data, "data");
 
 				return {
 					id: data.token,
