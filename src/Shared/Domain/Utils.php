@@ -33,18 +33,22 @@ final readonly class Utils
 
     public static function jsonEncode(array $values): string
     {
-        return json_encode($values);
+        $json = json_encode($values, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+
+        if (false === $json) {
+            throw new \RuntimeException('Unable to encode data to JSON: ' . json_last_error_msg());
+        }
+
+        return $json;
     }
 
     public static function jsonDecode(string $json): array
     {
-        $data = json_decode($json, true);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new \RuntimeException('Unable to parse response body into JSON: ' . json_last_error());
+        try {
+            return json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            throw new \RuntimeException('Unable to parse response body into JSON: ' . $e->getMessage());
         }
-
-        return $data;
     }
 
     public static function toSnakeCase(string $text): string

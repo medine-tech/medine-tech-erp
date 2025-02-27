@@ -60,7 +60,12 @@ final class AggregateRootSimilarComparator extends Comparator
         $actualReflected = new ReflectionObject($actual);
 
         foreach ($expectedReflected->getProperties() as $expectedReflectedProperty) {
-            $actualReflectedProperty = $actualReflected->getProperty($expectedReflectedProperty->getName());
+
+            $propertyName = $expectedReflectedProperty->getName();
+             if (!$actualReflected->hasProperty($propertyName)) {
+                  return false;
+             }
+            $actualReflectedProperty = $actualReflected->getProperty($propertyName);
 
             $expectedReflectedProperty->setAccessible(true);
             $actualReflectedProperty->setAccessible(true);
