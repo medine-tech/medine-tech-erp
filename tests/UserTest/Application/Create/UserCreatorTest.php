@@ -1,19 +1,20 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Tests\Unit\UserTest;
+namespace Tests\UserTest\Application\Create;
 
 use MedineTech\Users\Application\Create\UserCreator;
 use MedineTech\Users\Application\Create\UserCreatorRequest;
 use MedineTech\Users\Domain\UserRepository;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
-use Tests\Unit\UserTest\Domain\UserMother;
+use Tests\UserTest\Domain\UserMother;
 
-final class UserUnitTestCase extends UnitTestCase
+final class UserCreatorTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+
+    #[test]
     public function it_should_create_user(): void
     {
         $user = UserMother::create();
@@ -22,16 +23,17 @@ final class UserUnitTestCase extends UnitTestCase
         $userRepository = $this->mock(UserRepository::class);
         $userRepository->shouldReceive('save')
             ->once()
-            ->with($user)
+            ->with($this->similarTo($user))
             ->andReturnNull();
 
-        $creator = new UserCreator($userRepository);
-        $response = ($creator)(new UserCreatorRequest([
-            'id'       => $user->id(),
+        $request = new UserCreatorRequest([
             'name'     => $user->name(),
             'email'    => $user->email(),
             'password' => $user->password()
-        ]));
+        ]);
+
+        $creator = new UserCreator($userRepository);
+        ($creator)($request);
 
         $this->assertTrue(true);
     }

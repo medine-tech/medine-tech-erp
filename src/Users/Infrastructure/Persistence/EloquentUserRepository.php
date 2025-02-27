@@ -13,11 +13,11 @@ final class EloquentUserRepository implements UserRepository
     public function save(User $user): void
     {
         $userModel = new UserModel();
-        $userModel->id = $user->id();
         $userModel->name = $user->name();
         $userModel->email = $user->email();
         $userModel->password = $user->password();
 
         $userModel->save();
     }
+
 }

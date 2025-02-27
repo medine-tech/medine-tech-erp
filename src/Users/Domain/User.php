@@ -6,32 +6,21 @@ namespace MedineTech\Users\Domain;
 
 final class User
 {
-    private string $id;
-    private string $name;
-    private string $email;
-    private string $password;
 
     public function __construct(
-        string $id,
-        string $name,
-        string $email,
-        string $password,
+      private readonly string $name,
+      private readonly string $email,
+      private readonly string $password
     ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->email = $email;
-        $this->password = $password;
     }
 
     public static function create(
-        string $id,
         string $name,
         string $email,
         string $password
     ): self {
 
         return new self(
-            $id,
             $name,
             $email,
             $password,
@@ -41,16 +30,10 @@ final class User
     public static function fromPrimitive(array $params): self
     {
         return new self(
-            $params['id'],
             $params['name'],
             $params['email'],
             $params['password'],
         );
-    }
-
-    public function id(): string
-    {
-        return $this->id;
     }
 
     public function name(): string
@@ -71,24 +54,8 @@ final class User
     public function toPrimitive(): array
     {
         return [
-            'id'       => $this->id(),
             'name'     => $this->name(),
             'password' => $this->password(),
         ];
-    }
-
-    public function changeName(string $newName): void
-    {
-        $this->name = $newName;
-    }
-
-    public function changeEmail(string $newEmail): void
-    {
-        $this->email = $newEmail;
-    }
-
-    public function changePassword(string $newPassword): void
-    {
-        $this->password = $newPassword;
     }
 }

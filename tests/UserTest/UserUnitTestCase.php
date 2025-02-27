@@ -1,16 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\Unit\UserTest\Application\Create;
+namespace Tests\UserTest;
 
 use MedineTech\Users\Application\Create\UserCreator;
 use MedineTech\Users\Application\Create\UserCreatorRequest;
 use MedineTech\Users\Domain\UserRepository;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
-use Tests\Unit\UserTest\Domain\UserMother;
-use Mockery;
+use Tests\UserTest\Domain\UserMother;
 
-final class UserCreatorTest extends UnitTestCase
+final class UserUnitTestCase extends UnitTestCase
 {
     /**
      * @test
@@ -19,22 +18,20 @@ final class UserCreatorTest extends UnitTestCase
     {
         $user = UserMother::create();
 
-        /** @var UserRepository|Mockery\MockInterface $userRepository */
+        /** @var UserRepository|\Mockery\MockInterface $userRepository */
         $userRepository = $this->mock(UserRepository::class);
         $userRepository->shouldReceive('save')
             ->once()
-            ->with(Mockery::type(\MedineTech\Users\Domain\User::class))
+            ->with($user)
             ->andReturnNull();
 
-        $request = new UserCreatorRequest([
+        $creator = new UserCreator($userRepository);
+        $response = ($creator)(new UserCreatorRequest([
             'id'       => $user->id(),
-            'name'     => $user->name() . "dsada",
+            'name'     => $user->name(),
             'email'    => $user->email(),
             'password' => $user->password()
-        ]);
-
-        $creator = new UserCreator($userRepository);
-        ($creator)($request);
+        ]));
 
         $this->assertTrue(true);
     }

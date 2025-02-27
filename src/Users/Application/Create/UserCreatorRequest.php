@@ -6,22 +6,15 @@ namespace MedineTech\Users\Application\Create;
 
 final class UserCreatorRequest
 {
-    private string $id;
     private string $name;
     private string $email;
     private string $password;
 
     public function __construct(array $data)
     {
-        $this->id = $data['id'] ?? '';
         $this->name = $data['name'] ?? '';
         $this->email = $data['email'] ?? '';
         $this->password = $data['password'] ?? '';
-    }
-
-    public function id(): string
-    {
-        return $this->id;
     }
 
     public function name(): string

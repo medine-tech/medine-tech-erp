@@ -12,15 +12,14 @@ use MedineTech\Users\Application\Create\UserCreatorRequest;
 
 /**
  * @OA\Post(
- *     path="/API_Flexio/v1/users",
+ *     path="/api/users-post",
  *     summary="Create a new user",
  *     tags={"Users"},
  *     security={{"token":{}}},
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"id", "name", "email", "password"},
- *             @OA\Property(property="id", type="string", example="user_123"),
+ *             required={""name", "email", "password"},
  *             @OA\Property(property="name", type="string", example="John Doe"),
  *             @OA\Property(property="email", type="string", example="john@example.com"),
  *             @OA\Property(property="password", type="string", example="secret")
@@ -51,7 +50,6 @@ final class UserPostController
     {
         try {
             $validatedData = $request->validate([
-                'id'       => 'required|string',
                 'name'     => 'required|string',
                 'email'    => 'required|email',
                 'password' => 'required|string'
@@ -60,13 +58,23 @@ final class UserPostController
             ($this->creator)(new UserCreatorRequest($validatedData));
 
             return new JsonResponse(null, 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+             return new JsonResponse([
+                  'title' => 'Validation Error',
+                 'status' => 400,
+                 'detail' => $e->getMessage(),
+                 'errors' => $e->errors(),
+                 ], 400);
+        } catch (\DomainException $e) {
+            Log::warning('Domain error during user creation: ' . $e->getMessage());
+            return new JsonResponse([ + 'title' => 'Business Rule Violation',
+                'status' => 422,
+                'detail' => $e->getMessage()
+            ], 422);
         } catch (Exception $e) {
             Log::error('User creation error: ' . $e->getMessage());
-
-            return new JsonResponse([
-                'title'  => 'Error',
-                'status' => 500,
-                'detail' => 'An error occurred'
+            return new JsonResponse([ + 'title' => 'Error', + 'status' => 500,
+                'detail' => app()->environment('production') ? 'An error occurred' : $e->getMessage()
             ], 500);
         }
     }

@@ -38,9 +38,9 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth:sanctum')
     ->name('logout');
 
-Route::post('/users-post', [UserPostController::class])
-    ->middleware('auth:sanctum')
-    ->name('users');
+Route::post('/users', UserPostController::class)
+    ->middleware('auth:sanctum');
+
 
 Route::get('/companies', CompaniesGetController::class)
     ->middleware('auth:sanctum')
