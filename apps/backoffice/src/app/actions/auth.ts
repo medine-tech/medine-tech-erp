@@ -1,7 +1,8 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { z } from "zod";
+
+import { auth, signIn, signOut } from "@/app/(auth)/actions/auth";
 
 const loginSchema = z.object({
 	email: z.string().email(),
@@ -11,38 +12,16 @@ const loginSchema = z.object({
 export async function login(formData: z.infer<typeof loginSchema>): Promise<any> {
 	try {
 		// Validate the form data
-		const validatedData = loginSchema.parse(formData);
+		const { email, password } = loginSchema.parse(formData);
 
-		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
-			method: "POST",
-			headers: {
-				accept: "application/json",
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(validatedData),
+		await signIn("credentials", {
+			email,
+			password,
+			// Needed to handle the redirect manually
+			redirect: false,
 		});
 
-		const data = await response.json();
-
-		if (response.ok) {
-			// Store the token in an HttpOnly cookie
-			const cookieStore = await cookies();
-			cookieStore.set("auth_token", data.token, {
-				httpOnly: true,
-				secure: process.env.NODE_ENV === "production",
-				sameSite: "strict",
-				maxAge: 60 * 60 * 24 * 7, // 1 week
-				path: "/",
-			});
-
-			return { success: true };
-		}
-
-		return {
-			success: false,
-			message: "Credenciales inválidas",
-			errors: data.errors || [],
-		};
+		return { success: true };
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			return {
@@ -69,19 +48,18 @@ export async function logout(): Promise<void> {
 			headers: {
 				accept: "application/json",
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${await getAuthToken()}`,
 			},
 		});
 
-		// Delete the token from the cookies
-		const cookieStore = await cookies();
-		cookieStore.delete("auth_token");
+		await signOut();
 	} catch (error) {
 		console.error("Logout error:", error);
 	}
 }
 
 export async function getAuthToken(): Promise<string | undefined> {
-	const cookieStore = await cookies();
+	const session = await auth();
 
-	return cookieStore.get("auth_token")?.value;
+	return session?.user?.token;
 }
