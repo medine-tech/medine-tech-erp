@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Unit\UserTest\Domain;
+
+use Faker\Factory;
+use MedineTech\Users\Domain\User;
+
+final class UserMother
+{
+    public static function create(
+        ?string $id = null,
+        ?string $name = null,
+        ?string $email = null,
+        ?string $password = null
+    ): User {
+        $faker = Factory::create();
+
+        return new User(
+            $id ?? $faker->uuid(),
+            $name ?? $faker->name(),
+            $email ?? $faker->email(),
+            $password ?? $faker->password()
+        );
+    }
+}
