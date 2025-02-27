@@ -41,7 +41,7 @@ final class CompanyPostController
             return new JsonResponse([
                 'title' => 'Error',
                 'status' => 500,
-                'detail' => $e->getMessage(),
+                'detail' => 'An unexpected error occurred while processing your request.',
             ], 500);
         }
     }

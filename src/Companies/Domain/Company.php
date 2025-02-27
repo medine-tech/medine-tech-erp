@@ -21,7 +21,7 @@ final class Company
         );
     }
 
-    public function fromPrimitives(array $row): self
+    public static function fromPrimitives(array $row): self
     {
         return new self(
             (string)$row['name']
