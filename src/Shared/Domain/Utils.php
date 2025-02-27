@@ -28,7 +28,11 @@ final readonly class Utils
 
     public static function stringToDate(string $date): DateTimeImmutable
     {
-        return new DateTimeImmutable($date);
+        try {
+            return new DateTimeImmutable($date);
+        } catch (\Exception $e) {
+            throw new \InvalidArgumentException(sprintf('The date string "%s" is not valid', $date), 0, $e);
+        }
     }
 
     public static function jsonEncode(array $values): string
@@ -75,16 +79,26 @@ final readonly class Utils
         return $results;
     }
 
-    public static function filesIn(string $path, $fileType): array
+    public static function filesIn(string $path, string $fileType): array
     {
+        $files = scandir($path);
+
+        if (false === $files) {
+            throw new \RuntimeException("Failed to scan directory: $path");
+        }
+
         return filter(
-            static fn(string $possibleModule): string|false => strstr($possibleModule, (string) $fileType),
-            scandir($path)
+            static fn(string $possibleModule): bool => str_contains($possibleModule, $fileType),
+            $files
         );
     }
 
-    public static function extractClassName($object): string
+    public static function extractClassName(object|string $object): string
     {
+        if (is_string($object) && !class_exists($object)) {
+            throw new \InvalidArgumentException(sprintf('The string "%s" is not a valid class name', $object));
+        }
+
         $reflect = new ReflectionClass($object);
 
         return $reflect->getShortName();
