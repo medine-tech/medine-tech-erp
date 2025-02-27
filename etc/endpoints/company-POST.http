@@ -1,0 +1,11 @@
+POST http://localhost/api/company-post
+accept: application/json
+content-type: application/json
+
+{
+  "id": "{{id}}",
+  "data": "{{data}}",
+  "token": "{{token}}"
+}
+
+###
