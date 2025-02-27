@@ -7,47 +7,37 @@ namespace MedineTech\Companies\Domain;
 final class Company
 {
     public function __construct(
-        private readonly string $id,
-        private readonly array $data
+        private readonly string $name
     )
     {
     }
 
     public static function create(
-        string $id,
-        array $data
+        string $name
     ): self
     {
         return new self(
-            $id,
-            $data
+            $name
         );
     }
 
     public function fromPrimitives(array $row): self
     {
         return new self(
-            (string)$row['id'],
-            (array)$row['data']
+            (string)$row['name']
         );
     }
 
     public function toPrimitives(): array
     {
         return [
-            'id' => $this->id(),
-            'data' => $this->data()
+            'name' => $this->name()
         ];
     }
 
-    public function id(): string
+    public function name(): string
     {
-        return $this->id;
-    }
-
-    public function data(): array
-    {
-        return $this->data;
+        return $this->name;
     }
 
 }

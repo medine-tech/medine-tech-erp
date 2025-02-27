@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\CompanyTest\Application\Create;
+namespace Tests\Companies\Application\Create;
 
 use MedineTech\Companies\Application\Create\CompanyCreator;
 use MedineTech\Companies\Application\Create\CompanyCreatorRequest;
 use MedineTech\Companies\Domain\CompanyRepository;
-use Tests\Unit\CompanyTest\Domain\CompanyMother;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\Companies\Domain\CompanyMother;
+use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 
 final class CompanyCreatorTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[test]
     public function it_should_create_a_company(): void
     {
         $company = CompanyMother::create();
@@ -21,7 +21,7 @@ final class CompanyCreatorTest extends UnitTestCase
         $companyRepository = $this->mock(CompanyRepository::class);
         $companyRepository->shouldReceive('save')
             ->once()
-            ->with($company)
+            ->with($this->similarTo($company))
             ->andReturnNull();
 
 
@@ -29,8 +29,9 @@ final class CompanyCreatorTest extends UnitTestCase
         $creator = new CompanyCreator($companyRepository);
 
         ($creator)(new CompanyCreatorRequest(
-            $company->id(),
-            $company->data()
+            $company->name()
         ));
+
+        $this->assertTrue(true);
     }
 }

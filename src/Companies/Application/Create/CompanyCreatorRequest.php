@@ -9,19 +9,13 @@ use MedineTech\Companies\Domain\Company;
 final class CompanyCreatorRequest
 {
     public function __construct(
-        private readonly string $id,
-        private readonly array $data
+        private readonly string $name
     )
     {
     }
 
-    public function id(): string
+    public function name(): string
     {
-        return $this->id;
-    }
-
-    public function data(): array
-    {
-        return $this->data;
+        return $this->name;
     }
 }

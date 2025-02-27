@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\CompanyTest\Domain;
+namespace Tests\Companies\Domain;
 
 use Faker\Factory;
 use MedineTech\Companies\Domain\Company;
@@ -10,14 +10,12 @@ use MedineTech\Companies\Domain\Company;
 final class CompanyMother
 {
     public static function create(
-    ?string $id = null,
-    ?array $data = null
+    ?string $name = null
     ): Company {
         $faker = Factory::create();
 
         return new Company(
-            $id ?? $faker->uuid(),
-            $data ?? []
+            $name ?? $faker->name()
         );
     }
 }

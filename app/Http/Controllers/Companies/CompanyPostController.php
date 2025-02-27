@@ -9,7 +9,7 @@ use MedineTech\Companies\Application\Create\CompanyCreator;
 use MedineTech\Companies\Application\Create\CompanyCreatorRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-final class CompaniesPostController
+final class CompanyPostController
 {
     public function __construct(
         private readonly CompanyCreator $creator
@@ -21,18 +21,16 @@ final class CompaniesPostController
     {
         try {
             $validatedData = $request->validate([
-                'id' => 'required|uuid',
-                'data' => 'required|array',
+                'name' => 'required|string',
             ]);
 
             $creatorRequest = new CompanyCreatorRequest(
-                $validatedData['id'],
-                $validatedData['data']
+                $validatedData['name']
             );
 
             ($this->creator)($creatorRequest);
 
-            return new JsonResponse(null, 201);
+            return new JsonResponse('', 201);
         } catch (ValidationException $e) {
             return new JsonResponse([
                 'title' => 'Validation Error',
@@ -43,7 +41,7 @@ final class CompaniesPostController
             return new JsonResponse([
                 'title' => 'Error',
                 'status' => 500,
-                'detail' => 'An error occurred while creating the company.',
+                'detail' => $e->getMessage(),
             ], 500);
         }
     }
