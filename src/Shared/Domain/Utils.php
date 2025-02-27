@@ -65,7 +65,7 @@ final readonly class Utils
         return lcfirst(str_replace('_', '', ucwords($text, '_')));
     }
 
-    public static function dot($array, string $prepend = ''): array
+    public static function dot(array $array, string $prepend = ''): array
     {
         $results = [];
         foreach ($array as $key => $value) {
