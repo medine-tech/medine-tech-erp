@@ -69,7 +69,7 @@ final class UserPostController
             return new JsonResponse([
                 'title' => 'Validation Error',
                 'status' => 400,
-                'detail' => $e->getMessage(),
+                'detail' => 'The given data was invalid.',
                 'errors' => $e->errors(),
             ], 400);
         } catch (\DomainException $e) {
@@ -77,14 +77,14 @@ final class UserPostController
             return new JsonResponse([
                 'title' => 'Business Rule Violation',
                 'status' => 422,
-                'detail' => $e->getMessage()
+                'detail' => 'A business rule was violated.'
             ], 422);
         } catch (Exception $e) {
             Log::error('User creation error: ' . $e->getMessage());
             return new JsonResponse([
                 'title' => 'Error',
                 'status' => 500,
-                'detail' => app()->environment('production') ? 'An error occurred' : $e->getMessage()
+                'detail' => 'An unexpected error occurred during user creation.'
             ], 500);
         }
     }
