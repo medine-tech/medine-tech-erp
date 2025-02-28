@@ -10,11 +10,13 @@ use MedineTech\Companies\Domain\Company;
 final class CompanyMother
 {
     public static function create(
-    ?string $name = null
+        ?string $id = null,
+        ?string $name = null
     ): Company {
         $faker = Factory::create();
 
         return new Company(
+            $id ?? $faker->uuid(),
             $name ?? $faker->name()
         );
     }

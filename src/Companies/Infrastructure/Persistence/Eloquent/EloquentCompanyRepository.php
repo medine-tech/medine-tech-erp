@@ -10,10 +10,15 @@ final class EloquentCompanyRepository implements CompanyRepository
 
     public function save(Company $company): void
     {
-        $companyModel = new CompanyModel();
-        $companyModel->name = $company->name();
+        try {
+            $companyModel = new CompanyModel();
+            $companyModel->id = $company->id();
+            $companyModel->name = $company->name();
 
-        $companyModel->save();
+            $companyModel->save();
+        } catch (\Exception $e) {
+            throw new \RuntimeException("Failed to save company: " . $e->getMessage(), 0, $e);
+        }
     }
 
 }

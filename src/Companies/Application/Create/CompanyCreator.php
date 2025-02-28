@@ -18,6 +18,7 @@ final class CompanyCreator
     public function __invoke(CompanyCreatorRequest $request): void
     {
         $company = Company::create(
+            $request->id(),
             $request->name()
         );
 

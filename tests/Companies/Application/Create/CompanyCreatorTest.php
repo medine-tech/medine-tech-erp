@@ -29,9 +29,9 @@ final class CompanyCreatorTest extends UnitTestCase
         $creator = new CompanyCreator($companyRepository);
 
         ($creator)(new CompanyCreatorRequest(
+            $company->id(),
             $company->name()
         ));
 
-        $this->assertTrue(true);
     }
 }

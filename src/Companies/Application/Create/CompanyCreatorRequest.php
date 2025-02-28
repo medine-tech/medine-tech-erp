@@ -9,6 +9,7 @@ use MedineTech\Companies\Domain\Company;
 final class CompanyCreatorRequest
 {
     public function __construct(
+        private readonly string $id,
         private readonly string $name
     )
     {
@@ -17,5 +18,10 @@ final class CompanyCreatorRequest
     public function name(): string
     {
         return $this->name;
+    }
+
+    public function id(): string
+    {
+        return $this->id;
     }
 }
