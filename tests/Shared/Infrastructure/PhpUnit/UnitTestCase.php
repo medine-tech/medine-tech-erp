@@ -11,7 +11,7 @@ use Mockery\MockInterface;
 use Tests\Shared\Domain\TestUtils;
 use Tests\Shared\Infrastructure\Mockery\MatcherIsSimilar;
 
-abstract class UnitTestCase
+abstract class UnitTestCase extends \PHPUnit\Framework\TestCase
 {
     protected function mock(string $className): MockInterface
     {
