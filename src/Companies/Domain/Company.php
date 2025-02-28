@@ -35,6 +35,7 @@ final class Company
     public function toPrimitives(): array
     {
         return [
+            'id' => $this->id(),
             'name' => $this->name()
         ];
     }

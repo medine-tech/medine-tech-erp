@@ -48,7 +48,7 @@ final class CompanyPostController
     {
         try {
             $validatedData = $request->validate([
-                'id' => 'required|string',
+                'id' => 'required|string|uuid',
                 'name' => 'required|string|min:3|max:40',
             ]);
 
