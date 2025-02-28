@@ -1,0 +1,10 @@
+POST http://localhost/api/users
+accept: application/json
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "{{$random.alphabetic(10)}}",
+  "email": "{{$random.alphabetic(10)}}@example.com",
+  "password": "{{$random.alphabetic(10)}}"
+}

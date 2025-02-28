@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Shared\Infrastructure\PhpUnit;
 
+use PHPUnit\Framework\TestCase;
 use MedineTech\Shared\Domain\Bus\Event\DomainEvent;
 use MedineTech\Shared\Domain\Bus\Event\EventBus;
 use Mockery;
@@ -11,7 +12,7 @@ use Mockery\MockInterface;
 use Tests\Shared\Domain\TestUtils;
 use Tests\Shared\Infrastructure\Mockery\MatcherIsSimilar;
 
-abstract class UnitTestCase extends \PHPUnit\Framework\TestCase
+abstract class UnitTestCase extends TestCase
 {
     protected function mock(string $className): MockInterface
     {
