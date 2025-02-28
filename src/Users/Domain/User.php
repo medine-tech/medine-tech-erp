@@ -7,11 +7,15 @@ namespace MedineTech\Users\Domain;
 final class User
 {
 
+    private ?int $id;
+
     public function __construct(
+      ?int $id,
       private readonly string $name,
       private readonly string $email,
       private readonly string $password
     ) {
+        $this->id = $id;
     }
 
     public static function create(
@@ -21,6 +25,7 @@ final class User
     ): self {
 
         return new self(
+            null,
             $name,
             $email,
             $password,
@@ -30,12 +35,16 @@ final class User
     public static function fromPrimitive(array $params): self
     {
         return new self(
+            $params['id'] ?? null,
             $params['name'],
             $params['email'],
             $params['password'],
         );
     }
-
+    public function id(): int
+    {
+        return $this->id;
+    }
     public function name(): string
     {
         return $this->name;
@@ -54,7 +63,9 @@ final class User
     public function toPrimitive(): array
     {
         return [
+            'id'       => $this->id(),
             'name'     => $this->name(),
+            'email'    => $this->email(),
             'password' => $this->password(),
         ];
     }

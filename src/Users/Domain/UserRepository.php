@@ -8,4 +8,8 @@ interface UserRepository
 {
     public function save(User $user): void;
 
+    public function findByEmail(UserEmail $email): ?User;
+
+    public function nextId(): int;
+
 }

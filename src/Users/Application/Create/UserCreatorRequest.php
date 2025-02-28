@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace MedineTech\Users\Application\Create;
 
 final class UserCreatorRequest
@@ -10,11 +8,11 @@ final class UserCreatorRequest
     private string $email;
     private string $password;
 
-    public function __construct(array $data)
+    public function __construct(string $name, string $email, string $password)
     {
-        $this->name = $data['name'] ?? '';
-        $this->email = $data['email'] ?? '';
-        $this->password = $data['password'] ?? '';
+        $this->name = $name;
+        $this->email = $email;
+        $this->password = $password;
     }
 
     public function name(): string
