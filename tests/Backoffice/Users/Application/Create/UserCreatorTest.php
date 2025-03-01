@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\UserTest\Application\Create;
+namespace Tests\Backoffice\Users\Application\Create;
 
 use MedineTech\Users\Application\Create\UserCreator;
 use MedineTech\Users\Application\Create\UserCreatorRequest;
@@ -10,10 +10,10 @@ use MedineTech\Users\Domain\User;
 use MedineTech\Users\Domain\UserAlreadyExists;
 use MedineTech\Users\Domain\UserEmail;
 use MedineTech\Users\Domain\UserRepository;
-use PHPUnit\Framework\Attributes\Test;
-use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
-use Tests\UserTest\Domain\UserMother;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\Backoffice\Users\Domain\UserMother;
+use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 
 final class UserCreatorTest extends UnitTestCase
 {

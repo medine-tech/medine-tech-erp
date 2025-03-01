@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\UserTest;
+namespace Tests\Backoffice\Users;
 
 use MedineTech\Users\Application\Create\UserCreator;
 use MedineTech\Users\Application\Create\UserCreatorRequest;
 use MedineTech\Users\Domain\UserRepository;
+use Tests\Backoffice\Users\Domain\UserMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
-use Tests\UserTest\Domain\UserMother;
 
 final class UserUnitTestCase extends UnitTestCase
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\UserTest\Domain;
+namespace Tests\Backoffice\Users\Domain;
 
-use MedineTech\Users\Domain\User;
 use Faker\Factory;
+use MedineTech\Users\Domain\User;
 
 final class UserMother
 {

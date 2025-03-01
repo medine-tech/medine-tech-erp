@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Tests\Companies\Application\Create;
+namespace Tests\Backoffice\Companies\Application\Create;
 
 use MedineTech\Companies\Application\Create\CompanyCreator;
 use MedineTech\Companies\Application\Create\CompanyCreatorRequest;
 use MedineTech\Companies\Domain\CompanyRepository;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Companies\Domain\CompanyMother;
+use Tests\Backoffice\Companies\Domain\CompanyMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 
 final class CompanyCreatorTest extends UnitTestCase
 {
-    #[test]
+    #[Test]
     public function it_should_create_a_company(): void
     {
         $company = CompanyMother::create();
@@ -32,6 +32,5 @@ final class CompanyCreatorTest extends UnitTestCase
             $company->id(),
             $company->name()
         ));
-
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Companies\Domain;
+namespace Tests\Backoffice\Companies\Domain;
 
 use Faker\Factory;
 use MedineTech\Companies\Domain\Company;
