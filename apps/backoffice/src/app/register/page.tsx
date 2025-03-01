@@ -8,13 +8,13 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import MedineLogo from "@/app/components/medine-logo";
-import { Button } from "@/app/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/app/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/app/components/ui/form";
-import { Input } from "@/app/components/ui/input";
-import { cn } from "@/app/lib/utils";
+import MedineLogo from "@/components/medine-logo";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 const registerSchema = z
   .object({
