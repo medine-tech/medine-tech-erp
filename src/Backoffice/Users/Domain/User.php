@@ -32,13 +32,13 @@ final class User
         );
     }
 
-    public static function fromPrimitive(array $params): self
+    public static function fromPrimitive(array $primitives): self
     {
         return new self(
-            $params['id'] ?? null,
-            $params['name'],
-            $params['email'],
-            $params['password'],
+            (int)$primitives['id'],
+            (string)$primitives['name'],
+            (string)$primitives['email'],
+            (string)$primitives['password'],
         );
     }
     public function id(): int

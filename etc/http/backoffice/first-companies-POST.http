@@ -1,10 +1,10 @@
-POST http://localhost/api/register
+POST http://localhost/api/backoffice/first-companies
 accept: application/json
 content-type: application/json
 
 {
-    "name": "Example Developer",
-    "email": "email@medine.tech",
+    "name": "{{$random.alphabetic(10)}}",
+    "email": "email1@example.com",
     "password": "password",
     "password_confirmation": "password"
 }
