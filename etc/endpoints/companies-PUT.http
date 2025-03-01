@@ -1,0 +1,8 @@
+PUT http://localhost/api/companies/{{id}}
+accept: application/json
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "{{$random.alphabetic(10)}}"
+}
