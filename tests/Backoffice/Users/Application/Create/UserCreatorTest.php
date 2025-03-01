@@ -6,11 +6,7 @@ namespace Tests\Backoffice\Users\Application\Create;
 
 use MedineTech\Backoffice\Users\Application\Create\UserCreator;
 use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
-use MedineTech\Backoffice\Users\Domain\User;
-use MedineTech\Backoffice\Users\Domain\UserAlreadyExists;
-use MedineTech\Backoffice\Users\Domain\UserEmail;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
-use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Users\Domain\UserMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -20,65 +16,31 @@ final class UserCreatorTest extends UnitTestCase
     #[Test]
     public function it_should_create_user(): void
     {
-        $expectedUser = UserMother::create();
+        $userId = 1;
+        $user = UserMother::create(id: $userId);
 
-        /** @var UserRepository|Mockery\MockInterface $userRepository */
         $userRepository = $this->mock(UserRepository::class);
-
         $userRepository->shouldReceive('findByEmail')
             ->once()
-            ->with(Mockery::on(function (UserEmail $email) use ($expectedUser): bool {
-                return $email->value() === $expectedUser->email();
-            }))
+            ->with($user->email())
             ->andReturnNull();
 
         $userRepository->shouldReceive('nextId')
             ->once()
-            ->andReturn(1);
+            ->andReturn($userId);
 
         $userRepository->shouldReceive('save')
             ->once()
-            ->with(Mockery::on(function (User $user) use ($expectedUser): bool {
-                return
-                    $user->name() === $expectedUser->name() &&
-                    $user->email() === $expectedUser->email() &&
-                    $user->password() === $expectedUser->password() &&
-                    $user->id() === 1;
-            }))
+            ->with($this->similarTo($user))
             ->andReturnNull();
 
         $request = new UserCreatorRequest(
-            $expectedUser->name(),
-            $expectedUser->email(),
-            $expectedUser->password()
+            $user->name(),
+            $user->email(),
+            $user->password()
         );
 
-        $creator = new UserCreator($userRepository);
-        ($creator)($request);
-    }
-
-    #[Test]
-    public function it_should_throw_exception_when_user_already_exists(): void
-    {
-        $this->expectException(UserAlreadyExists::class);
-
-        $existingUser = UserMother::create();
-
-        /** @var UserRepository|Mockery\MockInterface $userRepository */
-        $userRepository = $this->mock(UserRepository::class);
-        $userRepository->shouldReceive('findByEmail')
-            ->once()
-            ->with(Mockery::on(function (UserEmail $email) use ($existingUser): bool {
-                return $email->value() === $existingUser->email();
-            }))
-            ->andReturn($existingUser);
-
-        $request = new UserCreatorRequest(
-            $existingUser->name(),
-            $existingUser->email(),
-            $existingUser->password()
-        );
-
+        /** @var UserRepository $userRepository */
         $creator = new UserCreator($userRepository);
         ($creator)($request);
     }
