@@ -3,36 +3,44 @@ declare(strict_types=1);
 
 namespace Tests\UserTest;
 
-use MedineTech\Users\Application\Create\UserCreator;
-use MedineTech\Users\Application\Create\UserCreatorRequest;
 use MedineTech\Users\Domain\UserRepository;
+use Mockery\MockInterface;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
-use Tests\UserTest\Domain\UserMother;
 
-final class UserUnitTestCase extends UnitTestCase
+/**
+ * @method UserRepository&MockInterface mock(string $class)
+ */
+abstract class UserUnitTestCase extends UnitTestCase
 {
     /**
-     * @test
+     * @var MockInterface|null
      */
-    public function it_should_create_user(): void
+    private ?MockInterface $repository = null;
+
+    protected function repository(): MockInterface
     {
-        $user = UserMother::create();
+        if ($this->repository !== null) {
+            return $this->repository;
+        }
 
-        /** @var UserRepository|\Mockery\MockInterface $userRepository */
-        $userRepository = $this->mock(UserRepository::class);
-        $userRepository->shouldReceive('save')
+        return $this->repository = $this->mock(UserRepository::class);
+    }
+
+    protected function shouldSaveUser($user): void
+    {
+        $this->repository()
+            ->shouldReceive('save')
             ->once()
-            ->with($user)
+            ->with($this->similarTo($user))
             ->andReturnNull();
+    }
 
-        $creator = new UserCreator($userRepository);
-        $response = ($creator)(new UserCreatorRequest([
-            'id'       => $user->id(),
-            'name'     => $user->name(),
-            'email'    => $user->email(),
-            'password' => $user->password()
-        ]));
-
-        $this->assertTrue(true);
+    protected function shouldFindUser(int $id, $user): void
+    {
+        $this->repository()
+            ->shouldReceive('find')
+            ->once()
+            ->with($id)
+            ->andReturn($user);
     }
 }

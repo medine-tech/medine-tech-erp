@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Companies\CompaniesGetController;
 use App\Http\Controllers\Users\UserPostController;
 use App\Http\Controllers\Companies\CompanyPostController;
+use App\Http\Controllers\Users\UserPutController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisteredUserController::class, 'store'])
@@ -24,7 +25,6 @@ Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
     ->name('password.email');
 
 Route::post('/reset-password', [NewPasswordController::class, 'store'])
-    ->middleware('guest')
     ->name('password.store');
 
 Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)
@@ -40,6 +40,10 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->name('logout');
 
 Route::post('/users', UserPostController::class)
+    ->middleware('auth:sanctum')
+    ->name('users');
+
+Route::put('/users/{id}', UserPutController::class)
     ->middleware('auth:sanctum')
     ->name('users');
 
