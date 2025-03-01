@@ -6,6 +6,7 @@ namespace Tests\Companies\Application\Update;
 
 use MedineTech\Companies\Application\Update\CompanyUpdater;
 use MedineTech\Companies\Application\Update\CompanyUpdaterRequest;
+use MedineTech\Companies\Domain\CompanyNotFound;
 use MedineTech\Companies\Domain\CompanyRepository;
 use MedineTech\Shared\Domain\ValueObject\Uuid;
 use PHPUnit\Framework\Attributes\Test;
@@ -24,7 +25,6 @@ final class CompanyUpdaterTest extends CompanyUnitTestCase
 
         $newName = 'new name';
 
-        $originalCompany->changeName($newName);
 
         /* @var CompanyRepository $companyRepository */
         $repository = $this->repository();
@@ -37,5 +37,19 @@ final class CompanyUpdaterTest extends CompanyUnitTestCase
             $newName
         ));
 
+        $this->assertEquals($newName, $originalCompany->name());
+
+    }
+
+    #[test]
+    public function it_should_throw_exception_when_company_not_found(): void
+    {
+        $id = Uuid::random()->value();
+        $this->shouldNotFind($id);
+
+        $updater = new CompanyUpdater($this->repository());
+
+        $this->expectException(CompanyNotFound::class);
+        ($updater)(new CompanyUpdaterRequest($id, 'new name'));
     }
 }

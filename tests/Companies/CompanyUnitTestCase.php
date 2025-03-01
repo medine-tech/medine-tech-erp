@@ -39,4 +39,13 @@ abstract class CompanyUnitTestCase extends UnitTestCase
             ->with($this->similarTo($id))
             ->andReturn($company);
     }
+
+    protected function shouldNotFind(string $id): void
+    {
+        $this->repository()
+            ->shouldReceive('find')
+            ->once()
+            ->with($this->similarTo($id))
+            ->andReturnNull();
+    }
 }

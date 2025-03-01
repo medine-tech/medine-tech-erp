@@ -40,6 +40,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *         description="Validation error"
  *     ),
  *     @OA\Response(
+ *     response=404,
+ *     description="Company not found"
+ *     ),
+ *     @OA\Response(
  *         response=500,
  *         description="Internal server error"
  *     )
