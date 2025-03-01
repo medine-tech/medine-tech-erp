@@ -6,35 +6,34 @@ namespace MedineTech\Backoffice\FirstCompanies\Application\Register;
 
 use MedineTech\Backoffice\FirstCompanies\Domain\FirstCompany;
 use MedineTech\Backoffice\FirstCompanies\Domain\FirstCompanyRepository;
-use MedineTech\Backoffice\Users\Application\FindByEmail\UserByEmailFinder;
-use MedineTech\Backoffice\Users\Application\FindByEmail\UserByEmailFinderRequest;
-use MedineTech\Backoffice\Users\Domain\UserDoesNotExists;
+use MedineTech\Backoffice\Users\Application\Search\UsersSearcher;
+use MedineTech\Backoffice\Users\Application\Search\UsersSearcherRequest;
 
 final readonly class FirstCompanyRegister
 {
     public function __construct(
         private FirstCompanyRepository $repository,
-        private UserByEmailFinder $userByEmailFinder
+        private UsersSearcher $usersSearcher
     ) {
     }
 
     public function __invoke(FirstCompanyRegisterRequest $request): void
     {
-        try {
-            $this->ensureUserDoesNotExists($request);
-        } catch (UserDoesNotExists) {
-            $firstCompany = new FirstCompany(
-                $request->userName(),
-                $request->userEmail(),
-                $request->userPassword(),
-            );
+        $usersResponse = ($this->usersSearcher)(new UsersSearcherRequest([
+            "email" => $request->userEmail(),
+        ]));
+        $user = $usersResponse->items()[0] ?? null;
 
-            $this->repository->save($firstCompany);
+        if ($user) {
+            return;
         }
-    }
 
-    private function ensureUserDoesNotExists(FirstCompanyRegisterRequest $request): void
-    {
-        ($this->userByEmailFinder)(new UserByEmailFinderRequest($request->userEmail()));
+        $firstCompany = new FirstCompany(
+            $request->userName(),
+            $request->userEmail(),
+            $request->userPassword(),
+        );
+
+        $this->repository->save($firstCompany);
     }
 }

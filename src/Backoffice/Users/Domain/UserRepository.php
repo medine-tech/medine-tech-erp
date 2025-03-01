@@ -12,4 +12,6 @@ interface UserRepository
 
     public function nextId(): int;
 
+    public function search(array $filters): array;
+
 }

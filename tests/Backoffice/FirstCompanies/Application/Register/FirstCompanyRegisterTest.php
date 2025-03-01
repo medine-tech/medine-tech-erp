@@ -7,10 +7,9 @@ namespace Tests\Backoffice\FirstCompanies\Application\Register;
 use MedineTech\Backoffice\FirstCompanies\Application\Register\FirstCompanyRegister;
 use MedineTech\Backoffice\FirstCompanies\Application\Register\FirstCompanyRegisterRequest;
 use MedineTech\Backoffice\FirstCompanies\Domain\FirstCompanyRepository;
-use MedineTech\Backoffice\Users\Application\FindByEmail\UserByEmailFinder;
-use MedineTech\Backoffice\Users\Application\FindByEmail\UserByEmailFinderRequest;
-use MedineTech\Backoffice\Users\Application\FindByEmail\UserByEmailFinderResponse;
-use MedineTech\Backoffice\Users\Domain\UserDoesNotExists;
+use MedineTech\Backoffice\Users\Application\Search\UsersSearcher;
+use MedineTech\Backoffice\Users\Application\Search\UsersSearcherRequest;
+use MedineTech\Backoffice\Users\Application\Search\UsersSearcherResponse;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\FirstCompanies\Domain\FirstCompanyMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -29,20 +28,17 @@ final class FirstCompanyRegisterTest extends UnitTestCase
             ->with($this->similarTo($firstCompany))
             ->andReturnNull();
 
-        $userByEmailFinder = $this->mock(UserByEmailFinder::class);
-        $userByEmailFinder->shouldReceive('__invoke')
+        $usersSearcher = $this->mock(UsersSearcher::class);
+        $usersSearcher->shouldReceive('__invoke')
             ->once()
-            ->with($this->similarTo(new UserByEmailFinderRequest(
-                $firstCompany->userEmail(),
-            )))
-            ->andThrow(UserDoesNotExists::class);
-
+            ->with($this->similarTo(new UsersSearcherRequest(["email" => $firstCompany->userEmail(),])))
+            ->andReturn(new UsersSearcherResponse([]));
 
         /** @var FirstCompanyRepository $firstCompanyRepository */
-        /** @var UserByEmailFinder $userByEmailFinder */
+        /** @var UsersSearcher $usersSearcher */
         $register = new FirstCompanyRegister(
             $firstCompanyRepository,
-            $userByEmailFinder,
+            $usersSearcher,
         );
         ($register)(new FirstCompanyRegisterRequest(
             $firstCompany->userName(),
