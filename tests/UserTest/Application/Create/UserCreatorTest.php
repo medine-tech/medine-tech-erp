@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Tests\UserTest\Application\Create;
@@ -10,20 +9,20 @@ use MedineTech\Users\Domain\User;
 use MedineTech\Users\Domain\UserAlreadyExists;
 use MedineTech\Users\Domain\UserEmail;
 use MedineTech\Users\Domain\UserRepository;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
+use Tests\UserTest\UserUnitTestCase;
 use Tests\UserTest\Domain\UserMother;
 use Mockery;
 
-final class UserCreatorTest extends UnitTestCase
+final class UserCreatorTest extends UserUnitTestCase
 {
     #[Test]
     public function it_should_create_user(): void
     {
         $expectedUser = UserMother::create();
-
-        /** @var UserRepository|Mockery\MockInterface $userRepository */
-        $userRepository = $this->mock(UserRepository::class);
+        /** @var UserRepository&MockInterface $userRepository */
+        $userRepository = $this->repository();
 
         $userRepository->shouldReceive('findByEmail')
             ->once()
@@ -61,11 +60,10 @@ final class UserCreatorTest extends UnitTestCase
     public function it_should_throw_exception_when_user_already_exists(): void
     {
         $this->expectException(UserAlreadyExists::class);
-
         $existingUser = UserMother::create();
+        /** @var UserRepository&MockInterface $userRepository */
+        $userRepository = $this->repository();
 
-        /** @var UserRepository|Mockery\MockInterface $userRepository */
-        $userRepository = $this->mock(UserRepository::class);
         $userRepository->shouldReceive('findByEmail')
             ->once()
             ->with(Mockery::on(function (UserEmail $email) use ($existingUser): bool {
