@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Companies\Application\Update\CompanyUpdater;
 use MedineTech\Companies\Application\Update\CompanyUpdaterRequest;
+use MedineTech\Companies\Domain\CompanyNotFound;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -74,6 +75,12 @@ final class CompanyPutController
                 'detail' => 'The given data was invalid.',
                 'errors' => $e->errors(),
             ], JsonResponse::HTTP_BAD_REQUEST);
+        } catch (CompanyNotFound $e) {
+            return new JsonResponse([
+                'title' => 'Not Found',
+                'status' => JsonResponse::HTTP_NOT_FOUND,
+                'detail' => 'Company not found with the provided ID.',
+            ], JsonResponse::HTTP_NOT_FOUND);
         } catch (Exception $e) {
             return new JsonResponse([
                 'title' => 'Error',

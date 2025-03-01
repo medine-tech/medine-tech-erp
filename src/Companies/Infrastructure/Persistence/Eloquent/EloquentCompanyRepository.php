@@ -21,13 +21,16 @@ final class EloquentCompanyRepository implements CompanyRepository
 
     public function find(string $id): ?Company
     {
-        return CompanyModel::query()
+        $model = CompanyModel::query()
             ->where('id', $id)
-            ->get()
-            ->map(function (CompanyModel $model): Company {
-                $params = $this->fromDatabase($model->toArray());
-                return Company::fromPrimitives($params);
-            })->first();
+            ->first();
+
+        if (!$model) {
+            return null;
+        }
+
+        $params = $this->fromDatabase($model->toArray());
+        return Company::fromPrimitives($params);
     }
 
     protected function fromDatabase(array $params): array
