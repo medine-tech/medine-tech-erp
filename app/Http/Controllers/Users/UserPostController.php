@@ -16,8 +16,14 @@ use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
  *     path="/api/users",
  *     summary="Create a new user",
  *     tags={"Users"},
- *     security={{"token":{OA\Property(property="email", type="string", example="john@example.com"),
- *             @OA\Property(property="password", type="string", example="secret")
+ *     security={{"sanctum":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"name","email","password"},
+ *             @OA\Property(property="name", type="string", example="John Doe", description="User name (3-30 chars)"),
+ *             @OA\Property(property="email", type="string", example="user@example.com", description="User email address"),
+ *             @OA\Property(property="password", type="string", format="password", example="password123", description="User password (8-30 chars)")
  *         )
  *     ),
  *     @OA\Response(
@@ -26,15 +32,34 @@ use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
  *     ),
  *     @OA\Response(
  *         response=400,
- *         description="Bad request"
+ *         description="Validation error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="title", type="string", example="Validation Error"),
+ *             @OA\Property(property="status", type="integer", example=400),
+ *             @OA\Property(property="detail", type="string", example="The given data was invalid."),
+ *             @OA\Property(property="errors", type="object")
+ *         )
  *     ),
- *  @OA\Response(
- *          response=422,
- *          description="Business Rule Violation"
- *      ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Business Rule Violation",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="title", type="string", example="Business Rule Violation"),
+ *             @OA\Property(property="status", type="integer", example=422),
+ *             @OA\Property(property="detail", type="string", example="A business rule was violated.")
+ *         )
+ *     ),
  *     @OA\Response(
  *         response=500,
- *         description="Internal server error"
+ *         description="Internal server error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="title", type="string", example="Error"),
+ *             @OA\Property(property="status", type="integer", example=500),
+ *             @OA\Property(property="detail", type="string", example="An unexpected error occurred during user creation.")
+ *         )
  *     )
  * )
  */
@@ -49,8 +74,8 @@ final class UserPostController
     {
         try {
             $validatedData = $request->validate([
-                'name'     => 'required|string|min:3|max:30',
-                'email'    => 'required|email',
+                'name' => 'required|string|min:3|max:30',
+                'email' => 'required|email',
                 'password' => 'required|string|min:8|max:30'
             ]);
 
