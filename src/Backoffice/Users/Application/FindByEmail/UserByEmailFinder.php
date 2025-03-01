@@ -7,7 +7,7 @@ namespace MedineTech\Backoffice\Users\Application\FindByEmail;
 use MedineTech\Backoffice\Users\Domain\UserDoesNotExists;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
 
-final readonly class UserByEmailFinder
+class UserByEmailFinder
 {
     public function __construct(
         private UserRepository $repository
