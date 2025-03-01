@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Backoffice\Users\Application\Create;
 
-use MedineTech\Users\Application\Create\UserCreator;
-use MedineTech\Users\Application\Create\UserCreatorRequest;
-use MedineTech\Users\Domain\User;
-use MedineTech\Users\Domain\UserAlreadyExists;
-use MedineTech\Users\Domain\UserEmail;
-use MedineTech\Users\Domain\UserRepository;
+use MedineTech\Backoffice\Users\Application\Create\UserCreator;
+use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
+use MedineTech\Backoffice\Users\Domain\User;
+use MedineTech\Backoffice\Users\Domain\UserAlreadyExists;
+use MedineTech\Backoffice\Users\Domain\UserEmail;
+use MedineTech\Backoffice\Users\Domain\UserRepository;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Users\Domain\UserMother;

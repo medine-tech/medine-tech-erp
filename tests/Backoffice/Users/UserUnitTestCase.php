@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Tests\Backoffice\Users;
 
-use MedineTech\Users\Application\Create\UserCreator;
-use MedineTech\Users\Application\Create\UserCreatorRequest;
-use MedineTech\Users\Domain\UserRepository;
+use MedineTech\Backoffice\Users\Application\Create\UserCreator;
+use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
+use MedineTech\Backoffice\Users\Domain\UserRepository;
 use Tests\Backoffice\Users\Domain\UserMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 

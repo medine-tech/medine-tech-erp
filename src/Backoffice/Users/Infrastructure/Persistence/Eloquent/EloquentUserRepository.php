@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MedineTech\Users\Infrastructure\Persistence;
+namespace MedineTech\Backoffice\Users\Infrastructure\Persistence\Eloquent;
 
 use App\Models\User as UserModel;
-use MedineTech\Users\Domain\User;
-use MedineTech\Users\Domain\UserEmail;
-use MedineTech\Users\Domain\UserRepository;
+use MedineTech\Backoffice\Users\Domain\User;
+use MedineTech\Backoffice\Users\Domain\UserRepository;
 
 final class EloquentUserRepository implements UserRepository
 {
@@ -28,18 +27,19 @@ final class EloquentUserRepository implements UserRepository
         return $maxId ? $maxId + 1 : 1;
     }
 
-    public function findByEmail(UserEmail $email): ?User
+    public function findByEmail(string $email): ?User
     {
-        $userModel = UserModel::where('email', $email->value())->first();
+        $userModel = UserModel::where('email', $email)->first();
+
         if (!$userModel) {
             return null;
         }
+
         return User::fromPrimitive([
-            'id'       => $userModel->id,
-            'name'     => $userModel->name,
-            'email'    => $userModel->email,
+            'id' => $userModel->id,
+            'name' => $userModel->name,
+            'email' => $userModel->email,
             'password' => $userModel->password,
         ]);
     }
-
 }

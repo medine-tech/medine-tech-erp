@@ -8,8 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use MedineTech\Users\Application\Create\UserCreator;
-use MedineTech\Users\Application\Create\UserCreatorRequest;
+use MedineTech\Backoffice\Users\Application\Create\UserCreator;
+use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
 
 /**
  * @OA\Post(

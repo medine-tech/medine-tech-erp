@@ -1,6 +1,6 @@
 <?php
 
-namespace MedineTech\Users\Application\Create;
+namespace MedineTech\Backoffice\Users\Application\Create;
 
 final class UserCreatorRequest
 {
