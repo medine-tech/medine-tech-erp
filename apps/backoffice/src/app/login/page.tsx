@@ -8,6 +8,7 @@ import { toast, Toaster } from "sonner";
 import { z } from "zod";
 
 import { login } from "@/app/actions/auth";
+import { loginSchema } from "@/app/utils/zodSchemas";
 import {
   Form,
   FormControl,
@@ -15,9 +16,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/app/components/ui/form";
-import { Input } from "@/app/components/ui/input";
-import { loginSchema } from "@/app/utils/zodSchemas";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 export default function LoginPage() {
   const LoginFormData = useForm<z.infer<typeof loginSchema>>({

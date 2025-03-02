@@ -1,5 +1,5 @@
 import { getCompanies } from "@/app/actions/companies";
-import { Card, CardHeader, CardTitle } from "@/app/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Company {
   id: string;

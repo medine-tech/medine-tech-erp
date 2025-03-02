@@ -15,9 +15,9 @@ import {
 import Link from "next/link";
 import type React from "react";
 
-import MedineLogo from "@/app/components/medine-logo";
-import { Button } from "@/app/components/ui/button";
-import { Card } from "@/app/components/ui/card";
+import MedineLogo from "@/components/medine-logo";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export default function LandingPage() {
   const currentYear = new Date().getFullYear();

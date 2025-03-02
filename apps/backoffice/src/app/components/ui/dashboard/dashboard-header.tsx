@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { logout } from "@/app/actions/auth";
-import { Button } from "@/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 export function DashboardHeader() {
   const router = useRouter();

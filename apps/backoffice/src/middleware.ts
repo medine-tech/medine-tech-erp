@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/app/(auth)/actions/auth";
 
-const publicRoutes = ["/login"];
+const publicRoutes = ["/login", "/register"];
 const blockedPaths = ["/dashboard"];
 
 export async function middleware(req: NextRequest): Promise<NextResponse> {
