@@ -50,12 +50,12 @@ export default function RegisterPage() {
     },
   });
 
-  async function onSubmit(data: RegisterFormValues) {
+  async function onSubmit(_data: RegisterFormValues) {
     setIsLoading(true);
     try {
-      console.log(data);
+      // console.log(data);
       toast.success("Registro exitoso");
-    } catch (error) {
+    } catch (_error) {
       toast.error("Error al registrar la empresa");
     } finally {
       setIsLoading(false);
