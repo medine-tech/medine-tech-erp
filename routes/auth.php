@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Companies\CompaniesGetController;
+use App\Http\Controllers\Companies\CompanyGetController;
 use App\Http\Controllers\Companies\CompanyPutController;
 use App\Http\Controllers\Users\UserPostController;
 use App\Http\Controllers\Companies\CompanyPostController;
@@ -53,5 +54,9 @@ Route::post('/companies', CompanyPostController::class)
     ->name('companies');
 
 Route::put('/companies/{id}', CompanyPutController::class)
+    ->middleware('auth:sanctum')
+    ->name('companies');
+
+Route::get('/companies/{id}', CompanyGetController::class)
     ->middleware('auth:sanctum')
     ->name('companies');
