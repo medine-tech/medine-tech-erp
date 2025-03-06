@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MedineTech\Companies\Application\Create;
-
-use MedineTech\Companies\Domain\Company;
+namespace MedineTech\Backoffice\Companies\Application\Create;
 
 final class CompanyCreatorRequest
 {

@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Companies;
+namespace App\Http\Controllers\Backoffice\Companies;
 
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use MedineTech\Companies\Application\Create\CompanyCreator;
-use MedineTech\Companies\Application\Create\CompanyCreatorRequest;
+use MedineTech\Backoffice\Companies\Application\Create\CompanyCreator;
+use MedineTech\Backoffice\Companies\Application\Create\CompanyCreatorRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @OA\Post(
- *     path="/api/companies",
- *     tags={"Companies"},
+ *     path="/api/backoffice/companies",
+ *     tags={"Backoffice - Companies"},
  *     summary="Create a new company",
  *     @OA\RequestBody(
  *         @OA\JsonContent(
@@ -27,11 +27,22 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     ),
  *     @OA\Response(
  *          response=400,
- *          description="Validation error"
+ *          description="Validation error",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="title", type="string", example="Validation Error"),
+ *              @OA\Property(property="status", type="integer", example=400),
+ *              @OA\Property(property="detail", type="string", example="The given data was invalid."),
+ *              @OA\Property(property="errors", type="object")
+ *          )
  *     ),
  *     @OA\Response(
  *          response=500,
- *          description="Internal server error"
+ *          description="Internal server error",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="title", type="string", example="Internal Server Error"),
+ *              @OA\Property(property="status", type="integer", example=500),
+ *              @OA\Property(property="detail", type="string", example="An unexpected error occurred while processing your request.")
+ *          )
  *     )
  * )
  */
@@ -63,16 +74,16 @@ final class CompanyPostController
         } catch (ValidationException $e) {
             return new JsonResponse([
                 'title' => 'Validation Error',
-                'status' => 400,
+                'status' => JsonResponse::HTTP_BAD_REQUEST,
                 'detail' => 'The given data was invalid.',
                 'errors' => $e->errors(),
-            ], 400);
+            ], JsonResponse::HTTP_BAD_REQUEST);
         } catch (Exception $e) {
             return new JsonResponse([
-                'title' => 'Error',
-                'status' => 500,
+                'title' => 'Internal Server Error',
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
                 'detail' => 'An unexpected error occurred while processing your request.',
-            ], 500);
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

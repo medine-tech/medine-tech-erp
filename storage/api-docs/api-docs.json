@@ -99,6 +99,307 @@
                 ]
             }
         },
+        "/api/backoffice/companies/{id}": {
+            "get": {
+                "tags": [
+                    "Backoffice - Companies"
+                ],
+                "summary": "Get a company by ID",
+                "description": "Returns the details of a company based on the provided ID.",
+                "operationId": "a9c25cc6842ae778409fd59fc4f07517",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the company to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "123e4567-e89b-12d3-a456-426655440000"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Company details retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "123e4567-e89b-12d3-a456-426655440000"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "MedineTech"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Company not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Company not found"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The company with id <123e4567-e89b-12d3-a456-426655440000> does not exist."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/backoffice/companies": {
+            "post": {
+                "tags": [
+                    "Backoffice - Companies"
+                ],
+                "summary": "Create a new company",
+                "operationId": "35b0e8a71551ee33733c335eb0d61459",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "example": "123e4567-e89b-12d3-a456-426655440000"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "MedineTech"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Company created successfully"
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred while processing your request."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/backoffice/companies/{id}": {
+            "put": {
+                "tags": [
+                    "Backoffice - Companies"
+                ],
+                "summary": "Update an existing company",
+                "operationId": "763c2a0b7c379c863e6e4d15e82e897f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the company to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "New Company Name"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Company updated successfully"
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Company not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Not Found"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "Company not found with the provided ID."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred while processing your request."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/backoffice/first-companies": {
             "post": {
                 "tags": [
@@ -193,49 +494,6 @@
                                 }
                             }
                         }
-                    }
-                }
-            }
-        },
-        "/api/companies": {
-            "post": {
-                "tags": [
-                    "Companies"
-                ],
-                "summary": "Create a new company",
-                "operationId": "38018bc718180f316906be2cdad0a7cd",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "id",
-                                    "name"
-                                ],
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "example": "123e4567-e89b-12d3-a456-426655440000"
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "example": "MedineTech"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Company created successfully"
-                    },
-                    "400": {
-                        "description": "Validation error"
-                    },
-                    "500": {
-                        "description": "Internal server error"
                     }
                 }
             }
@@ -383,12 +641,12 @@
             "description": "Authentication"
         },
         {
-            "name": "Backoffice - First Companies",
-            "description": "Backoffice - First Companies"
+            "name": "Backoffice - Companies",
+            "description": "Backoffice - Companies"
         },
         {
-            "name": "Companies",
-            "description": "Companies"
+            "name": "Backoffice - First Companies",
+            "description": "Backoffice - First Companies"
         },
         {
             "name": "Users",
