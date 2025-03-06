@@ -7,12 +7,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/companies', CompanyPostController::class)
     ->middleware('auth:sanctum')
-    ->name('companies');
+    ->name('companies.create');
 
 Route::put('/companies/{id}', CompanyPutController::class)
     ->middleware('auth:sanctum')
-    ->name('companies');
+    ->name('companies.update');
 
 Route::get('/companies/{id}', CompanyGetController::class)
     ->middleware('auth:sanctum')
-    ->name('companies');
+    ->name('companies.show');

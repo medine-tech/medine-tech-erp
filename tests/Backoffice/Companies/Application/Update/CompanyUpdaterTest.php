@@ -10,8 +10,9 @@ use MedineTech\Backoffice\Companies\Domain\CompanyNotFound;
 use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
 use MedineTech\Shared\Domain\ValueObject\Uuid;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\Companies\CompanyUnitTestCase;
-use Tests\Companies\Domain\CompanyMother;
+use Tests\Backoffice\Companies\CompanyUnitTestCase;
+use Tests\Backoffice\Companies\Domain\CompanyMother;
+
 
 final class CompanyUpdaterTest extends CompanyUnitTestCase
 {

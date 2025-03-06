@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @OA\Get(
- *     path="/api/companies/{id}",
+ *     path="/companies/{id}",
  *     tags={"Companies"},
  *     summary="Get a company by ID",
  *     description="Returns the details of a company based on the provided ID.",

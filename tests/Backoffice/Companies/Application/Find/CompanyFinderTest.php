@@ -16,7 +16,7 @@ use Tests\Backoffice\Companies\Domain\CompanyMother;
 class CompanyFinderTest extends CompanyUnitTestCase
 {
     #[test]
-    public function it_should_find_a_company()
+    public function it_should_find_a_company(): void
     {
         $id = Uuid::random()->value();
         $company = CompanyMother::create($id);
@@ -26,6 +26,9 @@ class CompanyFinderTest extends CompanyUnitTestCase
         $this->shouldFind($company->id(), $company);
 
         $finder = new CompanyFinder($repository);
-        ($finder)(new CompanyFinderRequest($company->id()));
+        $response = ($finder)(new CompanyFinderRequest($company->id()));
+
+        $this->assertEquals($company->id(), $response->id());
+        $this->assertEquals($company->name(), $response->name());
     }
 }
