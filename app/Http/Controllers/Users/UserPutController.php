@@ -3,32 +3,32 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Users;
 
+use App\Models\User;
 use DomainException;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 use MedineTech\Users\Application\Update\UserUpdater;
 use MedineTech\Users\Application\Update\UserUpdaterRequest;
 
 /**
  * @OA\Put(
- *     path="/api/users",
- *     summary="Update an existing user",
+ *     path="/users/{id}",
  *     tags={"Users"},
- *     security={{"token": {
- *          @OA\Property(property="email", type="string", example="john@example.com"),
- *          @OA\Property(property="password", type="string", example="secret")
- *     }}},
+ *     summary="Update an existing user",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true, *     ),
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"id", "name", "email", "password"},
- *             @OA\Property(property="id", type="integer", example=1),
- *             @OA\Property(property="name", type="string", example="Updated Name"),
- *             @OA\Property(property="email", type="string", format="email", example="updated@example.com"),
- *             @OA\Property(property="password", type="string", example="new_secret")
+ *             required={"name", "email"},
+ *             @OA\Property(property="name", type="string", example="New User Name"),
+ *             @OA\Property(property="email", type="string", format="email", example="newuser@example.com"),
+ *             @OA\Property(property="password", type="string", example="newpassword", nullable=true)
  *         )
  *     ),
  *     @OA\Response(
@@ -37,11 +37,15 @@ use MedineTech\Users\Application\Update\UserUpdaterRequest;
  *     ),
  *     @OA\Response(
  *         response=400,
- *         description="Bad request"
+ *         description="Validation error"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="User not found"
  *     ),
  *     @OA\Response(
  *         response=422,
- *         description="Business Rule Violation"
+ *         description="Domain error"
  *     ),
  *     @OA\Response(
  *         response=500,
@@ -49,55 +53,80 @@ use MedineTech\Users\Application\Update\UserUpdaterRequest;
  *     )
  * )
  */
+
 final class UserPutController
 {
     public function __construct(
         private UserUpdater $updater
     ) {}
 
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(int $id, Request $request): JsonResponse
     {
         try {
-            $validatedData = $request->validate([
-                'id'       => 'required|integer',
-                'name'     => 'required|string|min:3|max:30',
-                'email'    => 'required|email',
-                'password' => 'required|string|min:8|max:30'
-            ]);
+            $user = User::find($id);
+            if (!$user) {
+                return new JsonResponse([
+                    'title' => 'User Not Found',
+                    'status' => JsonResponse::HTTP_NOT_FOUND,
+                    'detail' => "User with ID {$id} does not exist"
+                ], JsonResponse::HTTP_NOT_FOUND);
+            }
 
-            $hashedPassword = Hash::make($validatedData['password']);
+            $validationRules = [
+                'name' => 'required|string|min:3|max:30',
+                'email' => 'required|email'
+            ];
+
+            if ($request->has('password') && !empty($request->password)) {
+                $validationRules['password'] = 'string|min:8|max:30';
+            }
+
+            $validatedData = $request->validate($validationRules);
 
             ($this->updater)(
                 new UserUpdaterRequest(
-                    (int) $validatedData['id'],
+                    $id,
                     $validatedData['name'],
                     $validatedData['email'],
-                    $hashedPassword
+                    $request->has('password') ? $request->password : null
                 )
             );
 
-            return new JsonResponse(null, 200);
+            return new JsonResponse(['message' => 'User updated successfully'], JsonResponse::HTTP_OK);
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return new JsonResponse([
-                'title'  => 'Validation Error',
-                'status' => 400,
-                'detail' => 'The given data was invalid.',
-                'errors' => $e->errors(),
-            ], 400);
+                'title' => 'Validation Error',
+                'status' => JsonResponse::HTTP_BAD_REQUEST,
+                'detail' => $e->getMessage(),
+                'errors' => $e->errors()
+            ], JsonResponse::HTTP_BAD_REQUEST);
+
+        } catch (InvalidArgumentException $e) {
+            Log::error('Invalid argument: ' . $e->getMessage());
+            return new JsonResponse([
+                'title' => 'Invalid Input',
+                'status' => JsonResponse::HTTP_BAD_REQUEST,
+                'detail' => $e->getMessage()
+            ], JsonResponse::HTTP_BAD_REQUEST);
+
         } catch (DomainException $e) {
-            Log::warning('Domain error during user update: ' . $e->getMessage());
+            Log::warning('Domain error: ' . $e->getMessage());
             return new JsonResponse([
-                'title'  => 'Business Rule Violation',
-                'status' => 422,
-                'detail' => 'A business rule was violated.',
-            ], 422);
+                'title' => 'Domain Error',
+                'status' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
+                'detail' => $e->getMessage()
+            ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         } catch (Exception $e) {
-            Log::error('User update error: ' . $e->getMessage());
+            Log::error('Server error: ' . $e->getMessage());
+            Log::error('Error class: ' . get_class($e));
+
             return new JsonResponse([
-                'title'  => 'Error',
-                'status' => 500,
-                'detail' => 'An unexpected error occurred during user update.'
-            ], 500);
+                'title' => 'Internal Server Error',
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
+                'detail' => config('app.debug') ? $e->getMessage() : 'Error interno del servidor'
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

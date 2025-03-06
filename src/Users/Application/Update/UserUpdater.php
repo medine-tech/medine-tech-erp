@@ -4,35 +4,37 @@ declare(strict_types=1);
 namespace MedineTech\Users\Application\Update;
 
 use DomainException;
-use MedineTech\Users\Domain\User;
-use MedineTech\Users\Domain\UserEmail;
 use MedineTech\Users\Domain\UserRepository;
+use MedineTech\Users\Domain\UserEmail;
 
 final class UserUpdater
 {
     public function __construct(
-        private readonly UserRepository $repository
+        private UserRepository $repository
     ) {}
 
     public function __invoke(UserUpdaterRequest $request): void
     {
         $existingUser = $this->repository->find($request->id());
+
         if (!$existingUser) {
             throw new DomainException('User not found.');
         }
 
-        $userWithEmail = $this->repository->findByEmail(new UserEmail($request->email()));
-        if ($userWithEmail && $userWithEmail->id() !== $request->id()) {
+        $email = new UserEmail($request->email());
+        $userWithSameEmail = $this->repository->findByEmail($email);
+
+        if ($userWithSameEmail && $userWithSameEmail->id() !== $request->id()) {
             throw new DomainException('Email is already in use.');
         }
 
-        $updatedUser = new User(
-            $request->id(),
-            $request->name(),
-            $request->email(),
-            $request->password()
-        );
+        $existingUser->changeName($request->name());
+        $existingUser->changeEmail($email);
 
-        $this->repository->save($updatedUser);
+        if ($request->password() !== null && $request->password() !== '') {
+            $existingUser->changePassword($request->password());
+        }
+
+        $this->repository->save($existingUser);
     }
 }

@@ -1,50 +1,43 @@
 <?php
-
 declare(strict_types=1);
 
 namespace MedineTech\Users\Domain;
 
 final class User
 {
-
-    private ?int $id;
+    private bool $passwordChanged = false;
 
     public function __construct(
-      ?int $id,
-      private readonly string $name,
-      private readonly string $email,
-      private readonly string $password
-    ) {
-        $this->id = $id;
-    }
+        private int $id,
+        private string $name,
+        private string $email,
+        private string $password
+    ) {}
 
     public static function create(
+        int $id,
         string $name,
-        string $email,
+        UserEmail $email,
         string $password
     ): self {
-
-        return new self(
-            null,
-            $name,
-            $email,
-            $password,
-        );
+        return new self($id, $name, $email->value(), $password);
     }
 
-    public static function fromPrimitive(array $params): self
+    public static function fromPrimitives(array $primitives): self
     {
         return new self(
-            $params['id'] ?? null,
-            $params['name'],
-            $params['email'],
-            $params['password'],
+            (int) $primitives['id'],
+            (string) $primitives['name'],
+            (string) $primitives['email'],
+            (string) ($primitives['password'] ?? '')
         );
     }
+
     public function id(): int
     {
         return $this->id;
     }
+
     public function name(): string
     {
         return $this->name;
@@ -55,18 +48,46 @@ final class User
         return $this->email;
     }
 
-    public function password(): string
+    public function password(): ?string
     {
         return $this->password;
     }
 
-    public function toPrimitive(): array
+    public function isPasswordChanged(): bool
+    {
+        return $this->passwordChanged;
+    }
+
+    public function changeName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function changeEmail(UserEmail $email): void
+    {
+        if ($email->value() === $this->email) {
+            return;
+        }
+        $this->email = $email->value();
+    }
+
+    public function changePassword(?string $password): void
+    {
+        if ($password === null) {
+            return;
+        }
+
+        $this->password = $password;
+        $this->passwordChanged = true;
+    }
+
+    public function toPrimitives(): array
     {
         return [
-            'id'       => $this->id(),
-            'name'     => $this->name(),
-            'email'    => $this->email(),
-            'password' => $this->password(),
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => $this->password
         ];
     }
 }

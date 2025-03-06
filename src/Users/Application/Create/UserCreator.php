@@ -1,6 +1,4 @@
 <?php
-// File: src/Users/Application/Create/UserCreator.php
-
 declare(strict_types=1);
 
 namespace MedineTech\Users\Application\Create;
@@ -23,15 +21,13 @@ final class UserCreator
             throw new UserAlreadyExists($request->email());
         }
 
-        $id = $this->repository->nextId();
-
-        $user = new User(
-            $id,
+        $user = User::create(
+            $this->repository->nextId(),
             $request->name(),
-            $request->email(),
+            $email,
             $request->password()
         );
 
-        $this->repository->save($user);
+        $this->repository->create($user);
     }
 }
