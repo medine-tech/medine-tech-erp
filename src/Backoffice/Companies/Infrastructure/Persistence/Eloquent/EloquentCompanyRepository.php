@@ -42,10 +42,18 @@ final class EloquentCompanyRepository implements CompanyRepository
         return Company::fromPrimitives($params);
     }
 
-    public function search(array $filters): array
+    public function search(array $filters, int $perPage = 20): array
     {
-        $result = CompanyModel::where($filters)
-            ->paginate(20)
+        $query = CompanyModel::query();
+
+        foreach ($filters as $field => $value) {
+            if (in_array($field, ['id', 'name'])) {
+                $query->where($field, $value);
+            }
+        }
+
+        $result = $query
+            ->paginate($perPage)
             ->toArray();
 
         return [

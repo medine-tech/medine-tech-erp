@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Companies\Application\Search;
+namespace Tests\Backoffice\Companies\Application\Search;
 
 use MedineTech\Backoffice\Companies\Application\Search\CompanySearcher;
 use MedineTech\Backoffice\Companies\Application\Search\CompanySearcherRequest;
