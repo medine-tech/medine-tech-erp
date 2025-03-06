@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Companies\Application\Search;
 
-final class CompanySearcherRequest
+final class CompaniesSearcherRequest
 {
     private array $filters;
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Companies;
 
+use Exception;
 use MedineTech\Backoffice\Companies\Application\Find\CompanyFinder;
 use MedineTech\Backoffice\Companies\Application\Find\CompanyFinderRequest;
 use MedineTech\Backoffice\Companies\Domain\CompanyNotFound;
@@ -12,8 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @OA\Get(
- *     path="/companies/{id}",
- *     tags={"Companies"},
+ *     path="/api/backoffice/companies/{id}",
+ *     tags={"Backoffice - Companies"},
  *     summary="Get a company by ID",
  *     description="Returns the details of a company based on the provided ID.",
  *     @OA\Parameter(
@@ -25,15 +26,29 @@ use Symfony\Component\HttpFoundation\Request;
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="Company details retrieved successfully"
+ *         description="Company details retrieved successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="id", type="string", example="123e4567-e89b-12d3-a456-426655440000"),
+ *             @OA\Property(property="name", type="string", example="MedineTech")
+ *         )
  *     ),
  *     @OA\Response(
  *         response=404,
- *         description="Company not found"
+ *         description="Company not found",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Company not found"),
+ *             @OA\Property(property="status", type="integer", example=404),
+ *             @OA\Property(property="detail", type="string", example="The company with id <123e4567-e89b-12d3-a456-426655440000> does not exist.")
+ *         )
  *     ),
  *     @OA\Response(
  *         response=500,
- *         description="Internal server error"
+ *         description="Internal server error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Internal Server Error"),
+ *             @OA\Property(property="status", type="integer", example=500),
+ *             @OA\Property(property="detail", type="string", example="An unexpected error occurred.")
+ *         )
  *     )
  * )
  */
@@ -56,10 +71,20 @@ final class CompanyGetController
                 'id' => $response->id(),
                 'name' => $response->name()
             ], JsonResponse::HTTP_OK);
-        } catch (CompanyNotFound $exception) {
+
+        } catch (CompanyNotFound $e) {
             return new JsonResponse([
-                'message' => $exception->getMessage()
+                'title' => 'Company not found',
+                'status' => JsonResponse::HTTP_NOT_FOUND,
+                'detail' => "The company with id <$id> does not exist.",
             ], JsonResponse::HTTP_NOT_FOUND);
+
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'title' => 'Internal Server Error',
+                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
+                'detail' => 'An unexpected error occurred.',
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

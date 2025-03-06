@@ -1,4 +1,4 @@
-POST http://localhost/api/companies
+POST http://localhost/api/backoffice/companies
 accept: application/json
 content-type: application/json
 Authorization: Bearer {{token}}
