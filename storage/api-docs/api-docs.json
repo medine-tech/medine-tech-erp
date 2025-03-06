@@ -280,7 +280,7 @@
                 }
             }
         },
-        "api/backoffice/companies/{id}": {
+        "/api/backoffice/companies/{id}": {
             "put": {
                 "tags": [
                     "Backoffice - Companies"

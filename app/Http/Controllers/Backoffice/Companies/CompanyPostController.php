@@ -80,7 +80,7 @@ final class CompanyPostController
             ], JsonResponse::HTTP_BAD_REQUEST);
         } catch (Exception $e) {
             return new JsonResponse([
-                'title' => 'Error',
+                'title' => 'Internal Server Error',
                 'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
                 'detail' => 'An unexpected error occurred while processing your request.',
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
