@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MedineTech\Companies\Application\Create;
+namespace MedineTech\Backoffice\Companies\Application\Update;
 
-use MedineTech\Companies\Domain\Company;
-
-final class CompanyCreatorRequest
+class CompanyUpdaterRequest
 {
     public function __construct(
         private readonly string $id,

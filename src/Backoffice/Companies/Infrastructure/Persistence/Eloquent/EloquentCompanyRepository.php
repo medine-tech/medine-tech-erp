@@ -1,10 +1,10 @@
 <?php
 
-namespace MedineTech\Companies\Infrastructure\Persistence\Eloquent;
+namespace MedineTech\Backoffice\Companies\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Support\Str;
-use MedineTech\Companies\Domain\Company;
-use MedineTech\Companies\Domain\CompanyRepository;
+use MedineTech\Backoffice\Companies\Domain\Company;
+use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
 
 final class EloquentCompanyRepository implements CompanyRepository
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Backoffice\Companies\Domain;
 
 use Faker\Factory;
-use MedineTech\Companies\Domain\Company;
+use MedineTech\Backoffice\Companies\Domain\Company;
 
 final class CompanyMother
 {

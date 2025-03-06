@@ -6,11 +6,8 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\Companies\CompaniesGetController;
-use App\Http\Controllers\Companies\CompanyGetController;
-use App\Http\Controllers\Companies\CompanyPutController;
+use App\Http\Controllers\Backoffice\Companies\CompaniesGetController;
 use App\Http\Controllers\Users\UserPostController;
-use App\Http\Controllers\Companies\CompanyPostController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisteredUserController::class, 'store'])
@@ -46,17 +43,5 @@ Route::post('/users', UserPostController::class)
     ->name('users');
 
 Route::get('/companies', CompaniesGetController::class)
-    ->middleware('auth:sanctum')
-    ->name('companies');
-
-Route::post('/companies', CompanyPostController::class)
-    ->middleware('auth:sanctum')
-    ->name('companies');
-
-Route::put('/companies/{id}', CompanyPutController::class)
-    ->middleware('auth:sanctum')
-    ->name('companies');
-
-Route::get('/companies/{id}', CompanyGetController::class)
     ->middleware('auth:sanctum')
     ->name('companies');

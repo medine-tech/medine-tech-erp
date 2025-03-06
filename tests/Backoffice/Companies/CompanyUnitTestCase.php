@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Backoffice\Companies;
 
-use MedineTech\Companies\Domain\Company;
-use MedineTech\Companies\Domain\CompanyRepository;
+use MedineTech\Backoffice\Companies\Domain\Company;
+use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
 use Mockery\MockInterface;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 

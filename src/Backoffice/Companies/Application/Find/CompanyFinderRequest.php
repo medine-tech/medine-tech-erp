@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MedineTech\Companies\Application\Find;
+namespace MedineTech\Backoffice\Companies\Application\Find;
 
 final readonly class CompanyFinderRequest
 {

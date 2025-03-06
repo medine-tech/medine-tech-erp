@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Companies;
+namespace App\Http\Controllers\Backoffice\Companies;
 
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use MedineTech\Companies\Application\Create\CompanyCreator;
-use MedineTech\Companies\Application\Create\CompanyCreatorRequest;
+use MedineTech\Backoffice\Companies\Application\Create\CompanyCreator;
+use MedineTech\Backoffice\Companies\Application\Create\CompanyCreatorRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**

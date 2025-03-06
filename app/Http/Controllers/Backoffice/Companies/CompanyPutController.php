@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Companies;
+namespace App\Http\Controllers\Backoffice\Companies;
 
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use MedineTech\Companies\Application\Update\CompanyUpdater;
-use MedineTech\Companies\Application\Update\CompanyUpdaterRequest;
-use MedineTech\Companies\Domain\CompanyNotFound;
+use MedineTech\Backoffice\Companies\Application\Update\CompanyUpdater;
+use MedineTech\Backoffice\Companies\Application\Update\CompanyUpdaterRequest;
+use MedineTech\Backoffice\Companies\Domain\CompanyNotFound;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**

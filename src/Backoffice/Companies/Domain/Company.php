@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MedineTech\Companies\Domain;
+namespace MedineTech\Backoffice\Companies\Domain;
 
 final class Company
 {

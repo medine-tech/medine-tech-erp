@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MedineTech\Companies\Application\Find;
+namespace MedineTech\Backoffice\Companies\Application\Find;
 
-use MedineTech\Companies\Domain\CompanyNotFound;
-use MedineTech\Companies\Domain\CompanyRepository;
+use MedineTech\Backoffice\Companies\Domain\CompanyNotFound;
+use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
 
 final readonly class CompanyFinder
 {

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Backoffice\Companies\Application\Update;
 
-use MedineTech\Companies\Application\Update\CompanyUpdater;
-use MedineTech\Companies\Application\Update\CompanyUpdaterRequest;
-use MedineTech\Companies\Domain\CompanyNotFound;
-use MedineTech\Companies\Domain\CompanyRepository;
+use MedineTech\Backoffice\Companies\Application\Update\CompanyUpdater;
+use MedineTech\Backoffice\Companies\Application\Update\CompanyUpdaterRequest;
+use MedineTech\Backoffice\Companies\Domain\CompanyNotFound;
+use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
 use MedineTech\Shared\Domain\ValueObject\Uuid;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Companies\CompanyUnitTestCase;
