@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @OA\Post(
- *     path="/companies",
+ *     path="/api/companies",
  *     tags={"Companies"},
  *     summary="Create a new company",
  *     @OA\RequestBody(

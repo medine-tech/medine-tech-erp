@@ -9,4 +9,6 @@ interface CompanyRepository
     public function save(Company $company): void;
 
     public function find(string $id): ?Company;
+
+    public function search(array $filters): array;
 }
