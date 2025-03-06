@@ -1,15 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
-namespace MedineTech\Users\Application\Update;
+namespace MedineTech\Backoffice\Users\Application\Find;
 
-final class UserUpdaterRequest
+
+final class UserFinderResponse
 {
+
     public function __construct(
         private int $id,
         private string $name,
-        private string $email,
-        private ?string $password
+        private string $email
     ) {}
 
     public function id(): int
@@ -25,10 +27,5 @@ final class UserUpdaterRequest
     public function email(): string
     {
         return $this->email;
-    }
-
-    public function password(): ?string
-    {
-        return $this->password;
     }
 }

@@ -42,11 +42,14 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected $casts = [
-        'id' => 'integer',
-        'email_verified_at' => 'datetime',
-       'password' => 'hashed'
-    ];
+    protected function casts(): array
+    {
+        return [
+            'id'                => 'integer',
+            'email_verified_at' => 'datetime',
+            'password'          => 'hashed',
+        ];
+    }
 
     public function companies(): BelongsToMany
     {

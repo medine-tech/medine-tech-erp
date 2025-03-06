@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace MedineTech\Users\Application\Update;
+namespace MedineTech\Backoffice\Users\Application\Update;
 
 use DomainException;
-use MedineTech\Users\Domain\UserRepository;
-use MedineTech\Users\Domain\UserEmail;
+use MedineTech\Backoffice\Users\Domain\UserEmail;
+use MedineTech\Backoffice\Users\Domain\UserRepository;
 
 final class UserUpdater
 {
@@ -22,7 +22,7 @@ final class UserUpdater
         }
 
         $email = new UserEmail($request->email());
-        $userWithSameEmail = $this->repository->findByEmail($email);
+        $userWithSameEmail = $this->repository->findByEmail($email->value());
 
         if ($userWithSameEmail && $userWithSameEmail->id() !== $request->id()) {
             throw new DomainException('Email is already in use.');

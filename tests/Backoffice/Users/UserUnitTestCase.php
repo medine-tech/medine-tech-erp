@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\UserTest;
+namespace Tests\Backoffice\Users;
 
-use MedineTech\Users\Domain\UserRepository;
+use MedineTech\Backoffice\Users\Domain\UserRepository;
 use Mockery\MockInterface;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 
@@ -40,7 +40,7 @@ abstract class UserUnitTestCase extends UnitTestCase
         $this->repository()
             ->shouldReceive('find')
             ->once()
-            ->with($id)
+            ->with($this->similarTo($id))
             ->andReturn($user);
     }
 }

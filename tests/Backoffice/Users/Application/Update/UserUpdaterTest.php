@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\UserTest\Application\Update;
+namespace Tests\Backoffice\Users\Application\Update;
 
-use MedineTech\Users\Application\Update\UserUpdater;
-use MedineTech\Users\Application\Update\UserUpdaterRequest;
+use MedineTech\Backoffice\Users\Application\Update\UserUpdater;
+use MedineTech\Backoffice\Users\Application\Update\UserUpdaterRequest;
 use MedineTech\Users\Domain\User;
 use MedineTech\Users\Domain\UserEmail;
 use MedineTech\Users\Domain\UserRepository;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\UserTest\UserUnitTestCase;
 use Tests\UserTest\Domain\UserMother;
+use Tests\UserTest\UserUnitTestCase;
 
 final class UserUpdaterTest extends UserUnitTestCase
 {

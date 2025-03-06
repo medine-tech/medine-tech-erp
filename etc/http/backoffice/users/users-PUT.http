@@ -1,4 +1,4 @@
-POST http://localhost/api/users
+PUT http://localhost/api/backoffice/users/{{id}}
 accept: application/json
 content-type: application/json
 Authorization: Bearer {{token}}

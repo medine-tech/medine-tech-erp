@@ -1,0 +1,11 @@
+GET http://localhost/api/backoffice/users/{{id}}
+accept: application/json
+Authorization: Bearer {{token}}
+
+###
+
+GET http://localhost/api/backoffice/users
+accept: application/json
+Authorization: Bearer {{token}}
+
+###

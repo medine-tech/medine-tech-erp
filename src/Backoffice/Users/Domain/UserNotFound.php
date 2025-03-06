@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MedineTech\Users\Domain;
+namespace MedineTech\Backoffice\Users\Domain;
 
 use DomainException;
 

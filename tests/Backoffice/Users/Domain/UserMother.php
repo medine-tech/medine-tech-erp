@@ -6,6 +6,7 @@ namespace Tests\Backoffice\Users\Domain;
 
 use Faker\Factory;
 use MedineTech\Backoffice\Users\Domain\User;
+use MedineTech\Backoffice\Users\Domain\UserEmail;
 
 final class UserMother
 {
@@ -20,7 +21,7 @@ final class UserMother
         return new User(
             $id ?? $faker->randomNumber(),
             $name ?? $faker->name(),
-            $email ?? $faker->email(),
+            new UserEmail($email ?? $faker->email()),
             $password ?? $faker->password()
         );
     }
