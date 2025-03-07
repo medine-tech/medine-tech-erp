@@ -5,20 +5,22 @@ namespace MedineTech\Backoffice\Users\Domain;
 
 final class User
 {
-    private bool $passwordChanged = false;
+    private UserEmail $email;
 
     public function __construct(
         private int $id,
         private string $name,
-        private UserEmail $email,
-        private string $password
-    ) {}
+        string $email,
+        private ?string $password
+    ) {
+        $this->email = new UserEmail($email);
+    }
 
     public static function create(
         int $id,
         string $name,
-        UserEmail $email,
-        string $password
+        string $email,
+        ?string $password
     ): self {
         return new self($id, $name, $email, $password);
     }
@@ -28,7 +30,7 @@ final class User
         return new self(
             (int) $primitives['id'],
             (string) $primitives['name'],
-            new UserEmail($primitives['email']),
+            (string) $primitives['email'],
             (string) ($primitives['password'] ?? '')
         );
     }
@@ -53,41 +55,18 @@ final class User
         return $this->password;
     }
 
-    public function isPasswordChanged(): bool
-    {
-        return $this->passwordChanged;
-    }
-
     public function changeName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function changeEmail(UserEmail $email): void
-    {
-        if ($email->value() === $this->email->value()) {
-            return;
-        }
-        $this->email = $email;
-    }
-
-    public function changePassword(?string $password): void
-    {
-        if ($password === null) {
-            return;
-        }
-
-        $this->password = $password;
-        $this->passwordChanged = true;
-    }
-
     public function toPrimitives(): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email->value(),
-            'password' => $this->password
+            'id'       => $this->id(),
+            'name'     => $this->name(),
+            'email'    => $this->email(),
+            'password' => $this->password(),
         ];
     }
 }

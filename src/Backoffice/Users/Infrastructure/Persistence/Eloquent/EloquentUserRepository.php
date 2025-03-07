@@ -1,11 +1,9 @@
 <?php
-
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Users\Infrastructure\Persistence\Eloquent;
 
 use App\Models\User as UserModel;
-use Closure;
 use Illuminate\Database\QueryException;
 use MedineTech\Backoffice\Users\Domain\User;
 use MedineTech\Backoffice\Users\Domain\UserAlreadyExists;
@@ -16,25 +14,20 @@ final class EloquentUserRepository implements UserRepository
     public function save(User $user): void
     {
         try {
-            $model = UserModel::findOrFail($user->id());
+            $model = UserModel::find($user->id());
             $data = $this->toDatabase($user->toPrimitives());
 
-            if (!$this->isPasswordChanged($user) || $user->password() === null) {
-                unset($data['password']);
+            if ($model) {
+                $model->name = $user->name();
+                $model->save();
+            } else {
+                $model = new UserModel();
+                $model->id = $user->id();
+                $model->name = $user->name();
+                $model->email = $user->email();
+                $model->password = $user->password();
+                $model->save();
             }
-
-            $model->update($data);
-        } catch (QueryException $e) {
-            $this->handleDatabaseExceptions($e, $user->email());
-        }
-    }
-
-    public function create(User $user): void
-    {
-        try {
-            $data = $this->toDatabase($user->toPrimitives());
-
-            UserModel::create($data);
         } catch (QueryException $e) {
             $this->handleDatabaseExceptions($e, $user->email());
         }
@@ -84,11 +77,6 @@ final class EloquentUserRepository implements UserRepository
         ];
     }
 
-    private function isPasswordChanged(User $user): bool
-    {
-        return method_exists($user, 'isPasswordChanged') ? $user->isPasswordChanged() : false;
-    }
-
     private function handleDatabaseExceptions(QueryException $e, string $email): void
     {
         if (isset($e->errorInfo[1]) && $e->errorInfo[1] === 1062) {
@@ -105,13 +93,13 @@ final class EloquentUserRepository implements UserRepository
         );
     }
 
-    private function fromDatabase(): Closure
+    private function fromDatabase(): \Closure
     {
         return fn(array $user) => User::fromPrimitives([
             'id' => $user['id'],
-            'name' => $user["name"],
-            'email' => $user["email"],
-            'password' => $user["password"] ?? "",
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'password' => $user['password'] ?? "",
         ]);
     }
 }

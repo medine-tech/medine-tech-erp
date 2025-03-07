@@ -17,39 +17,25 @@ use MedineTech\Backoffice\Users\Domain\UserNotFound;
  *     path="/api/backoffice/users/{id}",
  *     tags={"Backoffice - Users"},
  *     summary="Retrieve a user by ID",
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
- *         description="User ID",
- *         required=true,
- *         @OA\Schema(
- *             type="integer"
+ *     @OA\Parameter(name="id",in="path",description="User ID",required=true,
+ *         @OA\Schema(type="integer"
  *         )
  *     ),
- *     @OA\Response(
- *         response=200,
- *         description="User found successfully",
- *         @OA\JsonContent(
- *             type="object",
+ *     @OA\Response(response=200,description="User found successfully",
+ *         @OA\JsonContent(type="object",
  *             @OA\Property(property="id", type="integer", example=1),
  *             @OA\Property(property="name", type="string", example="John Doe"),
  *         )
  *     ),
- *     @OA\Response(
- *         response=404,
- *         description="User Not Found",
- *         @OA\JsonContent(
- *             type="object",
+ *     @OA\Response(response=404,description="User Not Found",
+ *         @OA\JsonContent(type="object",
  *             @OA\Property(property="title", type="string", example="User Not Found"),
  *             @OA\Property(property="status", type="integer", example=404),
  *             @OA\Property(property="detail", type="string", example="User with the given ID does not exist")
  *         )
  *     ),
- *     @OA\Response(
- *         response=500,
- *         description="Internal server error",
- *         @OA\JsonContent(
- *             type="object",
+ *     @OA\Response(response=500,description="Internal server error",
+ *         @OA\JsonContent(type="object",
  *             @OA\Property(property="title", type="string", example="Internal Server Error"),
  *             @OA\Property(property="status", type="integer", example=500),
  *             @OA\Property(property="detail", type="string", example="An Unexpected Error Occurred")
@@ -58,7 +44,7 @@ use MedineTech\Backoffice\Users\Domain\UserNotFound;
  * )
  */
 
-class UserGetController
+final class UserGetController
 {
     public function __construct(
         private UserFinder $finder

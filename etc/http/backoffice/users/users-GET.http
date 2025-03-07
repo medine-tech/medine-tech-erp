@@ -1,4 +1,4 @@
-GET http://localhost/api/backoffice/users/{{id}}
+GET http://localhost/api/backoffice/users/3
 accept: application/json
 Authorization: Bearer {{token}}
 

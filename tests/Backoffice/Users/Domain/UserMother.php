@@ -21,7 +21,7 @@ final class UserMother
         return new User(
             $id ?? $faker->randomNumber(),
             $name ?? $faker->name(),
-            new UserEmail($email ?? $faker->email()),
+            $email ?? $faker->email(),
             $password ?? $faker->password()
         );
     }

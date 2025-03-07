@@ -20,50 +20,22 @@ use MedineTech\Backoffice\Users\Application\Create\UserCreator;
  *         required=true,
  *         @OA\JsonContent(
  *             required={"name","email","password"},
- *             @OA\Property(
- *                 property="name",
- *                 type="string",
- *                 example="John Doe"
- *             ),
- *             @OA\Property(
- *                 property="email",
- *                 type="string",
- *                 format="email",
- *                 example="john.doe@example.com"
- *             ),
- *             @OA\Property(
- *                 property="password",
- *                 type="string",
- *                 example="secretPassword123"
+ *             @OA\Property(property="name", type="string", example="John Doe"),
+ *             ),@OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
+ *             ), @OA\Property(property="password", type="string", example="secretPassword123"),
  *             )
  *         )
  *     ),
- *     @OA\Response(
- *         response=201,
- *         description="User created successfully"
+ *     @OA\Response(response=201,description="User created successfully"
  *     ),
- *     @OA\Response(
- *         response=400,
- *         description="Validation error",
+ *     @OA\Response(response=400,description="Validation error",
  *         @OA\JsonContent(
  *             @OA\Property(property="title", type="string", example="Validation Error"),
  *             @OA\Property(property="status", type="integer", example=400),
  *             @OA\Property(property="detail", type="string", example="The given data was invalid."),
  *             @OA\Property(property="errors", type="object")
  *         )
- *     ),
- *     @OA\Response(
- *         response=409,
- *         description="Conflict: User already exists",
- *         @OA\JsonContent(
- *             @OA\Property(property="title", type="string", example="Conflict"),
- *             @OA\Property(property="status", type="integer", example=409),
- *             @OA\Property(property="detail", type="string", example="User already exists")
- *         )
- *     ),
- *     @OA\Response(
- *         response=500,
- *         description="Internal server error",
+ *     ), @OA\Response(response=500,description="Internal server error",
  *         @OA\JsonContent(
  *             @OA\Property(property="title", type="string", example="Internal Server Error"),
  *             @OA\Property(property="status", type="integer", example=500),
@@ -105,14 +77,6 @@ final class UserPostController
                 'detail' => 'The given data was invalid.',
                 'errors' => $e->errors()
             ], JsonResponse::HTTP_BAD_REQUEST);
-
-        } catch (UserAlreadyExists $e) {
-            Log::warning('Conflict: ' . $e->getMessage());
-            return new JsonResponse([
-                'title' => 'Conflict',
-                'status' => JsonResponse::HTTP_CONFLICT,
-                'detail' => 'User already exists'
-            ], JsonResponse::HTTP_CONFLICT);
 
         } catch (Exception $e) {
             Log::error('Server error: ' . $e->getMessage());

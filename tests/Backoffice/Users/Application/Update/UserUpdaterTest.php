@@ -5,72 +5,31 @@ namespace Tests\Backoffice\Users\Application\Update;
 
 use MedineTech\Backoffice\Users\Application\Update\UserUpdater;
 use MedineTech\Backoffice\Users\Application\Update\UserUpdaterRequest;
-use MedineTech\Users\Domain\User;
-use MedineTech\Users\Domain\UserEmail;
-use MedineTech\Users\Domain\UserRepository;
+use MedineTech\Backoffice\Users\Domain\UserRepository;
 use PHPUnit\Framework\Attributes\Test;
-use Tests\UserTest\Domain\UserMother;
-use Tests\UserTest\UserUnitTestCase;
+use Tests\Backoffice\Users\Domain\UserMother;
+use Tests\Backoffice\Users\UserUnitTestCase;
 
 final class UserUpdaterTest extends UserUnitTestCase
 {
     #[Test]
-    public function it_should_update_user(): void
+    public function it_should_update_an_entity_name(): void
     {
-        $userFromMother = UserMother::create();
-        $existingUser = new User(
-            1,
-            $userFromMother->name(),
-            $userFromMother->email(),
-            $userFromMother->password()
-        );
+        $id = 1;
+        $originalUser = UserMother::create($id);
+        $newName = 'new name';
 
-        $newName     = 'New Name';
-        $newEmail    = 'newemail@example.com';
-        $newPassword = $existingUser->password();
+        /* @var UserRepository $repository */
+        $repository = $this->repository();
+        $this->shouldFindUser($originalUser->id(), $originalUser);
+        $this->shouldSaveUser($originalUser);
 
-        $updatedUser = new User(
-            $existingUser->id(),
-            $newName,
-            $newEmail,
-            $newPassword
-        );
+        $updater = new UserUpdater($repository);
+        ($updater)(new UserUpdaterRequest(
+            $originalUser->id(),
+            $newName
+        ));
 
-        $userRepository = $this->repository();
-
-        $userRepository->shouldReceive('find')
-            ->once()
-            ->with($existingUser->id())
-            ->andReturn($existingUser);
-
-        $userRepository->shouldReceive('findByEmail')
-            ->once()
-            ->with(\Mockery::on(function (UserEmail $email) use ($newEmail): bool {
-                return $email->value() === $newEmail;
-            }))
-            ->andReturnNull();
-
-        $userRepository->shouldReceive('save')
-            ->once()
-            ->with(\Mockery::on(function (User $user) use ($updatedUser): bool {
-                return $user->id() === $updatedUser->id() &&
-                    $user->name() === $updatedUser->name() &&
-                    $user->email() === $updatedUser->email() &&
-                    $user->password() === $updatedUser->password();
-            }))
-            ->andReturnNull();
-
-        $request = new UserUpdaterRequest(
-            $existingUser->id(),
-            $newName,
-            $newEmail,
-            $newPassword
-        );
-
-        /** @var UserRepository $userRepository */
-        $updater = new UserUpdater($userRepository);
-        ($updater)($request);
-
-
+        $this->assertEquals($newName, $originalUser->name());
     }
 }

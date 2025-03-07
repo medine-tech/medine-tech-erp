@@ -21,14 +21,14 @@ final readonly class UserCreator
 
         $id = $this->repository->nextId();
 
-        $user = new User(
+        $user = User::create(
             $id,
             $request->name(),
-            new UserEmail($request->email()),
+            $request->email(),
             $request->password()
         );
 
-        $this->repository->create($user);
+        $this->repository->save($user);
     }
 
     private function ensureUserDoesNotExists(UserCreatorRequest $request): void

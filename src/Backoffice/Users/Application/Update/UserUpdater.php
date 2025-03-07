@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Users\Application\Update;
 
-use DomainException;
-use MedineTech\Backoffice\Users\Domain\UserEmail;
+use MedineTech\Backoffice\Users\Domain\UserNotFound;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
 
 final class UserUpdater
@@ -15,26 +14,14 @@ final class UserUpdater
 
     public function __invoke(UserUpdaterRequest $request): void
     {
-        $existingUser = $this->repository->find($request->id());
+        $user = $this->repository->find($request->id());
 
-        if (!$existingUser) {
-            throw new DomainException('User not found.');
+        if ($user === null) {
+            throw new UserNotFound($request->id());
         }
 
-        $email = new UserEmail($request->email());
-        $userWithSameEmail = $this->repository->findByEmail($email->value());
+        $user->changeName($request->name());
 
-        if ($userWithSameEmail && $userWithSameEmail->id() !== $request->id()) {
-            throw new DomainException('Email is already in use.');
-        }
-
-        $existingUser->changeName($request->name());
-        $existingUser->changeEmail($email);
-
-        if ($request->password() !== null && $request->password() !== '') {
-            $existingUser->changePassword($request->password());
-        }
-
-        $this->repository->save($existingUser);
+        $this->repository->save($user);
     }
 }

@@ -8,8 +8,6 @@ interface UserRepository
 {
     public function save(User $user): void;
 
-    public function create(User $user): void;
-
     public function find(int $id): ?User;
 
     public function findByEmail(string $email): ?User;

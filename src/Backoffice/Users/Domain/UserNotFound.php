@@ -8,7 +8,7 @@ use DomainException;
 
 final class UserNotFound extends DomainException
 {
-    public function __construct(string $id)
+    public function __construct(int $id)
     {
         parent::__construct("The User with id <$id> does not exist.");
     }
