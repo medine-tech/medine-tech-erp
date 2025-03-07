@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Backoffice\Companies\Application\Create;
 
-use MedineTech\Companies\Application\Create\CompanyCreator;
-use MedineTech\Companies\Application\Create\CompanyCreatorRequest;
-use MedineTech\Companies\Domain\CompanyRepository;
+use MedineTech\Backoffice\Companies\Application\Create\CompanyCreator;
+use MedineTech\Backoffice\Companies\Application\Create\CompanyCreatorRequest;
+use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Companies\Domain\CompanyMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;

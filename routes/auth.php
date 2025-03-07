@@ -5,8 +5,6 @@ use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\Companies\CompaniesGetController;
-use App\Http\Controllers\Companies\CompanyPostController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
@@ -33,10 +31,3 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth:sanctum')
     ->name('logout');
 
-Route::get('/companies', CompaniesGetController::class)
-    ->middleware('auth:sanctum')
-    ->name('companies');
-
-Route::post('/companies', CompanyPostController::class)
-    ->middleware('auth:sanctum')
-    ->name('companies');

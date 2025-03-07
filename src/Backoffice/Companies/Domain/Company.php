@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace MedineTech\Companies\Domain;
+namespace MedineTech\Backoffice\Companies\Domain;
 
 final class Company
 {
     public function __construct(
         private readonly string $id,
-        private readonly string $name
+        private string $name
     )
     {
     }
@@ -50,4 +50,12 @@ final class Company
         return $this->name;
     }
 
+    public function changeName(string $name): void
+    {
+        if ($name === $this->name) {
+            return;
+        }
+
+        $this->name = $name;
+    }
 }
