@@ -8,6 +8,7 @@ use App\Models\User as UserModel;
 use Closure;
 use MedineTech\Backoffice\Users\Domain\User;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
+use function Lambdish\Phunctional\map;
 
 final class EloquentUserRepository implements UserRepository
 {
@@ -66,21 +67,20 @@ final class EloquentUserRepository implements UserRepository
 
     public function search(array $filters): array
     {
-        $result = UserModel::fromFilters($filters)
-            ->paginate(20)
-            ->toArray();
+        $paginator = UserModel::fromFilters($filters)
+            ->paginate(20);
 
         return [
-            'items' => array_map($this->fromDatabase(), $result['data']),
-            'total' => $result['total'],
-            'per_page' => $result['per_page'],
-            'current_page' => $result['current_page'],
+            'items' => map($this->fromDatabase(), $paginator->items()),
+            'total' => $paginator->total(),
+            'perPage' => $paginator->perPage(),
+            'currentPage' => $paginator->currentPage(),
         ];
     }
 
     private function fromDatabase(): Closure
     {
-        return fn(array $user) => User::fromPrimitives([
+        return fn(UserModel $user) => User::fromPrimitives([
             'id' => $user['id'],
             'name' => $user['name'],
             'email' => $user['email'],

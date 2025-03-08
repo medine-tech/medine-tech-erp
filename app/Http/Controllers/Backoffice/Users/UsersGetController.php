@@ -91,6 +91,7 @@ final class UsersGetController extends Controller
             return response()->json([
                 "title" => "Internal Server Error",
                 "detail" => "An unexpected error occurred",
+                "error" => $e->getMessage(),
                 "status" => 500,
             ], 500);
         }

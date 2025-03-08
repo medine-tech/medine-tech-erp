@@ -39,26 +39,23 @@ final class EloquentCompanyRepository implements CompanyRepository
 
     public function search(array $filters, int $perPage = 20): array
     {
-        $query = CompanyModel::fromFilters($filters);
-
-        $result = $query
-            ->paginate($perPage)
-            ->toArray();
+        $paginator = CompanyModel::fromFilters($filters)
+            ->paginate($perPage);
 
         return [
-            'items' => map($this->fromDatabase(), $result['data']),
-            'total' => $result['total'],
-            'perPage' => $result['per_page'],
-            'currentPage' => $result['current_page'],
+            'items' => map($this->fromDatabase(), $paginator->items()),
+            'total' => $paginator->total(),
+            'perPage' => $paginator->perPage(),
+            'currentPage' => $paginator->currentPage(),
         ];
     }
 
     private function fromDatabase(): Closure
     {
-        return function (array $row) {
+        return function (CompanyModel $model) {
             return Company::fromPrimitives([
-                "id" => $row['id'],
-                "name" => $row["name"] ?? "without name",
+                "id" => $model['id'],
+                "name" => $model["name"] ?? "without name",
             ]);
         };
     }

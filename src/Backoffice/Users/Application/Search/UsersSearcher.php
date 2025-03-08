@@ -27,8 +27,8 @@ class UsersSearcher
                 );
             }, $result["items"]),
             $result["total"],
-            $result["per_page"],
-            $result["current_page"]
+            $result["perPage"],
+            $result["currentPage"]
         );
     }
 }
