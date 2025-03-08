@@ -280,7 +280,7 @@
                 }
             }
         },
-        "/api/backoffice/companies/{id}": {
+        "api/backoffice/companies/{id}": {
             "put": {
                 "tags": [
                     "Backoffice - Companies"
@@ -498,13 +498,300 @@
                 }
             }
         },
-        "/api/users": {
+        "/api/backoffice/users/{id}": {
+            "get": {
+                "tags": [
+                    "Backoffice - Users"
+                ],
+                "summary": "Retrieve a user by ID",
+                "operationId": "854dec5e1a31613a225fe935782c50ee",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User found successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "User Not Found"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "User with the given ID does not exist"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An Unexpected Error Occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Backoffice - Users"
+                ],
+                "summary": "Update an existing user",
+                "operationId": "ade359c92a6593cbb373a63713e820b8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully"
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/backoffice/users": {
+            "get": {
+                "tags": [
+                    "Backoffice - Users"
+                ],
+                "summary": "Search users based on filters",
+                "operationId": "acea973d32a10041d2bc7a21126eaa0f",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful retrieval of user list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "John Doe"
+                                                            },
+                                                            "email": {
+                                                                "type": "string",
+                                                                "example": "john@example.com"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 100
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An error occurred"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
-                    "Users"
+                    "Backoffice - Users"
                 ],
                 "summary": "Create a new user",
-                "operationId": "3c26aad8fd5a84cffd0770b210b20781",
+                "operationId": "24b0958da33d8c102ef0643d082d722d",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -517,20 +804,17 @@
                                 ],
                                 "properties": {
                                     "name": {
-                                        "description": "User name (3-30 chars)",
                                         "type": "string",
                                         "example": "John Doe"
                                     },
                                     "email": {
-                                        "description": "User email address",
                                         "type": "string",
-                                        "example": "user@example.com"
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
                                     },
                                     "password": {
-                                        "description": "User password (8-30 chars)",
                                         "type": "string",
-                                        "format": "password",
-                                        "example": "password123"
+                                        "example": "secretPassword123"
                                     }
                                 },
                                 "type": "object"
@@ -569,30 +853,6 @@
                             }
                         }
                     },
-                    "422": {
-                        "description": "Business Rule Violation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "title": {
-                                            "type": "string",
-                                            "example": "Business Rule Violation"
-                                        },
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 422
-                                        },
-                                        "detail": {
-                                            "type": "string",
-                                            "example": "A business rule was violated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
                     "500": {
                         "description": "Internal server error",
                         "content": {
@@ -601,7 +861,7 @@
                                     "properties": {
                                         "title": {
                                             "type": "string",
-                                            "example": "Error"
+                                            "example": "Internal Server Error"
                                         },
                                         "status": {
                                             "type": "integer",
@@ -609,7 +869,7 @@
                                         },
                                         "detail": {
                                             "type": "string",
-                                            "example": "An unexpected error occurred during user creation."
+                                            "example": "An unexpected error occurred while processing your request."
                                         }
                                     },
                                     "type": "object"
@@ -617,12 +877,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             }
         }
     },
@@ -649,8 +904,8 @@
             "description": "Backoffice - First Companies"
         },
         {
-            "name": "Users",
-            "description": "Users"
+            "name": "Backoffice - Users",
+            "description": "Backoffice - Users"
         }
     ]
 }
