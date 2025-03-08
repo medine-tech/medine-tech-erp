@@ -8,6 +8,7 @@ use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreator;
 use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreatorRequest;
 use MedineTech\Backoffice\Users\Application\Create\UserCreator;
 use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
+use MedineTech\Backoffice\Users\Domain\UserCreatedDomainEvent;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Users\Domain\UserMother;
@@ -50,11 +51,22 @@ final class UserCreatorTest extends UnitTestCase
             )))
             ->andReturnNull();
 
+        // event
+        $eventBus = $this->eventBus();
+        $event = new UserCreatedDomainEvent(
+            (string)$userId,
+            $user->name(),
+            $user->email(),
+            $user->password(),
+        );
+        $this->shouldPublishDomainEvent($event);
+
         /** @var UserRepository $userRepository */
         /** @var CompanyUserCreator $userCompanyCreator */
         $creator = new UserCreator(
             $userRepository,
-            $userCompanyCreator
+            $userCompanyCreator,
+            $eventBus
         );
         ($creator)($request);
     }

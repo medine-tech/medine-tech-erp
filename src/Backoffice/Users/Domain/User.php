@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Users\Domain;
 
-final class User
+use MedineTech\Shared\Domain\Aggregate\AggregateRoot;
+
+final class User extends AggregateRoot
 {
     private UserEmail $email;
 
@@ -22,16 +24,24 @@ final class User
         string $email,
         ?string $password
     ): self {
-        return new self($id, $name, $email, $password);
+        $user = new self($id, $name, $email, $password);
+
+        $user->record(new UserCreatedDomainEvent(
+            (string)$user->id(),
+            $user->name(),
+            $user->email()
+        ));
+
+        return $user;
     }
 
     public static function fromPrimitives(array $primitives): self
     {
         return new self(
-            (int) $primitives['id'],
-            (string) $primitives['name'],
-            (string) $primitives['email'],
-            (string) ($primitives['password'] ?? '')
+            (int)$primitives['id'],
+            (string)$primitives['name'],
+            (string)$primitives['email'],
+            (string)($primitives['password'] ?? '')
         );
     }
 
@@ -63,9 +73,9 @@ final class User
     public function toPrimitives(): array
     {
         return [
-            'id'       => $this->id(),
-            'name'     => $this->name(),
-            'email'    => $this->email(),
+            'id' => $this->id(),
+            'name' => $this->name(),
+            'email' => $this->email(),
             'password' => $this->password(),
         ];
     }
