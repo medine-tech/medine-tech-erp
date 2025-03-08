@@ -6,6 +6,7 @@ namespace Tests\Backoffice\Companies\Application\Create;
 
 use MedineTech\Backoffice\Companies\Application\Create\CompanyCreator;
 use MedineTech\Backoffice\Companies\Application\Create\CompanyCreatorRequest;
+use MedineTech\Backoffice\Companies\Domain\CompanyCreatedDomainEvent;
 use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
 use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreator;
 use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreatorRequest;
@@ -37,12 +38,20 @@ final class CompanyCreatorTest extends UnitTestCase
             )))
             ->andReturnNull();
 
+        // event
+        $eventBus = $this->eventBus();
+        $domainEvent = new CompanyCreatedDomainEvent(
+            $company->id(),
+            $company->name(),
+        );
+        $this->shouldPublishDomainEvent($domainEvent);
 
         /* @var CompanyRepository $companyRepository */
         /* @var CompanyUserCreator $userCompanyCreator */
         $creator = new CompanyCreator(
             $companyRepository,
-            $userCompanyCreator
+            $userCompanyCreator,
+            $eventBus
         );
 
         ($creator)(new CompanyCreatorRequest(

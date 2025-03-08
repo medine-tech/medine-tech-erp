@@ -26,8 +26,8 @@ final class UsersSearcherTest extends UnitTestCase
             ->andReturn([
                 "items" => [$user],
                 "total" => 1,
-                "per_page" => 10,
-                "current_page" => 1,
+                "perPage" => 10,
+                "currentPage" => 1,
             ]);
 
         /** @var UserRepository $userRepository */

@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Shared\Infrastructure\PhpUnit;
 
-use PHPUnit\Framework\TestCase;
 use MedineTech\Shared\Domain\Bus\Event\DomainEvent;
 use MedineTech\Shared\Domain\Bus\Event\EventBus;
 use Mockery;
 use Mockery\MockInterface;
+use PHPUnit\Framework\TestCase;
 use Tests\Shared\Domain\TestUtils;
 use Tests\Shared\Infrastructure\Mockery\MatcherIsSimilar;
 
 abstract class UnitTestCase extends TestCase
 {
+    private MockInterface|EventBus|null $eventBus = null;
+
     protected function mock(string $className): MockInterface
     {
         return Mockery::mock($className);
@@ -35,7 +37,7 @@ abstract class UnitTestCase extends TestCase
             ->andReturnNull();
     }
 
-    protected function eventBus(): MockInterface
+    protected function eventBus(): MockInterface|EventBus
     {
         return $this->eventBus ??= $this->mock(EventBus::class);
     }
@@ -60,7 +62,8 @@ abstract class UnitTestCase extends TestCase
         return TestUtils::similarTo($value, $delta);
     }
 
-    public function tearDown(): void {
-        \Mockery::close();
+    public function tearDown(): void
+    {
+        Mockery::close();
     }
 }

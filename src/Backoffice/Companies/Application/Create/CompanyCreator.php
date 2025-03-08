@@ -8,12 +8,14 @@ use MedineTech\Backoffice\Companies\Domain\Company;
 use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
 use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreator;
 use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreatorRequest;
+use MedineTech\Shared\Domain\Bus\Event\EventBus;
 
 class CompanyCreator
 {
     public function __construct(
         private readonly CompanyRepository $repository,
-        private readonly CompanyUserCreator $companyUserCreator
+        private readonly CompanyUserCreator $companyUserCreator,
+        private readonly EventBus $eventBus
     ) {
     }
 
@@ -30,6 +32,8 @@ class CompanyCreator
             $company->id(),
             $request->userId()
         ));
+
+        $this->eventBus->publish(...$company->pullDomainEvents());
     }
 
 }
