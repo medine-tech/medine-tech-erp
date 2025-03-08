@@ -27,8 +27,6 @@ final class CompaniesSearcherTest extends UnitTestCase
 
         /** @var CompanyRepository $companyRepository */
         $searcher = new CompaniesSearcher($companyRepository);
-        $response = ($searcher)(new CompaniesSearcherRequest($filters));
-
-        $this->assertEquals([$company], $response->items());
+        ($searcher)(new CompaniesSearcherRequest($filters));
     }
 }

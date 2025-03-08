@@ -32,7 +32,7 @@ final class FirstCompanyRegisterTest extends UnitTestCase
         $usersSearcher->shouldReceive('__invoke')
             ->once()
             ->with($this->similarTo(new UsersSearcherRequest(["email" => $firstCompany->userEmail(),])))
-            ->andReturn(new UsersSearcherResponse([]));
+            ->andReturn(new UsersSearcherResponse([], 0, 1, 20));
 
         /** @var FirstCompanyRepository $firstCompanyRepository */
         /** @var UsersSearcher $usersSearcher */
