@@ -7,7 +7,7 @@ namespace MedineTech\Backoffice\Users\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use MedineTech\Shared\Infrastructure\Persistence\Eloquent\EloquentFilters;
 
-final class EloquentUserFilters extends EloquentFilters
+final class UserFilters extends EloquentFilters
 {
     protected function companyId($value): void
     {

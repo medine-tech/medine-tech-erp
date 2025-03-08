@@ -4,3 +4,10 @@ content-type: application/json
 Authorization: Bearer {{token}}
 
 ###
+
+GET http://localhost/api/backoffice/{{tenant}}/companies
+accept: application/json
+content-type: application/json
+Authorization: Bearer {{token}}
+
+###

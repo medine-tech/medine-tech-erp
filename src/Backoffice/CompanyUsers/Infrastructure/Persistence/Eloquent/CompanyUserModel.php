@@ -6,7 +6,7 @@ namespace MedineTech\Backoffice\CompanyUsers\Infrastructure\Persistence\Eloquent
 
 use Illuminate\Database\Eloquent\Model;
 
-final class EloquentCompanyUser extends Model
+final class CompanyUserModel extends Model
 {
     protected $table = 'company_users';
     protected $fillable = [

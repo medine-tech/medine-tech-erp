@@ -23,7 +23,12 @@ final class CompaniesSearcherTest extends UnitTestCase
         $companyRepository->shouldReceive('search')
             ->once()
             ->with($filters)
-            ->andReturn([$company]);
+            ->andReturn([
+                "items" => [$company],
+                "total" => 1,
+                "perPage" => 10,
+                "currentPage" => 1,
+            ]);
 
         /** @var CompanyRepository $companyRepository */
         $searcher = new CompaniesSearcher($companyRepository);

@@ -11,7 +11,7 @@ final class EloquentCompanyUserRepository implements CompanyUserRepository
 {
     public function save(CompanyUser $companyUser): void
     {
-        EloquentCompanyUser::updateOrCreate(
+        CompanyUserModel::updateOrCreate(
             [
                 'company_id' => $companyUser->companyId(),
                 'user_id' => $companyUser->userId(),

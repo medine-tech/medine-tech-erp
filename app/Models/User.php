@@ -11,8 +11,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use MedineTech\Backoffice\Companies\Infrastructure\Persistence\Eloquent\CompanyModel;
-use MedineTech\Backoffice\CompanyUsers\Infrastructure\Persistence\Eloquent\EloquentCompanyUser;
-use MedineTech\Backoffice\Users\Infrastructure\Persistence\Eloquent\EloquentUserFilters;
+use MedineTech\Backoffice\CompanyUsers\Infrastructure\Persistence\Eloquent\CompanyUserModel;
+use MedineTech\Backoffice\Users\Infrastructure\Persistence\Eloquent\UserFilters;
 
 
 class User extends Authenticatable
@@ -67,11 +67,11 @@ class User extends Authenticatable
 
     public function company_users(): HasMany
     {
-        return $this->hasMany(EloquentCompanyUser::class, 'user_id');
+        return $this->hasMany(CompanyUserModel::class, 'user_id');
     }
 
     public function scopeFromFilters(Builder $builder, array $filters): void
     {
-        (new EloquentUserFilters())->apply($builder, $filters);
+        (new UserFilters())->apply($builder, $filters);
     }
 }
