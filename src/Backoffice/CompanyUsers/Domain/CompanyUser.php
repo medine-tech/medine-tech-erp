@@ -4,17 +4,28 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\CompanyUsers\Domain;
 
-final readonly class CompanyUser
+use MedineTech\Shared\Domain\Aggregate\AggregateRoot;
+
+final class CompanyUser extends AggregateRoot
 {
     public function __construct(
-        private string $companyId,
-        private int $userId,
+        private readonly string $companyId,
+        private readonly int $userId,
     ) {
     }
 
     public static function create(string $companyId, int $userId): CompanyUser
     {
-        return new self($companyId, $userId);
+        $companyUser = new self($companyId, $userId);
+
+        $aggregateId = $companyUser->companyId() . '-' . $companyUser->userId();
+        $companyUser->record(new CompanyUserCreatedDomainEvent(
+            $aggregateId,
+            $companyUser->companyId(),
+            $companyUser->userId()
+        ));
+
+        return $companyUser;
     }
 
     public function companyId(): string

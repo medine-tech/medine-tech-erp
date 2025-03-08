@@ -6,11 +6,13 @@ namespace MedineTech\Backoffice\CompanyUsers\Application\Create;
 
 use MedineTech\Backoffice\CompanyUsers\Domain\CompanyUser;
 use MedineTech\Backoffice\CompanyUsers\Domain\CompanyUserRepository;
+use MedineTech\Shared\Domain\Bus\Event\EventBus;
 
 class CompanyUserCreator
 {
     public function __construct(
-        private CompanyUserRepository $repository,
+        private readonly CompanyUserRepository $repository,
+        private readonly EventBus $eventBus,
     ) {
     }
 
@@ -22,5 +24,7 @@ class CompanyUserCreator
         );
 
         $this->repository->save($companyUser);
+
+        $this->eventBus->publish(...$companyUser->pullDomainEvents());
     }
 }

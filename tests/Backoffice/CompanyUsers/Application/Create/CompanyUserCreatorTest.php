@@ -6,6 +6,7 @@ namespace Tests\Backoffice\CompanyUsers\Application\Create;
 
 use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreator;
 use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreatorRequest;
+use MedineTech\Backoffice\CompanyUsers\Domain\CompanyUserCreatedDomainEvent;
 use MedineTech\Backoffice\CompanyUsers\Domain\CompanyUserRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\CompanyUsers\Domain\CompanyUserMother;
@@ -24,9 +25,19 @@ final class CompanyUserCreatorTest extends UnitTestCase
             ->with($this->similarTo($companyUser))
             ->andReturnNull();
 
+        // event
+        $aggregateId = $companyUser->companyId() . '-' . $companyUser->userId();
+        $event = new CompanyUserCreatedDomainEvent(
+            $aggregateId,
+            $companyUser->companyId(),
+            $companyUser->userId(),
+        );
+        $this->shouldPublishDomainEvent($event);
+
         /** @var CompanyUserRepository $companyUserRepository */
         $creator = new CompanyUserCreator(
             $companyUserRepository,
+            $this->eventBus()
         );
         ($creator)(new CompanyUserCreatorRequest(
             $companyUser->companyId(),
