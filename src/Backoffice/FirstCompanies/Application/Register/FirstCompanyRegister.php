@@ -32,7 +32,8 @@ final readonly class FirstCompanyRegister
         // create company
         ($this->companyCreator)(new CompanyCreatorRequest(
             $request->companyId(),
-            $request->companyName()
+            $request->companyName(),
+            $userId
         ));
 
         ($this->companyUserCreator)(new CompanyUserCreatorRequest(

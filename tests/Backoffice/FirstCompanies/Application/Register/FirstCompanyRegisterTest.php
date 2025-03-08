@@ -47,6 +47,7 @@ final class FirstCompanyRegisterTest extends UnitTestCase
             ->with($this->similarTo(new CompanyCreatorRequest(
                 $request->companyId(),
                 $request->companyName(),
+                $userId
             )))
             ->andReturnNull();
 

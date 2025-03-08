@@ -67,7 +67,8 @@ final class CompanyPostController
 
             $creatorRequest = new CompanyCreatorRequest(
                 $validatedData['id'],
-                $validatedData['name']
+                $validatedData['name'],
+                $request->user()->id,
             );
 
             ($this->creator)($creatorRequest);

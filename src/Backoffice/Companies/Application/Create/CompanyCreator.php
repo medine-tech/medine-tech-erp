@@ -6,13 +6,15 @@ namespace MedineTech\Backoffice\Companies\Application\Create;
 
 use MedineTech\Backoffice\Companies\Domain\Company;
 use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
+use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreator;
+use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreatorRequest;
 
 class CompanyCreator
 {
     public function __construct(
-        private readonly CompanyRepository $repository
-    )
-    {
+        private readonly CompanyRepository $repository,
+        private readonly CompanyUserCreator $companyUserCreator
+    ) {
     }
 
     public function __invoke(CompanyCreatorRequest $request): void
@@ -23,6 +25,11 @@ class CompanyCreator
         );
 
         $this->repository->save($company);
+
+        ($this->companyUserCreator)(new CompanyUserCreatorRequest(
+            $company->id(),
+            $request->userId()
+        ));
     }
 
 }

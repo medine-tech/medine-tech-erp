@@ -4,7 +4,7 @@ content-type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "{{$random.alphabetic(10)}}",
-  "email": "{{$random.alphabetic(10)}}@example.com",
-  "password": "{{$random.alphabetic(10)}}"
+  "name": "{{$random.name.fullName}}",
+  "email": "{{$random.email}}",
+  "password": "{{$random.internet.password}}"
 }
