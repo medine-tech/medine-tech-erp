@@ -6,7 +6,6 @@ namespace MedineTech\Backoffice\Users\Infrastructure\Persistence\Eloquent;
 
 use App\Models\User as UserModel;
 use Closure;
-use Illuminate\Database\QueryException;
 use MedineTech\Backoffice\Users\Domain\User;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
 
@@ -14,27 +13,25 @@ final class EloquentUserRepository implements UserRepository
 {
     public function save(User $user): int
     {
-        try {
-            $model = UserModel::find($user->id());
+        $model = UserModel::where([
+            "email" => $user->email()
+        ])->first();
 
-            if ($model) {
-                $model->name = $user->name();
-                $model->save();
+        if ($model) {
+            $model->name = $user->name();
+            $model->save();
 
-                return $model->id;
-            }
-
-            UserModel::create([
-                'id' => $user->id(),
-                'name' => $user->name(),
-                'email' => $user->email(),
-                'password' => $user->password(),
-            ]);
-
-            return $user->id();
-        } catch (QueryException $e) {
-            throw new $e;
+            return $model->id;
         }
+
+        UserModel::create([
+            'id' => $user->id(),
+            'name' => $user->name(),
+            'email' => $user->email(),
+            'password' => $user->password(),
+        ]);
+
+        return $user->id();
     }
 
     public function find(int $id): ?User

@@ -428,15 +428,26 @@
                         "application/json": {
                             "schema": {
                                 "required": [
+                                    "companyId",
+                                    "companyName",
                                     "name",
                                     "email",
                                     "password",
                                     "password_confirmation"
                                 ],
                                 "properties": {
+                                    "companyId": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "123e4567-e89b-12d3-a456-426655440000"
+                                    },
+                                    "companyName": {
+                                        "type": "string",
+                                        "example": "Company name"
+                                    },
                                     "name": {
                                         "type": "string",
-                                        "example": "Company Name"
+                                        "example": "user name"
                                     },
                                     "email": {
                                         "type": "string",
