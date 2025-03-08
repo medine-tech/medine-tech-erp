@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Users\Application\Create;
@@ -7,6 +6,7 @@ namespace MedineTech\Backoffice\Users\Application\Create;
 use MedineTech\Backoffice\Users\Domain\User;
 use MedineTech\Backoffice\Users\Domain\UserAlreadyExists;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
+use MedineTech\Backoffice\Users\Domain\UserEmail;
 
 final readonly class UserCreator
 {
@@ -21,7 +21,7 @@ final readonly class UserCreator
 
         $id = $this->repository->nextId();
 
-        $user = new User(
+        $user = User::create(
             $id,
             $request->name(),
             $request->email(),

@@ -6,6 +6,7 @@ namespace Tests\Backoffice\Users\Domain;
 
 use Faker\Factory;
 use MedineTech\Backoffice\Users\Domain\User;
+use MedineTech\Backoffice\Users\Domain\UserEmail;
 
 final class UserMother
 {

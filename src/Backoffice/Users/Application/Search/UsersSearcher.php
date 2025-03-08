@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Users\Application\Search;
@@ -17,6 +16,11 @@ class UsersSearcher
     {
         $result = $this->repository->search($request->filters());
 
-        return new UsersSearcherResponse($result["items"] ?? []);
+        return new UsersSearcherResponse(
+            $result["items"] ?? [],
+            $result["total"] ?? 0,
+            $result["per_page"] ?? 20,
+            $result["current_page"] ?? 1
+        );
     }
 }

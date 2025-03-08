@@ -1,5 +1,0 @@
-GET http://localhost/api/user
-accept: application/json
-Authorization: Bearer {{token}}
-
-###

@@ -1,50 +1,45 @@
 <?php
-
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Users\Domain;
 
 final class User
 {
-
-    private ?int $id;
+    private UserEmail $email;
 
     public function __construct(
-      ?int $id,
-      private readonly string $name,
-      private readonly string $email,
-      private readonly string $password
+        private int $id,
+        private string $name,
+        string $email,
+        private ?string $password
     ) {
-        $this->id = $id;
+        $this->email = new UserEmail($email);
     }
 
     public static function create(
+        int $id,
         string $name,
         string $email,
-        string $password
+        ?string $password
     ): self {
-
-        return new self(
-            null,
-            $name,
-            $email,
-            $password,
-        );
+        return new self($id, $name, $email, $password);
     }
 
-    public static function fromPrimitive(array $primitives): self
+    public static function fromPrimitives(array $primitives): self
     {
         return new self(
-            (int)$primitives['id'],
-            (string)$primitives['name'],
-            (string)$primitives['email'],
-            (string)$primitives['password'],
+            (int) $primitives['id'],
+            (string) $primitives['name'],
+            (string) $primitives['email'],
+            (string) ($primitives['password'] ?? '')
         );
     }
+
     public function id(): int
     {
         return $this->id;
     }
+
     public function name(): string
     {
         return $this->name;
@@ -52,15 +47,20 @@ final class User
 
     public function email(): string
     {
-        return $this->email;
+        return $this->email->value();
     }
 
-    public function password(): string
+    public function password(): ?string
     {
         return $this->password;
     }
 
-    public function toPrimitive(): array
+    public function changeName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function toPrimitives(): array
     {
         return [
             'id'       => $this->id(),
