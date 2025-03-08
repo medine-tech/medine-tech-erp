@@ -74,7 +74,7 @@ final class CompanyPutController
 
             ($this->updater)($updaterRequest);
 
-            return new JsonResponse('', JsonResponse::HTTP_OK);
+            return new JsonResponse(null, JsonResponse::HTTP_OK);
         } catch (ValidationException $e) {
             return new JsonResponse([
                 'title' => 'Validation Error',

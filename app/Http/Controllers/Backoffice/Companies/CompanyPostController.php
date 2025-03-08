@@ -73,7 +73,7 @@ final class CompanyPostController
 
             ($this->creator)($creatorRequest);
 
-            return new JsonResponse('', 201);
+            return new JsonResponse(null, 201);
         } catch (ValidationException $e) {
             return new JsonResponse([
                 'title' => 'Validation Error',

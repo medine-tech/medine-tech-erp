@@ -6,18 +6,14 @@ use App\Http\Controllers\Backoffice\Companies\CompanyPostController;
 use App\Http\Controllers\Backoffice\Companies\CompanyPutController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/backoffice/companies', CompaniesGetController::class)
-    ->middleware('auth:sanctum')
+Route::get('/companies', CompaniesGetController::class)
     ->name('companies.search');
 
-Route::post('/backoffice/companies', CompanyPostController::class)
-    ->middleware('auth:sanctum')
+Route::post('/companies', CompanyPostController::class)
     ->name('companies.create');
 
-Route::put('/backoffice/companies/{id}', CompanyPutController::class)
-    ->middleware('auth:sanctum')
+Route::put('/companies/{id}', CompanyPutController::class)
     ->name('companies.update');
 
-Route::get('/backoffice/companies/{id}', CompanyGetController::class)
-    ->middleware('auth:sanctum')
+Route::get('/companies/{id}', CompanyGetController::class)
     ->name('companies.show');
