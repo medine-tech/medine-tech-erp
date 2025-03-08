@@ -7,7 +7,7 @@ namespace MedineTech\Backoffice\Companies\Application\Create;
 use MedineTech\Backoffice\Companies\Domain\Company;
 use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
 
-final class CompanyCreator
+class CompanyCreator
 {
     public function __construct(
         private readonly CompanyRepository $repository

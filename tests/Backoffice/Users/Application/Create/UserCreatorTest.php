@@ -20,10 +20,6 @@ final class UserCreatorTest extends UnitTestCase
         $user = UserMother::create(id: $userId);
 
         $userRepository = $this->mock(UserRepository::class);
-        $userRepository->shouldReceive('findByEmail')
-            ->once()
-            ->with($user->email())
-            ->andReturnNull();
 
         $userRepository->shouldReceive('nextId')
             ->once()
@@ -32,7 +28,7 @@ final class UserCreatorTest extends UnitTestCase
         $userRepository->shouldReceive('save')
             ->once()
             ->with($this->similarTo($user))
-            ->andReturnNull();
+            ->andReturn($userId);
 
         $request = new UserCreatorRequest(
             $user->name(),

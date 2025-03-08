@@ -32,7 +32,7 @@ abstract class UserUnitTestCase extends UnitTestCase
             ->shouldReceive('save')
             ->once()
             ->with($this->similarTo($user))
-            ->andReturnNull();
+            ->andReturn($user->id());
     }
 
     protected function shouldFindUser(int $id, $user): void
