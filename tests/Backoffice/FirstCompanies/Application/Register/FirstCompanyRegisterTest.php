@@ -20,8 +20,9 @@ final class FirstCompanyRegisterTest extends UnitTestCase
     #[Test]
     public function it_should_register(): void
     {
+        $companyId = "company-id";
         $request = new FirstCompanyRegisterRequest(
-            "company-id",
+            $companyId,
             "company-name",
             "user-name",
             "user-email",
@@ -37,6 +38,7 @@ final class FirstCompanyRegisterTest extends UnitTestCase
                 $request->userName(),
                 $request->userEmail(),
                 $request->userPassword(),
+                $companyId
             )))
             ->andReturn($userId);
 

@@ -55,7 +55,7 @@ use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
  *     }
  * )
  */
-final class UserPostController
+final readonly class UserPostController
 {
     public function __construct(
         private UserCreator $creator
@@ -75,7 +75,8 @@ final class UserPostController
                 new UserCreatorRequest(
                     $validatedData['name'],
                     $validatedData['email'],
-                    $validatedData['password']
+                    $validatedData['password'],
+                    tenant("id")
                 )
             );
 

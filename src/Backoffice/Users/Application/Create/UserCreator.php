@@ -3,13 +3,16 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Users\Application\Create;
 
+use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreator;
+use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreatorRequest;
 use MedineTech\Backoffice\Users\Domain\User;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
 
 class UserCreator
 {
     public function __construct(
-        private UserRepository $repository
+        private readonly UserRepository $repository,
+        private readonly CompanyUserCreator $companyUserCreator
     ) {
     }
 
@@ -24,6 +27,13 @@ class UserCreator
             $request->password()
         );
 
-        return $this->repository->save($user);
+        $userId = $this->repository->save($user);
+
+        ($this->companyUserCreator)(new CompanyUserCreatorRequest(
+            $request->companyId(),
+            $userId,
+        ));
+
+        return $userId;
     }
 }

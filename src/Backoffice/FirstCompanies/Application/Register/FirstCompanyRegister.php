@@ -27,6 +27,7 @@ final readonly class FirstCompanyRegister
             $request->userName(),
             $request->userEmail(),
             $request->userPassword(),
+            $request->companyId()
         ));
 
         // create company

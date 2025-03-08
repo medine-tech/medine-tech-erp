@@ -66,7 +66,7 @@ final class EloquentUserRepository implements UserRepository
 
     public function search(array $filters): array
     {
-        $result = UserModel::where($filters)
+        $result = UserModel::fromFilters($filters)
             ->paginate(20)
             ->toArray();
 

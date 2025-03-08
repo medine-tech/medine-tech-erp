@@ -81,10 +81,7 @@ final readonly class UserPutController
                 )
             );
 
-            return new JsonResponse(
-                ['message' => 'User updated successfully'],
-                JsonResponse::HTTP_OK
-            );
+            return new JsonResponse(null, JsonResponse::HTTP_OK);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return new JsonResponse([
                 'title' => 'Validation Error',

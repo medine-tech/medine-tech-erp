@@ -67,7 +67,9 @@ final class UsersGetController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            $filters = $request->query();
+            $filters = (array)$request->query();
+            $filters["companyId"] = tenant("id");
+
             $searchRequest = new UsersSearcherRequest($filters);
             $searchResponse = ($this->searcher)($searchRequest);
 
