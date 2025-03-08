@@ -1,4 +1,11 @@
-GET http://localhost/api/backoffice/companies/{{id}}
+GET http://localhost/api/backoffice/{{tenant}}/companies/5253f019-da41-4d94-bc15-931d6f8c0cb8
+accept: application/json
+content-type: application/json
+Authorization: Bearer {{token}}
+
+###
+
+GET http://localhost/api/backoffice/{{tenant}}/companies
 accept: application/json
 content-type: application/json
 Authorization: Bearer {{token}}

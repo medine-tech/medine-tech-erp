@@ -1,18 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MedineTech\Backoffice\Users\Application\Create;
 
-final class UserCreatorRequest
+final readonly class UserCreatorRequest
 {
-    private string $name;
-    private string $email;
-    private string $password;
-
-    public function __construct(string $name, string $email, string $password)
-    {
-        $this->name = $name;
-        $this->email = $email;
-        $this->password = $password;
+    public function __construct(
+        private string $name,
+        private string $email,
+        private string $password,
+        private string $companyId,
+    ) {
     }
 
     public function name(): string
@@ -28,5 +27,10 @@ final class UserCreatorRequest
     public function password(): string
     {
         return $this->password;
+    }
+
+    public function companyId(): string
+    {
+        return $this->companyId;
     }
 }

@@ -1,10 +1,10 @@
-GET http://localhost/api/backoffice/users/3
+GET http://localhost/api/backoffice/{{tenant}}/users/3
 accept: application/json
 Authorization: Bearer {{token}}
 
 ###
 
-GET http://localhost/api/backoffice/users
+GET http://localhost/api/backoffice/{{tenant}}/users
 accept: application/json
 Authorization: Bearer {{token}}
 

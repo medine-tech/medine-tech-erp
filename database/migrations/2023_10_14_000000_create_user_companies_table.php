@@ -8,17 +8,16 @@ class CreateUserCompaniesTable extends Migration
 {
     public function up(): void
     {
-        Schema::create('user_companies', function (Blueprint $table) {
+        Schema::create('company_users', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id');
             $table->uuid('company_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('company_id')->references('uuid')->on('companies')->onDelete('cascade');
             $table->primary(['user_id', 'company_id']);
+            $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('user_companies');
+        Schema::dropIfExists('company_users');
     }
 }

@@ -20,8 +20,10 @@ use MedineTech\Backoffice\FirstCompanies\Application\Register\FirstCompanyRegist
  *         required=true,
  *         @OA\JsonContent(
  *             type="object",
- *             required={"name", "email", "password", "password_confirmation"},
- *             @OA\Property(property="name", type="string", example="Company Name"),
+ *             required={"companyId", "companyName", "name", "email", "password", "password_confirmation"},
+ *             @OA\Property(property="companyId", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426655440000"),
+ *             @OA\Property(property="companyName", type="string", example="Company name"),
+ *             @OA\Property(property="name", type="string", example="user name"),
  *             @OA\Property(property="email", type="string", example="admin@example.com"),
  *             @OA\Property(property="password", type="string", example="password"),
  *             @OA\Property(property="password_confirmation", type="string", example="password")
@@ -65,12 +67,16 @@ final class FirstCompanyPostController extends Controller
     {
         try {
             $validated = $request->validate([
+                'companyId' => ['required', 'uuid', 'max:36'],
+                'companyName' => ['required', 'string', 'max:255'],
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
 
             ($this->firstCompanyRegister)(new FirstCompanyRegisterRequest(
+                $validated['companyId'],
+                $validated['companyName'],
                 $validated['name'],
                 $validated['email'],
                 Hash::make($validated['password']),
