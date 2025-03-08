@@ -54,7 +54,10 @@ use MedineTech\Backoffice\Users\Application\Update\UserUpdaterRequest;
  *             @OA\Property(property="status", type="integer", example=500),
  *             @OA\Property(property="detail", type="string", example="An unexpected error occurred")
  *         )
- *     )
+ *     ),
+ *     security={
+ *         {"bearerAuth":{}}
+ *     }
  * )
  */
 final readonly class UserPutController
@@ -89,7 +92,6 @@ final readonly class UserPutController
                 'detail' => 'The given data was invalid.',
                 'errors' => $e->errors()
             ], JsonResponse::HTTP_BAD_REQUEST);
-
         } catch (Exception $e) {
             Log::error('Server error: ' . $e->getMessage());
             return new JsonResponse([

@@ -166,7 +166,7 @@
                         }
                     },
                     "500": {
-                        "description": "Internal server error",
+                        "description": "Internal Server Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -189,104 +189,19 @@
                             }
                         }
                     }
-                }
-            }
-        },
-        "/api/backoffice/companies": {
-            "post": {
-                "tags": [
-                    "Backoffice - Companies"
-                ],
-                "summary": "Create a new company",
-                "operationId": "35b0e8a71551ee33733c335eb0d61459",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "id",
-                                    "name"
-                                ],
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "example": "123e4567-e89b-12d3-a456-426655440000"
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "example": "MedineTech"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
                 },
-                "responses": {
-                    "201": {
-                        "description": "Company created successfully"
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "title": {
-                                            "type": "string",
-                                            "example": "Validation Error"
-                                        },
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 400
-                                        },
-                                        "detail": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
-                                        },
-                                        "errors": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "title": {
-                                            "type": "string",
-                                            "example": "Internal Server Error"
-                                        },
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 500
-                                        },
-                                        "detail": {
-                                            "type": "string",
-                                            "example": "An unexpected error occurred while processing your request."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                "security": [
+                    {
+                        "bearerAuth": []
                     }
-                }
-            }
-        },
-        "api/backoffice/companies/{id}": {
+                ]
+            },
             "put": {
                 "tags": [
                     "Backoffice - Companies"
                 ],
                 "summary": "Update an existing company",
-                "operationId": "763c2a0b7c379c863e6e4d15e82e897f",
+                "operationId": "8f489807d5084c8a4aad42f3fc47a9a7",
                 "parameters": [
                     {
                         "name": "id",
@@ -381,6 +296,101 @@
                                     "properties": {
                                         "title": {
                                             "type": "string",
+                                            "example": "Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred while processing your request."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/backoffice/companies": {
+            "post": {
+                "tags": [
+                    "Backoffice - Companies"
+                ],
+                "summary": "Create a new company",
+                "operationId": "35b0e8a71551ee33733c335eb0d61459",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "123e4567-e89b-12d3-a456-426655440000"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "MedineTech"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Company created successfully"
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
                                             "example": "Internal Server Error"
                                         },
                                         "status": {
@@ -397,7 +407,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/backoffice/first-companies": {
@@ -530,6 +545,10 @@
                                         "name": {
                                             "type": "string",
                                             "example": "John Doe"
+                                        },
+                                        "email": {
+                                            "type": "email",
+                                            "example": "e@mail.com"
                                         }
                                     },
                                     "type": "object"
@@ -585,7 +604,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -677,7 +701,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/backoffice/users": {
@@ -706,46 +735,37 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Success"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "users": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "properties": {
-                                                            "id": {
-                                                                "type": "integer",
-                                                                "example": 1
-                                                            },
-                                                            "name": {
-                                                                "type": "string",
-                                                                "example": "John Doe"
-                                                            },
-                                                            "email": {
-                                                                "type": "string",
-                                                                "example": "john@example.com"
-                                                            }
-                                                        },
-                                                        "type": "object"
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "John Doe"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "john@example.com"
                                                     }
                                                 },
-                                                "total": {
-                                                    "type": "integer",
-                                                    "example": 100
-                                                },
-                                                "current_page": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                }
-                                            },
-                                            "type": "object"
+                                                "type": "object"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 100
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
                                         }
                                     },
                                     "type": "object"
@@ -759,24 +779,17 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred"
+                                        },
                                         "status": {
                                             "type": "integer",
                                             "example": 500
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "An error occurred"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "users": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -784,7 +797,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -877,7 +895,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },

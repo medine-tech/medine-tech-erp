@@ -49,7 +49,10 @@ use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
  *             @OA\Property(property="status", type="integer", example=500),
  *             @OA\Property(property="detail", type="string", example="An unexpected error occurred while processing your request.")
  *         )
- *     )
+ *     ),
+ *     security={
+ *         {"bearerAuth":{}}
+ *     }
  * )
  */
 final class UserPostController

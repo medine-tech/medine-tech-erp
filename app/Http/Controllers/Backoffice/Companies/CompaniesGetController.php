@@ -17,13 +17,6 @@ class CompaniesGetController extends Controller
         ]);
 
         $user = $request->user();
-        if (!$user) {
-            return response()->json([
-                'status'  => 401,
-                'message' => 'User not authenticated',
-                'data'    => ['data' => null],
-            ], 401);
-        }
 
         try {
             $companies = $user->companies()->paginate(10);
