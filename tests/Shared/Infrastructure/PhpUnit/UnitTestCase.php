@@ -59,4 +59,8 @@ abstract class UnitTestCase extends TestCase
     {
         return TestUtils::similarTo($value, $delta);
     }
+
+    public function tearDown(): void {
+        \Mockery::close();
+    }
 }

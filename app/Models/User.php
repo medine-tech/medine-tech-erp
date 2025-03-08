@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use MedineTech\Companies\Infrastructure\Persistence\Eloquent\CompanyModel;
+use MedineTech\Backoffice\Companies\Infrastructure\Persistence\Eloquent\CompanyModel;
 
 
 class User extends Authenticatable
@@ -45,8 +45,9 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+            'id'                => 'integer',
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
 

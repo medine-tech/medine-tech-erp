@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use MedineTech\Companies\Infrastructure\Persistence\Eloquent\CompanyModel;
+use MedineTech\Backoffice\Companies\Infrastructure\Persistence\Eloquent\CompanyModel;
 use Stancl\Tenancy\Database\Models\Domain;
 
 return [

@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
-use MedineTech\Users\Domain\UserRepository;
-use MedineTech\Users\Infrastructure\Persistence\EloquentUserRepository;
-use MedineTech\Companies\Domain\CompanyRepository;
-use MedineTech\Companies\Infrastructure\Persistence\Eloquent\EloquentCompanyRepository;
+use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
+use MedineTech\Backoffice\Companies\Infrastructure\Persistence\Eloquent\EloquentCompanyRepository;
+use MedineTech\Backoffice\FirstCompanies\Domain\FirstCompanyRepository;
+use MedineTech\Backoffice\FirstCompanies\Infrastructure\Persistence\Eloquent\EloquentFirstCompanyRepository;
+use MedineTech\Backoffice\Users\Domain\UserRepository;
+use MedineTech\Backoffice\Users\Infrastructure\Persistence\Eloquent\EloquentUserRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(UserRepository::class, EloquentUserRepository::class);
         $this->app->bind(CompanyRepository::class, EloquentCompanyRepository::class);
+        $this->app->bind(FirstCompanyRepository::class, EloquentFirstCompanyRepository::class);
     }
 
     /**
