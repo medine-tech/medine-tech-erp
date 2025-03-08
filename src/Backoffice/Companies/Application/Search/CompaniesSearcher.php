@@ -11,7 +11,7 @@ use function Lambdish\Phunctional\map;
 class CompaniesSearcher
 {
     public function __construct(
-        private CompanyRepository $repository
+        private readonly CompanyRepository $repository
     ) {
     }
 

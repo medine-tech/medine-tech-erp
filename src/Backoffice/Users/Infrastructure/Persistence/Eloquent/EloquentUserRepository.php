@@ -8,6 +8,7 @@ use App\Models\User as UserModel;
 use Closure;
 use MedineTech\Backoffice\Users\Domain\User;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
+use RuntimeException;
 use function Lambdish\Phunctional\map;
 
 final class EloquentUserRepository implements UserRepository
@@ -25,12 +26,16 @@ final class EloquentUserRepository implements UserRepository
             return $model->id;
         }
 
-        UserModel::create([
+        $model = UserModel::create([
             'id' => $user->id(),
             'name' => $user->name(),
             'email' => $user->email(),
             'password' => $user->password(),
         ]);
+
+        if(null === $model) {
+            throw new RuntimeException("Failed to save user");
+        }
 
         return $user->id();
     }
