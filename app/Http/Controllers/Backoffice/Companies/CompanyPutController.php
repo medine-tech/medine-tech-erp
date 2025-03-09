@@ -9,6 +9,8 @@ use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Companies\Application\Update\CompanyUpdater;
 use MedineTech\Backoffice\Companies\Application\Update\CompanyUpdaterRequest;
 use MedineTech\Backoffice\Companies\Domain\CompanyNotFound;
+use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompanyPermissions;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -63,6 +65,10 @@ final class CompanyPutController
     public function __invoke(string $id, Request $request): JsonResponse
     {
         try {
+            if (!$request->user()->can(CompanyPermissions::UPDATE)) {
+                throw new UnauthorizedException(403);
+            }
+
             $validatedData = $request->validate([
                 'name' => 'required|string|min:3|max:40',
             ]);
@@ -88,6 +94,12 @@ final class CompanyPutController
                 'status' => JsonResponse::HTTP_NOT_FOUND,
                 'detail' => 'Company not found with the provided ID.',
             ], JsonResponse::HTTP_NOT_FOUND);
+        } catch (UnauthorizedException) {
+            return response()->json([
+                "title" => "Unauthorized",
+                "detail" => "You do not have permission to view this resource.",
+                "status" => 403,
+            ], 403);
         } catch (Exception $e) {
             return new JsonResponse([
                 'title' => 'Error',

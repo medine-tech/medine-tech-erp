@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Backoffice\Companies;
 
 use Exception;
+use Illuminate\Http\Request;
 use MedineTech\Backoffice\Companies\Application\Find\CompanyFinder;
 use MedineTech\Backoffice\Companies\Application\Find\CompanyFinderRequest;
 use MedineTech\Backoffice\Companies\Domain\CompanyNotFound;
+use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompanyPermissions;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @OA\Get(
@@ -68,6 +70,10 @@ final class CompanyGetController
     public function __invoke(string $id, Request $request): JsonResponse
     {
         try {
+            if (!$request->user()->can(CompanyPermissions::VIEW)) {
+                throw new UnauthorizedException(403);
+            }
+
             $response = ($this->finder)(
                 new CompanyFinderRequest((string)$id)
             );
@@ -84,6 +90,12 @@ final class CompanyGetController
                 'detail' => "The company with id <{$id}> does not exist."
             ], JsonResponse::HTTP_NOT_FOUND);
 
+        } catch (UnauthorizedException) {
+            return response()->json([
+                "title" => "Unauthorized",
+                "detail" => "You do not have permission to view this resource.",
+                "status" => 403,
+            ], 403);
         } catch (Exception $e) {
             return new JsonResponse([
                 'title' => 'Internal Server Error',

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Companies\Application\Create\CompanyCreator;
 use MedineTech\Backoffice\Companies\Application\Create\CompanyCreatorRequest;
+use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompanyPermissions;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -60,6 +62,10 @@ final class CompanyPostController
     public function __invoke(Request $request): JsonResponse
     {
         try {
+            if (!$request->user()->can(CompanyPermissions::CREATE)) {
+                throw new UnauthorizedException(403);
+            }
+
             $validatedData = $request->validate([
                 'id' => 'required|string|uuid',
                 'name' => 'required|string|min:3|max:40',
@@ -81,6 +87,12 @@ final class CompanyPostController
                 'detail' => 'The given data was invalid.',
                 'errors' => $e->errors(),
             ], JsonResponse::HTTP_BAD_REQUEST);
+        } catch (UnauthorizedException) {
+            return response()->json([
+                "title" => "Unauthorized",
+                "detail" => "You do not have permission to view this resource.",
+                "status" => 403,
+            ], 403);
         } catch (Exception $e) {
             return new JsonResponse([
                 'title' => 'Internal Server Error',
