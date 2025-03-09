@@ -48,6 +48,15 @@ use Spatie\Permission\Exceptions\UnauthorizedException;
  *         )
  *     ),
  *     @OA\Response(
+ *         response=403,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Unauthorized"),
+ *             @OA\Property(property="status", type="integer", example=403),
+ *             @OA\Property(property="detail", type="string", example="You do not have permission to view this resource.")
+ *         )
+ *     ),
+ *     @OA\Response(
  *         response=500,
  *         description="Internal server error",
  *         @OA\JsonContent(
