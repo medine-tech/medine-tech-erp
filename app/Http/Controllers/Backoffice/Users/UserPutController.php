@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use MedineTech\Backoffice\Users\Application\Update\UserUpdater;
 use MedineTech\Backoffice\Users\Application\Update\UserUpdaterRequest;
+use MedineTech\Backoffice\Users\Infrastructure\Authorization\UsersPermissions;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 
 /**
  * @OA\Put(
@@ -70,6 +72,10 @@ final readonly class UserPutController
     public function __invoke(int $id, Request $request): JsonResponse
     {
         try {
+            if (!$request->user()->can(UsersPermissions::UPDATE)) {
+                throw new UnauthorizedException(403);
+            }
+
             $validatedData = $request->validate([
                 'name' => 'required|string|min:3|max:30'
             ]);
@@ -89,6 +95,12 @@ final readonly class UserPutController
                 'detail' => 'The given data was invalid.',
                 'errors' => $e->errors()
             ], JsonResponse::HTTP_BAD_REQUEST);
+        } catch (UnauthorizedException) {
+            return response()->json([
+                "title" => "Unauthorized",
+                "detail" => "You do not have permission to view this resource.",
+                "status" => 403,
+            ], 403);
         } catch (Exception $e) {
             Log::error('Server error: ' . $e->getMessage());
             return new JsonResponse([

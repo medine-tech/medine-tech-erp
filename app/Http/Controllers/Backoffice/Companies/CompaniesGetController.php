@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use MedineTech\Backoffice\Companies\Application\Search\CompaniesSearcher;
 use MedineTech\Backoffice\Companies\Application\Search\CompaniesSearcherRequest;
 use MedineTech\Backoffice\Companies\Application\Search\CompanySearcherResponse;
-use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompanyPermissions;
+use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompaniesPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use function Lambdish\Phunctional\map;
 
@@ -34,7 +34,7 @@ final class CompaniesGetController extends Controller
 //            $role->syncPermissions([$permission]);
 //            $user->syncRoles([$role->name]);
 
-            if (!$user->can(CompanyPermissions::VIEW)) {
+            if (!$user->can(CompaniesPermissions::VIEW)) {
                 throw new UnauthorizedException(403);
             }
 

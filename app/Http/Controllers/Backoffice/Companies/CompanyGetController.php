@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use MedineTech\Backoffice\Companies\Application\Find\CompanyFinder;
 use MedineTech\Backoffice\Companies\Application\Find\CompanyFinderRequest;
 use MedineTech\Backoffice\Companies\Domain\CompanyNotFound;
-use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompanyPermissions;
+use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompaniesPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -70,7 +70,7 @@ final class CompanyGetController
     public function __invoke(string $id, Request $request): JsonResponse
     {
         try {
-            if (!$request->user()->can(CompanyPermissions::VIEW)) {
+            if (!$request->user()->can(CompaniesPermissions::VIEW)) {
                 throw new UnauthorizedException(403);
             }
 

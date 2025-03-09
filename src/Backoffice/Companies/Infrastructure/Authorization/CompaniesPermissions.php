@@ -2,7 +2,7 @@
 
 namespace MedineTech\Backoffice\Companies\Infrastructure\Authorization;
 
-enum CompanyPermissions: string
+enum CompaniesPermissions: string
 {
     case CREATE = 'backoffice.companies.create';
     case UPDATE = 'backoffice.companies.update';

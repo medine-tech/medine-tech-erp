@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Companies\Application\Create\CompanyCreator;
 use MedineTech\Backoffice\Companies\Application\Create\CompanyCreatorRequest;
-use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompanyPermissions;
+use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompaniesPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -62,7 +62,7 @@ final class CompanyPostController
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            if (!$request->user()->can(CompanyPermissions::CREATE)) {
+            if (!$request->user()->can(CompaniesPermissions::CREATE)) {
                 throw new UnauthorizedException(403);
             }
 

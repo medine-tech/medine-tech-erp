@@ -8,6 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use MedineTech\Backoffice\Users\Application\Search\UsersSearcher;
 use MedineTech\Backoffice\Users\Application\Search\UsersSearcherRequest;
+use MedineTech\Backoffice\Users\Infrastructure\Authorization\UsersPermissions;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 
 /**
  * @OA\Get(
@@ -67,6 +69,10 @@ final class UsersGetController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         try {
+            if (!$request->user()->can(UsersPermissions::VIEW)) {
+                throw new UnauthorizedException(403);
+            }
+
             $filters = (array)$request->query();
             $filters["companyId"] = tenant("id");
 
@@ -87,6 +93,12 @@ final class UsersGetController extends Controller
                 'per_page' => $searchResponse->perPage(),
                 'current_page' => $searchResponse->currentPage(),
             ]);
+        } catch (UnauthorizedException) {
+            return response()->json([
+                "title" => "Unauthorized",
+                "detail" => "You do not have permission to view this resource.",
+                "status" => 403,
+            ], 403);
         } catch (\Exception $e) {
             return response()->json([
                 "title" => "Internal Server Error",

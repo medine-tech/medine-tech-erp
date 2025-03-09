@@ -9,7 +9,7 @@ use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Companies\Application\Update\CompanyUpdater;
 use MedineTech\Backoffice\Companies\Application\Update\CompanyUpdaterRequest;
 use MedineTech\Backoffice\Companies\Domain\CompanyNotFound;
-use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompanyPermissions;
+use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompaniesPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -65,7 +65,7 @@ final class CompanyPutController
     public function __invoke(string $id, Request $request): JsonResponse
     {
         try {
-            if (!$request->user()->can(CompanyPermissions::UPDATE)) {
+            if (!$request->user()->can(CompaniesPermissions::UPDATE)) {
                 throw new UnauthorizedException(403);
             }
 
