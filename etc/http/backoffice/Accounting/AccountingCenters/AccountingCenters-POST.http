@@ -1,0 +1,14 @@
+POST http://localhost/api/backoffice/Accounting/AccountingCenters/{{tenant}}/accounting-centers
+accept: application/json
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "id": "{{$random.uuid}}",
+    "code": "AC-{{$random.number}}",
+    "name": "{{$random.company}}",
+    "description": "{{$random.lorem.sentence}}",
+    "status": 1,
+    "parent_id": "{{$random.uuid}}",
+    "company_id": "{{$random.uuid}}"
+}

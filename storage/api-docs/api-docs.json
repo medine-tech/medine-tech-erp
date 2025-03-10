@@ -99,6 +99,125 @@
                 ]
             }
         },
+        "/api/backoffice/accounting-centers": {
+            "post": {
+                "tags": [
+                    "Backoffice - Accounting Centers"
+                ],
+                "summary": "Create a new accounting center",
+                "operationId": "f82bf61904b0581ca807e52cfb4ea490",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "code",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "123e4567-e89b-12d3-a456-426655440000"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "maxLength": 50,
+                                        "example": "AC-001"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 40,
+                                        "minLength": 3,
+                                        "example": "Main Accounting Center"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Main accounting center description",
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "description": "1 = active, 0 = inactive",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "parent_id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "123e4567-e89b-12d3-a456-426655440001",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Accounting center created successfully"
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred while processing your request."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/backoffice/companies/{id}": {
             "get": {
                 "tags": [
@@ -928,6 +1047,10 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "Backoffice - Accounting Centers",
+            "description": "Backoffice - Accounting Centers"
         },
         {
             "name": "Backoffice - Companies",
