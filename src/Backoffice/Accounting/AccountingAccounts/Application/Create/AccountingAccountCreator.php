@@ -30,7 +30,9 @@ class AccountingAccountCreator
 
             $this->repository->save($accountingAccount);
         } catch (Exception $e) {
-            throw new (sprintf('Error creating accounting account: %s', $e->getMessage()));
+            throw new \Exception(
+                sprintf('Error creating accounting account: %s', $e->getMessage())
+            );
         }
     }
 }
