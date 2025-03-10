@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Companies;
@@ -14,27 +13,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @OA\Put(
- *     path="api/backoffice/companies/{id}",
+ *     path="/api/backoffice/companies/{id}",
  *     tags={"Backoffice - Companies"},
  *     summary="Update an existing company",
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
- *         required=true,
- *         description="The ID of the company to update",
- *         @OA\Schema(type="string", format="uuid")
- *     ),
+ *     security={ {"bearerAuth": {} } },
+ *     @OA\Parameter(name="id", in="path", required=true, description="The ID of the company to update", @OA\Schema(type="string", format="uuid")),
  *     @OA\RequestBody(
  *         required=true,
- *         @OA\JsonContent(
- *             required={"name"},
- *             @OA\Property(property="name", type="string", example="New Company Name")
- *         )
+ *         @OA\JsonContent(required={"name"}, @OA\Property(property="name", type="string", example="New Company Name"))
  *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Company updated successfully"
- *     ),
+ *     @OA\Response(response=200, description="Company updated successfully"),
  *     @OA\Response(
  *         response=400,
  *         description="Validation error",
@@ -58,7 +46,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *         response=500,
  *         description="Internal server error",
  *         @OA\JsonContent(
- *             @OA\Property(property="title", type="string", example="Internal Server Error"),
+ *             @OA\Property(property="title", type="string", example="Error"),
  *             @OA\Property(property="status", type="integer", example=500),
  *             @OA\Property(property="detail", type="string", example="An unexpected error occurred while processing your request.")
  *         )
@@ -69,8 +57,7 @@ final class CompanyPutController
 {
     public function __construct(
         private readonly CompanyUpdater $updater
-    )
-    {
+    ) {
     }
 
     public function __invoke(string $id, Request $request): JsonResponse
@@ -87,7 +74,7 @@ final class CompanyPutController
 
             ($this->updater)($updaterRequest);
 
-            return new JsonResponse('', JsonResponse::HTTP_OK);
+            return new JsonResponse(null, JsonResponse::HTTP_OK);
         } catch (ValidationException $e) {
             return new JsonResponse([
                 'title' => 'Validation Error',

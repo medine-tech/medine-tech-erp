@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Companies\Application\Search;
 
+use MedineTech\Backoffice\Companies\Domain\Company;
 use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
+use function Lambdish\Phunctional\map;
 
 class CompaniesSearcher
 {
     public function __construct(
-        private CompanyRepository $repository
+        private readonly CompanyRepository $repository
     ) {
     }
 
@@ -17,6 +19,16 @@ class CompaniesSearcher
     {
         $result = $this->repository->search($request->filters());
 
-        return new CompaniesSearcherResponse($result["items"] ?? []);
+        return new CompaniesSearcherResponse(
+            map(function (Company $company) {
+                return new CompanySearcherResponse(
+                    $company->id(),
+                    $company->name()
+                );
+            }, $result["items"]),
+            $result["total"],
+            $result["perPage"],
+            $result["currentPage"]
+        );
     }
 }

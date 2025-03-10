@@ -4,36 +4,42 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\FirstCompanies\Application\Register;
 
-use MedineTech\Backoffice\FirstCompanies\Domain\FirstCompany;
-use MedineTech\Backoffice\FirstCompanies\Domain\FirstCompanyRepository;
-use MedineTech\Backoffice\Users\Application\Search\UsersSearcher;
-use MedineTech\Backoffice\Users\Application\Search\UsersSearcherRequest;
+use MedineTech\Backoffice\Companies\Application\Create\CompanyCreator;
+use MedineTech\Backoffice\Companies\Application\Create\CompanyCreatorRequest;
+use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreator;
+use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreatorRequest;
+use MedineTech\Backoffice\Users\Application\Create\UserCreator;
+use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
 
 final readonly class FirstCompanyRegister
 {
     public function __construct(
-        private FirstCompanyRepository $repository,
-        private UsersSearcher $usersSearcher
+        private CompanyCreator $companyCreator,
+        private UserCreator $userCreator,
+        private CompanyUserCreator $companyUserCreator,
     ) {
     }
 
     public function __invoke(FirstCompanyRegisterRequest $request): void
     {
-        $usersResponse = ($this->usersSearcher)(new UsersSearcherRequest([
-            "email" => $request->userEmail(),
-        ]));
-        $user = $usersResponse->items()[0] ?? null;
-
-        if ($user) {
-            return;
-        }
-
-        $firstCompany = new FirstCompany(
+        // create user
+        $userId = ($this->userCreator)(new UserCreatorRequest(
             $request->userName(),
             $request->userEmail(),
             $request->userPassword(),
-        );
+            $request->companyId()
+        ));
 
-        $this->repository->save($firstCompany);
+        // create company
+        ($this->companyCreator)(new CompanyCreatorRequest(
+            $request->companyId(),
+            $request->companyName(),
+            $userId
+        ));
+
+        ($this->companyUserCreator)(new CompanyUserCreatorRequest(
+            $request->companyId(),
+            $userId,
+        ));
     }
 }
