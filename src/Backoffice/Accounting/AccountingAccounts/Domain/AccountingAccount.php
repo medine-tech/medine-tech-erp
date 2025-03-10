@@ -53,6 +53,13 @@ final class AccountingAccount extends AggregateRoot
 
     public static function fromPrimitives(array $row): self
     {
+        $requiredKeys = ['id', 'name', 'code', 'type', 'parent_id', 'status', 'company_id'];
+        foreach ($requiredKeys as $key) {
+            if (!array_key_exists($key, $row)) {
+                throw new \InvalidArgumentException("Missing required key: {$key}");
+            }
+        }
+
         return new self(
             (string)$row['id'],
             (string)$row['name'],
