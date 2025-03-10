@@ -41,7 +41,7 @@ final class CompaniesGetController extends Controller
             return response()->json([
                 "title" => "Internal Server Error",
                 "detail" => "An unexpected error occurred",
-                "eerror" => $e->getMessage(),
+                "error" => $e->getMessage(),
                 "status" => 500,
             ], 500);
         }
