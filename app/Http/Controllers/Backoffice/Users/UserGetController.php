@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use MedineTech\Backoffice\Users\Application\Find\UserFinder;
 use MedineTech\Backoffice\Users\Application\Find\UserFinderRequest;
 use MedineTech\Backoffice\Users\Domain\UserNotFound;
+use MedineTech\Backoffice\Users\Infrastructure\Authorization\UsersPermissions;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 
 /**
  * @OA\Get(
@@ -43,6 +45,15 @@ use MedineTech\Backoffice\Users\Domain\UserNotFound;
  *         )
  *     ),
  *     @OA\Response(
+ *         response=403,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Unauthorized"),
+ *             @OA\Property(property="status", type="integer", example=403),
+ *             @OA\Property(property="detail", type="string", example="You do not have permission to view this resource.")
+ *         )
+ *     ),
+ *     @OA\Response(
  *         response=500,
  *         description="Internal server error",
  *         @OA\JsonContent(
@@ -67,6 +78,10 @@ final class UserGetController
     public function __invoke(int $id, Request $request): JsonResponse
     {
         try {
+            if (!$request->user()->can(UsersPermissions::VIEW)) {
+                throw new UnauthorizedException(403);
+            }
+
             $response = ($this->finder)(new UserFinderRequest($id));
 
             return new JsonResponse([
@@ -80,6 +95,12 @@ final class UserGetController
                 'status' => JsonResponse::HTTP_NOT_FOUND,
                 'detail' => "User with ID {$id} does not exist"
             ], JsonResponse::HTTP_NOT_FOUND);
+        } catch (UnauthorizedException) {
+            return response()->json([
+                "title" => "Unauthorized",
+                "detail" => "You do not have permission to view this resource.",
+                "status" => 403,
+            ], 403);
         } catch (Exception $e) {
             return new JsonResponse([
                 'title' => 'Internal Server Error',

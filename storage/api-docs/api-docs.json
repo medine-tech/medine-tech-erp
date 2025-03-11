@@ -99,13 +99,139 @@
                 ]
             }
         },
-        "/api/backoffice/accounting-centers": {
+        "/api/backoffice/companies": {
+            "get": {
+                "tags": [
+                    "Backoffice - Companies"
+                ],
+                "summary": "Retrieve a list of companies",
+                "description": "Returns a paginated list of companies for authorized users. Accepts optional query parameters for filtering.",
+                "operationId": "23448a5f0cab918418fe7a7e0c04d180",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of entries per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of companies retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "format": "uuid",
+                                                        "example": "123e4567-e89b-12d3-a456-426655440000"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "MedineTech"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 100
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
             "post": {
                 "tags": [
-                    "Backoffice - Accounting Centers"
+                    "Backoffice - Companies"
                 ],
-                "summary": "Create a new accounting center",
-                "operationId": "f82bf61904b0581ca807e52cfb4ea490",
+                "summary": "Create a new company",
+                "operationId": "35b0e8a71551ee33733c335eb0d61459",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -113,7 +239,6 @@
                             "schema": {
                                 "required": [
                                     "id",
-                                    "code",
                                     "name"
                                 ],
                                 "properties": {
@@ -122,32 +247,9 @@
                                         "format": "uuid",
                                         "example": "123e4567-e89b-12d3-a456-426655440000"
                                     },
-                                    "code": {
-                                        "type": "string",
-                                        "maxLength": 50,
-                                        "example": "AC-001"
-                                    },
                                     "name": {
                                         "type": "string",
-                                        "maxLength": 40,
-                                        "minLength": 3,
-                                        "example": "Main Accounting Center"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "Main accounting center description",
-                                        "nullable": true
-                                    },
-                                    "status": {
-                                        "description": "1 = active, 0 = inactive",
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "parent_id": {
-                                        "type": "string",
-                                        "format": "uuid",
-                                        "example": "123e4567-e89b-12d3-a456-426655440001",
-                                        "nullable": true
+                                        "example": "MedineTech"
                                     }
                                 },
                                 "type": "object"
@@ -157,7 +259,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Accounting center created successfully"
+                        "description": "Company created successfully"
                     },
                     "400": {
                         "description": "Validation error",
@@ -179,6 +281,30 @@
                                         },
                                         "errors": {
                                             "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
                                         }
                                     },
                                     "type": "object"
@@ -253,6 +379,30 @@
                                         "name": {
                                             "type": "string",
                                             "example": "MedineTech"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
                                         }
                                     },
                                     "type": "object"
@@ -407,6 +557,30 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
                     "500": {
                         "description": "Internal server error",
                         "content": {
@@ -416,101 +590,6 @@
                                         "title": {
                                             "type": "string",
                                             "example": "Error"
-                                        },
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 500
-                                        },
-                                        "detail": {
-                                            "type": "string",
-                                            "example": "An unexpected error occurred while processing your request."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/backoffice/companies": {
-            "post": {
-                "tags": [
-                    "Backoffice - Companies"
-                ],
-                "summary": "Create a new company",
-                "operationId": "35b0e8a71551ee33733c335eb0d61459",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "id",
-                                    "name"
-                                ],
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "format": "uuid",
-                                        "example": "123e4567-e89b-12d3-a456-426655440000"
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "example": "MedineTech"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Company created successfully"
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "title": {
-                                            "type": "string",
-                                            "example": "Validation Error"
-                                        },
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 400
-                                        },
-                                        "detail": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
-                                        },
-                                        "errors": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "title": {
-                                            "type": "string",
-                                            "example": "Internal Server Error"
                                         },
                                         "status": {
                                             "type": "integer",
@@ -710,6 +789,30 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
                     "500": {
                         "description": "Internal server error",
                         "content": {
@@ -807,6 +910,30 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
                     "500": {
                         "description": "Internal server error",
                         "content": {
@@ -896,6 +1023,30 @@
                                         "current_page": {
                                             "type": "integer",
                                             "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
                                         }
                                     },
                                     "type": "object"
@@ -1001,6 +1152,30 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
                     "500": {
                         "description": "Internal server error",
                         "content": {
@@ -1047,10 +1222,6 @@
         {
             "name": "Authentication",
             "description": "Authentication"
-        },
-        {
-            "name": "Backoffice - Accounting Centers",
-            "description": "Backoffice - Accounting Centers"
         },
         {
             "name": "Backoffice - Companies",

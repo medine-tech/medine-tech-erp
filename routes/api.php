@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\TeamsPermission;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
 
@@ -11,6 +12,7 @@ Route::group([
     'middleware' => [
         'auth:sanctum',
         InitializeTenancyByPath::class,
+        TeamsPermission::class,
     ],
 ], function () {
     require __DIR__ . '/backoffice/companies.php';
