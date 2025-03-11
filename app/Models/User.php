@@ -13,12 +13,12 @@ use Laravel\Sanctum\HasApiTokens;
 use MedineTech\Backoffice\Companies\Infrastructure\Persistence\Eloquent\CompanyModel;
 use MedineTech\Backoffice\CompanyUsers\Infrastructure\Persistence\Eloquent\CompanyUserModel;
 use MedineTech\Backoffice\Users\Infrastructure\Persistence\Eloquent\UserFilters;
-
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.

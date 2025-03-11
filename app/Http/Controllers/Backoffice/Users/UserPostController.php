@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use MedineTech\Backoffice\Users\Application\Create\UserCreator;
 use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
+use MedineTech\Backoffice\Users\Infrastructure\Authorization\UsersPermissions;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 
 /**
  * @OA\Post(
@@ -41,6 +43,15 @@ use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
  *         )
  *     ),
  *     @OA\Response(
+ *         response=403,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Unauthorized"),
+ *             @OA\Property(property="status", type="integer", example=403),
+ *             @OA\Property(property="detail", type="string", example="You do not have permission to view this resource.")
+ *         )
+ *     ),
+ *     @OA\Response(
  *         response=500,
  *         description="Internal server error",
  *         @OA\JsonContent(
@@ -65,6 +76,10 @@ final readonly class UserPostController
     public function __invoke(Request $request): JsonResponse
     {
         try {
+            if (!$request->user()->can(UsersPermissions::CREATE)) {
+                throw new UnauthorizedException(403);
+            }
+
             $validatedData = $request->validate([
                 'name' => 'required|string|min:3|max:30',
                 'email' => 'required|email',
@@ -88,6 +103,12 @@ final readonly class UserPostController
                 'detail' => 'The given data was invalid.',
                 'errors' => $e->errors()
             ], JsonResponse::HTTP_BAD_REQUEST);
+        } catch (UnauthorizedException) {
+            return response()->json([
+                "title" => "Unauthorized",
+                "detail" => "You do not have permission to view this resource.",
+                "status" => 403,
+            ], 403);
         } catch (Exception $e) {
             Log::error('Server error: ' . $e->getMessage());
             return new JsonResponse([
