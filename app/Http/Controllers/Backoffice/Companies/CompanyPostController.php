@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Companies\Application\Create\CompanyCreator;
 use MedineTech\Backoffice\Companies\Application\Create\CompanyCreatorRequest;
+use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompaniesPermissions;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -40,6 +42,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *         )
  *     ),
  *     @OA\Response(
+ *         response=403,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Unauthorized"),
+ *             @OA\Property(property="status", type="integer", example=403),
+ *             @OA\Property(property="detail", type="string", example="You do not have permission to view this resource.")
+ *         )
+ *     ),
+ *     @OA\Response(
  *         response=500,
  *         description="Internal server error",
  *         @OA\JsonContent(
@@ -60,6 +71,10 @@ final class CompanyPostController
     public function __invoke(Request $request): JsonResponse
     {
         try {
+            if (!$request->user()->can(CompaniesPermissions::CREATE)) {
+                throw new UnauthorizedException(403);
+            }
+
             $validatedData = $request->validate([
                 'id' => 'required|string|uuid',
                 'name' => 'required|string|min:3|max:40',
@@ -81,6 +96,12 @@ final class CompanyPostController
                 'detail' => 'The given data was invalid.',
                 'errors' => $e->errors(),
             ], JsonResponse::HTTP_BAD_REQUEST);
+        } catch (UnauthorizedException) {
+            return response()->json([
+                "title" => "Unauthorized",
+                "detail" => "You do not have permission to view this resource.",
+                "status" => 403,
+            ], 403);
         } catch (Exception $e) {
             return new JsonResponse([
                 'title' => 'Internal Server Error',
