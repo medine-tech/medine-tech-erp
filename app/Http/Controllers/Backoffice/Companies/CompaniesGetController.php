@@ -91,10 +91,10 @@ final class CompaniesGetController extends Controller
         try {
             $user = $request->user();
 //            Role::create(['name' => 'developer']);
-//            Permission::create(['name' => CompanyPermissions::VIEW]);
+//            Permission::create(['name' => CompaniesPermissions::VIEW]);
 //
 //            $role = Role::findByName('developer');
-//            $permission = Permission::findByName(CompanyPermissions::VIEW->value);
+//            $permission = Permission::findByName(CompaniesPermissions::VIEW->value);
 //            $role->syncPermissions([$permission]);
 //            $user->syncRoles([$role->name]);
 
