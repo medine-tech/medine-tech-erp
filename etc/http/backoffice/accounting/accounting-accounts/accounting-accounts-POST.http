@@ -11,3 +11,4 @@ Authorization: Bearer {{token}}
     "type": {{$random.integer(1, 5)}},
     "parent_id": null
 }
+
