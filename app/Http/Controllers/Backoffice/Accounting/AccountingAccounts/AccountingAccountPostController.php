@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *             @OA\Property(property="description", type="string", example="Cash account for the company", nullable=true),
  *             @OA\Property(property="code", type="string", example="101"),
  *             @OA\Property(property="type", type="integer", example=1, description="1 = asset, 2 = liability, 3 = equity, 4 = revenue, 5 = expense"),
+ *             @OA\Property(property="status", type="string", example="active", description="Account status: active or inactive"),
  *             @OA\Property(property="parent_id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426655440001", nullable=true),
  *         )
  *     ),
@@ -80,16 +81,16 @@ final class AccountingAccountPostController
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            $user = $request->user();
-
-            Role::create(['name' => 'developer']);
-            Permission::create(['name' => AccountingAccountsPermissions::CREATE]);
-
-
-            $role = Role::findByName('developer');
-            $permission = Permission::findByName(AccountingAccountsPermissions::VIEW->value);
-            $role->syncPermissions([$permission]);
-            $user->syncRoles([$role->name]);
+//            $user = $request->user();
+//
+//            Role::create(['name' => 'developer']);
+//            Permission::create(['name' => AccountingAccountsPermissions::CREATE]);
+//
+//
+//            $role = Role::findByName('developer');
+//            $permission = Permission::findByName(AccountingAccountsPermissions::VIEW->value);
+//            $role->syncPermissions([$permission]);
+//            $user->syncRoles([$role->name]);
 
             if (!$request->user()->can(AccountingAccountsPermissions::CREATE)) {
                 throw new UnauthorizedException(403);
@@ -101,6 +102,7 @@ final class AccountingAccountPostController
                 'name' => 'required|string|min:3|max:40',
                 'description' => 'nullable|string|min:3|max:100',
                 'type' => 'required|int',
+                'status' => 'required|string|in:active,inactive',
                 'parent_id' => 'nullable|string|uuid',
             ]);
 
@@ -112,6 +114,7 @@ final class AccountingAccountPostController
                 $validatedData['name'],
                 $validatedData['description'] ?? null,
                 $validatedData['type'],
+                $validatedData['status'],
                 $validatedData['parent_id'] ?? null,
                 $request->tenant('id'),
                 $userId,
