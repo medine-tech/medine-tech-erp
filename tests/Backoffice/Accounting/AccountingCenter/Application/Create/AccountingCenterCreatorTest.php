@@ -8,6 +8,7 @@ use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\Account
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\AccountingCenterCreatorRequest;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterCreatedDomainEvent;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterRepository;
+use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterStatus;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 
@@ -16,7 +17,9 @@ final class AccountingCenterCreatorTest extends UnitTestCase
     #[Test]
     public function it_should_create_an_accounting_center(): void
     {
-        $accountingCenter = AccountingCenterMother::create();
+        $accountingCenter = AccountingCenterMother::create(
+            status: AccountingCenterStatus::ACTIVE
+        );
 
         $repository = $this->mock(AccountingCenterRepository::class);
         $repository->shouldReceive('save')
@@ -24,7 +27,7 @@ final class AccountingCenterCreatorTest extends UnitTestCase
             ->with($this->similarTo($accountingCenter))
             ->andReturnNull();
 
-        $defaultStatus = 'active';
+        $defaultStatus = AccountingCenterStatus::ACTIVE;
         $domainEvent = new AccountingCenterCreatedDomainEvent(
             $accountingCenter->id(),
             $accountingCenter->code(),
@@ -32,9 +35,9 @@ final class AccountingCenterCreatorTest extends UnitTestCase
             $accountingCenter->description(),
             $defaultStatus,
             $accountingCenter->parentId(),
-            $accountingCenter->companyId(),
             $accountingCenter->creatorId(),
-            $accountingCenter->updaterId()
+            $accountingCenter->updaterId(),
+            $accountingCenter->companyId()
         );
 
         $this->shouldPublishDomainEvent($domainEvent);
@@ -49,9 +52,8 @@ final class AccountingCenterCreatorTest extends UnitTestCase
             $accountingCenter->name(),
             $accountingCenter->description(),
             $accountingCenter->parentId(),
-            $accountingCenter->companyId(),
             $accountingCenter->creatorId(),
-            $accountingCenter->updaterId()
+            $accountingCenter->companyId()
         ));
     }
 }

@@ -15,9 +15,9 @@ final class AccountingCenterCreatedDomainEvent extends DomainEvent
         private readonly ?string $description,
         private readonly string $status,
         private readonly ?string $parentId,
-        private readonly string $companyId,
         private readonly int $creatorId,
         private readonly int $updaterId,
+        private readonly string $companyId,
         ?string $eventId = null,
         ?string $occurredOn = null
     ) {
@@ -34,12 +34,12 @@ final class AccountingCenterCreatedDomainEvent extends DomainEvent
             $aggregateId,
             (string)$body['code'],
             (string)$body['name'],
-            isset($body['description']) ? (string)$body['description'] : null,
+            (string)($body['description'] ?? null),
             (string)$body['status'],
-            isset($body['parent_id']) ? (string)$body['parent_id'] : null,
-            (string)$body['company_id'],
+            (string)($body['parent_id'] ?? null),
             (int)$body['creator_id'],
             (int)$body['updater_id'],
+            (string)$body['company_id'],
             $eventId,
             $occurredOn
         );
@@ -53,14 +53,55 @@ final class AccountingCenterCreatedDomainEvent extends DomainEvent
     public function toPrimitives(): array
     {
         return [
-            'code' => $this->code,
-            'name' => $this->name,
-            'description' => $this->description,
-            'status' => $this->status,
-            'parentId' => $this->parentId,
-            'companyId' => $this->companyId,
-            'creatorId' => $this->creatorId,
-            'updaterId' => $this->updaterId
+            'code' => $this->code(),
+            'name' => $this->name(),
+            'description' => $this->description(),
+            'status' => $this->status(),
+            'parentId' => $this->parentId(),
+            'creatorId' => $this->creatorId(),
+            'updaterId' => $this->updaterId(),
+            'companyId' => $this->companyId()
         ];
+    }
+
+
+    public function code(): string
+    {
+        return $this->code;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function description(): ?string
+    {
+        return $this->description;
+    }
+
+    public function status(): string
+    {
+        return $this->status;
+    }
+
+    public function parentId(): ?string
+    {
+        return $this->parentId;
+    }
+
+    public function companyId(): string
+    {
+        return $this->companyId;
+    }
+
+    public function creatorId(): int
+    {
+        return $this->creatorId;
+    }
+
+    public function updaterId(): int
+    {
+        return $this->updaterId;
     }
 }

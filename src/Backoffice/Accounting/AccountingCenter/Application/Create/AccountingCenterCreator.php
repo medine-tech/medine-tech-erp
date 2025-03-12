@@ -21,9 +21,8 @@ class AccountingCenterCreator
             $request->name(),
             $request->description(),
             $request->parentId(),
-            $request->companyId(),
             $request->creatorId(),
-            $request->updaterId()
+            $request->companyId()
         );
 
         $this->repository->save($accountingCenter);

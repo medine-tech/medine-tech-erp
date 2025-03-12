@@ -19,9 +19,9 @@ final class EloquentAccountingCenterRepository implements AccountingCenterReposi
                 'description' => $accountingCenter->description(),
                 'status' => $accountingCenter->status(),
                 'parent_id' => $accountingCenter->parentId(),
-                'company_id' => $accountingCenter->companyId(),
                 'creator_id' => $accountingCenter->creatorId(),
                 'updater_id' => $accountingCenter->updaterId(),
+                'company_id' => $accountingCenter->companyId()
             ];
 
             AccountingCenterModel::updateOrCreate(

@@ -4,4 +4,4 @@ use App\Http\Controllers\Backoffice\Accounting\AccountingCenter\AccountingCenter
 use Illuminate\Support\Facades\Route;
 
 Route::post('/accounting-centers', AccountingCenterPostController::class)
-    ->name('accounting-centers.create');
+    ->name('backoffice.accounting-centers.create');

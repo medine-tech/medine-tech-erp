@@ -14,9 +14,9 @@ final class AccountingCenter extends AggregateRoot
         private ?string $description,
         private string $status,
         private ?string $parentId,
-        private string $companyId,
         private int $creatorId,
-        private int $updaterId
+        private int $updaterId,
+        private string $companyId
     ) {
     }
 
@@ -26,11 +26,11 @@ final class AccountingCenter extends AggregateRoot
         string $name,
         ?string $description,
         ?string $parentId,
-        string $companyId,
         int $creatorId,
-        int $updaterId
+        string $companyId,
     ): self {
         $defaultStatus = AccountingCenterStatus::ACTIVE;
+        $defaultUpdaterId = $creatorId;
         $accountingCenter = new self(
             $id,
             $code,
@@ -38,9 +38,9 @@ final class AccountingCenter extends AggregateRoot
             $description,
             $defaultStatus,
             $parentId,
-            $companyId,
             $creatorId,
-            $updaterId
+            $defaultUpdaterId,
+            $companyId,
         );
 
         $accountingCenter->record(new AccountingCenterCreatedDomainEvent(
@@ -50,9 +50,9 @@ final class AccountingCenter extends AggregateRoot
             $accountingCenter->description(),
             $accountingCenter->status(),
             $accountingCenter->parentId(),
-            $accountingCenter->companyId(),
             $accountingCenter->creatorId(),
-            $accountingCenter->updaterId()
+            $accountingCenter->updaterId(),
+            $accountingCenter->companyId(),
         ));
 
         return $accountingCenter;
@@ -64,27 +64,27 @@ final class AccountingCenter extends AggregateRoot
             (string)$row['id'],
             (string)$row['code'],
             (string)$row['name'],
-            isset($row['description']) ? (string)$row['description'] : null,
+            (string)($row['description'] ?? null),
             (string)$row['status'],
-            isset($row['parent_id']) ? (string)$row['parent_id'] : null,
-            (string)$row['company_id'],
+            (string)($row['parent_id'] ?? null),
             (int)$row['creator_id'],
-            (int)$row['updater_id']
+            (int)$row['updater_id'],
+            (string)$row['company_id']
         );
     }
 
     public function toPrimitives(): array
     {
         return [
-            'id' => $this->id,
-            'code' => $this->code,
-            'name' => $this->name,
-            'description' => $this->description,
-            'status' => $this->status,
-            'parentId' => $this->parentId,
-            'companyId' => $this->companyId,
-            'creatorId' => $this->creatorId,
-            'updaterId' => $this->updaterId
+            'id' => $this->id(),
+            'code' => $this->code(),
+            'name' => $this->name(),
+            'description' => $this->description(),
+            'status' => $this->status(),
+            'parentId' => $this->parentId(),
+            'creatorId' => $this->creatorId(),
+            'updaterId' => $this->updaterId(),
+            'companyId' => $this->companyId()
         ];
     }
 

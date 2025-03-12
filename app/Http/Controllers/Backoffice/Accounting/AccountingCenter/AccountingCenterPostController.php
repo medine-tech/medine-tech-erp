@@ -78,12 +78,12 @@ final class AccountingCenterPostController
     public function __invoke(Request $request): JsonResponse
     {
         try {
-//            $user = $request->user();
+            $user = $request->user();
 //            Role::create(['name' => 'developer']);
 //            Permission::create(['name' => AccountingCenterPermissions::CREATE]);
-//
+
 //            $role = Role::findByName('developer');
-//            $permission = Permission::findByName(AccountingCenterPermissions::VIEW->value);
+//            $permission = Permission::findByName(AccountingCenterPermissions::CREATE->value);
 //            $role->syncPermissions([$permission]);
 //            $user->syncRoles([$role->name]);
 
@@ -96,7 +96,6 @@ final class AccountingCenterPostController
                 'code' => 'required|string|max:50',
                 'name' => 'required|string|min:3|max:40',
                 'description' => 'nullable|string',
-                'status' => 'required|string|in:active,inactive',
                 'parent_id' => 'nullable|string|uuid',
             ]);
 
@@ -107,10 +106,9 @@ final class AccountingCenterPostController
                 $validatedData['code'],
                 $validatedData['name'],
                 $validatedData['description'] ?? null,
-                $validatedData['status'],
                 $validatedData['parent_id'] ?? null,
-                $request->tenant('id'),
-                $userId
+                $userId,
+                tenant('id')
             );
 
             ($this->creator)($creatorRequest);
@@ -135,6 +133,7 @@ final class AccountingCenterPostController
                 'title' => 'Internal Server Error',
                 'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
                 'detail' => 'An unexpected error occurred while processing your request.',
+                'message' => $e->getMessage()
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

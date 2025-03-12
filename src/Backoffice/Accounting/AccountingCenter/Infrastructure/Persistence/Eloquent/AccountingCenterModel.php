@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Persistence\Eloquent;
 
-use Stancl\Tenancy\Database\Models\Tenant;
+use Illuminate\Database\Eloquent\Model;
 
-final class AccountingCenterModel extends Tenant
+final class AccountingCenterModel extends Model
 {
     protected $table = 'backoffice__accounting__accounting_centers';
     public $incrementing = false;
@@ -19,8 +19,8 @@ final class AccountingCenterModel extends Tenant
         'description',
         'status',
         'parent_id',
-        'company_id',
         'creator_id',
-        'updater_id'
+        'updater_id',
+        'company_id'
     ];
 }

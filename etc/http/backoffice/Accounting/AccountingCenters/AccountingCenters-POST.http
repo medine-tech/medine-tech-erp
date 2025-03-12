@@ -5,10 +5,8 @@ Authorization: Bearer {{token}}
 
 {
     "id": "{{$random.uuid}}",
-    "code": "AC-{{$random.number}}",
-    "name": "{{$random.company}}",
-    "description": "{{$random.lorem.sentence}}",
-    "status": "active",
-    "parent_id": "{{$random.uuid}}",
-    "company_id": "{{$random.uuid}}"
+    "code": "{{$random.uuid}}",
+    "name": "{{$random.company.name}}",
+    "description": null,
+    "parent_id": null
 }

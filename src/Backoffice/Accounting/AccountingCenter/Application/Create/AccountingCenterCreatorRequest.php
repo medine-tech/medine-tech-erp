@@ -11,9 +11,8 @@ final readonly class AccountingCenterCreatorRequest
         private string $name,
         private ?string $description,
         private ?string $parentId,
-        private string $companyId,
         private int $creatorId,
-        private int $updaterId
+        private string $companyId
 
     ) {
     }
@@ -51,10 +50,5 @@ final readonly class AccountingCenterCreatorRequest
     public function creatorId(): int
     {
         return $this->creatorId;
-    }
-
-    public function updaterId(): int
-    {
-        return $this->updaterId;
     }
 }

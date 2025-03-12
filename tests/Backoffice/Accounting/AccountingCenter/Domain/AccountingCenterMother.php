@@ -17,22 +17,28 @@ final class AccountingCenterMother
         ?string $description = null,
         ?string $status = null,
         ?string $parentId = null,
-        ?string $companyId = null,
         ?int $creatorId = null,
-        ?int $updaterId = null
+        ?int $updaterId = null,
+        ?string $companyId = null
     ): AccountingCenter {
         $faker = Factory::create();
+
+        $creator = $creatorId ?? $faker->numberBetween(1, 100);
 
         return new AccountingCenter(
             $id ?? $faker->uuid(),
             $code ?? $faker->uuid(),
             $name ?? $faker->company(),
             $description ?? $faker->optional()->sentence(),
-            $status ?? AccountingCenterStatus::ACTIVE,
+                $status ?? $faker->randomElement([
+                AccountingCenterStatus::ACTIVE,
+                AccountingCenterStatus::INACTIVE
+            ]),
             $parentId ?? $faker->optional()->uuid(),
-            $companyId ?? $faker->uuid(),
-                $creatorId ?? $faker->numberBetween(1, 100),
-                $updaterId ?? $faker->numberBetween(1, 100)
+                $creatorId ?? $creator,
+                $updaterId ?? $creator,
+                $companyId ?? $faker->uuid()
+
         );
     }
 }
