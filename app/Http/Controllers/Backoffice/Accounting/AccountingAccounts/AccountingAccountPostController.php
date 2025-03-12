@@ -31,7 +31,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *             @OA\Property(property="description", type="string", example="Cash account for the company", nullable=true),
  *             @OA\Property(property="code", type="string", example="101"),
  *             @OA\Property(property="type", type="integer", example=1, description="1 = asset, 2 = liability, 3 = equity, 4 = revenue, 5 = expense"),
- *             @OA\Property(property="status", type="string", example="active", description="Account status: active or inactive"),
  *             @OA\Property(property="parent_id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426655440001", nullable=true),
  *         )
  *     ),
