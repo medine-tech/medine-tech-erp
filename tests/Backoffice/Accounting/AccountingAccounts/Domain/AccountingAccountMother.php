@@ -19,9 +19,9 @@ final class AccountingAccountMother
         ?int $type = null,
         ?string $status = null,
         ?string $parentId = null,
-        ?string $companyId = null,
         ?int $creatorId = null,
-        ?int $updaterId = null
+        ?int $updaterId = null,
+        ?string $companyId = null
     ): AccountingAccount {
         $faker = Factory::create();
 
@@ -39,9 +39,10 @@ final class AccountingAccountMother
             ]),
                 $status ?? AccountingAccountStatus::ACTIVE,
             $parentId ?? $faker->uuid(),
-            $companyId ?? $faker->uuid(),
-            $creatorId ?? $faker->numberBetween(1, 100),
-            $updaterId ?? $faker->numberBetween(1, 100)
+                $creatorId ?? $faker->numberBetween(1, 100),
+                $updaterId ?? $faker->numberBetween(1, 100),
+            $companyId ?? $faker->uuid()
+
         );
     }
 }

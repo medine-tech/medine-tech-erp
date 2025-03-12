@@ -15,10 +15,10 @@ final class AccountingAccountCreatedDomainEvent extends DomainEvent
         private readonly ?string $description,
         private readonly int $type,
         private readonly string $status,
-        private readonly string $parentId,
-        private readonly string $companyId,
+        private readonly ?string $parentId,
         private readonly int $creatorId,
         private readonly int $updaterId,
+        private readonly string $companyId,
         ?string $eventId = null,
         ?string $occurredOn = null
     ) {
@@ -39,9 +39,9 @@ final class AccountingAccountCreatedDomainEvent extends DomainEvent
             (int)$body['type'],
             (string)$body['status'],
             isset($body['parent_id']) ? (string)$body['parent_id'] : null,
-            (string)$body['company_id'],
             (int)$body['creator_id'],
             (int)$body['updater_id'],
+            (string)$body['company_id'],
             $eventId,
             $occurredOn
         );
@@ -61,9 +61,9 @@ final class AccountingAccountCreatedDomainEvent extends DomainEvent
             'type' => $this->type,
             'status' => $this->status,
             'parentId' => $this->parentId,
-            'companyId' => $this->companyId,
             'creatorId' => $this->creatorId,
-            'updaterId' => $this->updaterId
+            'updaterId' => $this->updaterId,
+            'companyId' => $this->companyId
         ];
     }
 }

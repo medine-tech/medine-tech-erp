@@ -34,9 +34,9 @@ final class AccountingAccountCreatorTest extends UnitTestCase
             $accountingAccount->type(),
             $accountingAccount->status(),
             $accountingAccount->parentId(),
-            $accountingAccount->companyId(),
             $accountingAccount->creatorId(),
-            $accountingAccount->updaterId()
+            $accountingAccount->updaterId(),
+            $accountingAccount->companyId()
         );
         $this->shouldPublishDomainEvent($domainEvent);
 
@@ -53,9 +53,9 @@ final class AccountingAccountCreatorTest extends UnitTestCase
             $accountingAccount->description(),
             $accountingAccount->type(),
             $accountingAccount->parentId(),
-            $accountingAccount->companyId(),
             $accountingAccount->creatorId(),
-            $accountingAccount->updaterId()
+            $accountingAccount->updaterId(),
+            $accountingAccount->companyId()
         ));
     }
 }

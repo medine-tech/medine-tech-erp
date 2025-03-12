@@ -7,7 +7,7 @@ Authorization: Bearer {{token}}
     "id": "{{$random.uuid}}",
     "code": "{{$random.uuid}}",
     "name": "{{$random.company.name}}",
-    "description": "{{$random.text}}",
+    "description": null,
     "type": {{$random.integer(1, 5)}},
     "parent_id": null
 }

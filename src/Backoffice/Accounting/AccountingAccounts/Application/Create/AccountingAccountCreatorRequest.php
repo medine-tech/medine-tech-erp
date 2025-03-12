@@ -13,9 +13,9 @@ final readonly class AccountingAccountCreatorRequest
         private ?string $description,
         private int $type,
         private ?string $parentId,
-        private string $companyId,
         private int $creatorId,
-        private int $updaterId
+        private int $updaterId,
+        private string $companyId
     ) {
     }
 
@@ -49,11 +49,6 @@ final readonly class AccountingAccountCreatorRequest
         return $this->parentId;
     }
 
-    public function companyId(): string
-    {
-        return $this->companyId;
-    }
-
     public function creatorId(): int
     {
         return $this->creatorId;
@@ -62,5 +57,10 @@ final readonly class AccountingAccountCreatorRequest
     public function updaterId(): int
     {
         return $this->updaterId;
+    }
+
+    public function companyId(): string
+    {
+        return $this->companyId;
     }
 }

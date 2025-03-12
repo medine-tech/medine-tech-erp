@@ -16,9 +16,9 @@ final class AccountingAccount extends AggregateRoot
         private int $type,
         private string $status,
         private ?string $parentId,
-        private string $companyId,
         private int $creatorId,
-        private int $updaterId
+        private int $updaterId,
+        private string $companyId
     ) {
     }
 
@@ -29,9 +29,9 @@ final class AccountingAccount extends AggregateRoot
         ?string $description,
         int $type,
         ?string $parentId,
-        string $companyId,
         int $creatorId,
-        int $updaterId
+        int $updaterId,
+        string $companyId
     ): self {
 
         $status = AccountingAccountStatus::ACTIVE;
@@ -44,9 +44,9 @@ final class AccountingAccount extends AggregateRoot
             $type,
             $status,
             $parentId,
-            $companyId,
             $creatorId,
-            $updaterId
+            $updaterId,
+            $companyId
         );
 
         $accountingAccount->record(new AccountingAccountCreatedDomainEvent(
@@ -57,9 +57,9 @@ final class AccountingAccount extends AggregateRoot
             $accountingAccount->type(),
             $accountingAccount->status(),
             $accountingAccount->parentId(),
-            $accountingAccount->companyId(),
             $accountingAccount->creatorId(),
-            $accountingAccount->updaterId()
+            $accountingAccount->updaterId(),
+            $accountingAccount->companyId()
         ));
 
         return $accountingAccount;
@@ -76,9 +76,9 @@ final class AccountingAccount extends AggregateRoot
             (int)$row['type'],
             (string)$row['status'],
             isset($row['parent_id']) ? (string)$row['parent_id'] : null,
-            (string)$row['company_id'],
             (int)$row['creator_id'],
-            (int)$row['updater_id']
+            (int)$row['updater_id'],
+            (string)$row['company_id']
         );
     }
 
@@ -92,9 +92,9 @@ final class AccountingAccount extends AggregateRoot
             'type' => $this->type(),
             'status' => $this->status(),
             'parentId' => $this->parentId(),
-            'companyId' => $this->companyId(),
             'creatorId' => $this->creatorId(),
-            'updaterId' => $this->updaterId()
+            'updaterId' => $this->updaterId(),
+            'companyId' => $this->companyId()
         ];
     }
 
@@ -133,11 +133,6 @@ final class AccountingAccount extends AggregateRoot
         return $this->parentId;
     }
 
-    public function companyId(): string
-    {
-        return $this->companyId;
-    }
-
     public function creatorId(): int
     {
         return $this->creatorId;
@@ -146,5 +141,10 @@ final class AccountingAccount extends AggregateRoot
     public function updaterId(): int
     {
         return $this->updaterId;
+    }
+
+    public function companyId(): string
+    {
+        return $this->companyId;
     }
 }
