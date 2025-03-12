@@ -6,6 +6,7 @@ namespace MedineTech\Backoffice\Accounting\AccountingAccounts\Infrastructure\Per
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 final class AccountingAccountModel extends Model
 {
@@ -25,4 +26,9 @@ final class AccountingAccountModel extends Model
         'updater_id',
         'company_id'
     ];
+
+    public function scopeFromFilters(Builder $builder, array $filters): void
+    {
+        (new AccountingAccountFilters())->apply($builder, $filters);
+    }
 }

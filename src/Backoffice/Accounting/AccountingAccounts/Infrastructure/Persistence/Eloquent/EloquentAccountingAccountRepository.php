@@ -9,6 +9,7 @@ use Exception;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccount;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountRepository;
 use RuntimeException;
+use function Lambdish\Phunctional\map;
 
 
 final class EloquentAccountingAccountRepository implements AccountingAccountRepository
@@ -47,24 +48,39 @@ final class EloquentAccountingAccountRepository implements AccountingAccountRepo
             return null;
         }
 
-        $data = $model->toArray();
-        return $this->fromDatabase($data);
+        $AccountingAccountData = $model->toArray();
+        $AccountingAccountData['password'] = $model->password;
+
+        $fromDatabase = $this->fromDatabase();
+        return $fromDatabase($AccountingAccountData);
     }
 
-
-    private function fromDatabase(array $data): AccountingAccount
+    public function search(array $filters, int $perPage = 20): array
     {
-        return AccountingAccount::fromPrimitives([
-            'id' => $data['id'],
-            'code' => $data['code'],
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'type' => $data['type'],
-            'status' => $data['status'],
-            'parent_id' => $data['parent_id'],
-            'creator_id' => $data['creator_id'],
-            'updater_id' => $data['updater_id'],
-            'company_id' => $data['company_id']
+        $paginator = AccountingAccountModel::fromFilters($filters)
+            ->paginate($perPage);
+
+        return [
+            'items' => map($this->fromDatabase(), $paginator->items()),
+            'total' => $paginator->total(),
+            'perPage' => $paginator->perPage(),
+            'currentPage' => $paginator->currentPage(),
+        ];
+    }
+
+    private function fromDatabase(): Closure
+    {
+        return fn(AccountingAccountModel $model) => AccountingAccount::fromPrimitives([
+            'id' => $model['id'],
+            'code' => $model['code'],
+            'name' => $model['name'],
+            'description' => $model['description'],
+            'type' => $model['type'],
+            'status' => $model['status'],
+            'parent_id' => $model['parent_id'],
+            'creator_id' => $model['creator_id'],
+            'updater_id' => $model['updater_id'],
+            'company_id' => $model['company_id']
         ]);
     }
 }

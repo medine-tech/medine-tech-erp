@@ -4,3 +4,9 @@ content-type: application/json
 Authorization: Bearer {{token}}
 
 ###
+
+GET http://localhost/api/backoffice/{{tenant}}/accounting/accounting-accounts
+accept: application/json
+Authorization: Bearer {{token}}
+
+###

@@ -9,4 +9,6 @@ interface AccountingAccountRepository
     public function save(AccountingAccount $accountingAccount): void;
 
     public function find(string $id): ?AccountingAccount;
+
+    public function search(array $filters): array;
 }
