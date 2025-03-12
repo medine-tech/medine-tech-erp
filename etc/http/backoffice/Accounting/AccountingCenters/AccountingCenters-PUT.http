@@ -1,0 +1,11 @@
+PUT http://localhost/api/backoffice/{{tenant}}/accounting/accounting-centers/24679aa3-fc51-4a63-9b9d-83db7b83a96d
+accept: application/json
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "{{$random.company.name}}",
+    "description": null,
+    "status": "active",
+    "parent_id": null
+}
