@@ -11,8 +11,6 @@ use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\Accou
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\AccountingAccountCreatorRequest;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Infrastructure\Authorization\AccountingAccountsPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -55,8 +53,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *         @OA\JsonContent(
  *             type="object",
  *             @OA\Property(property="title", type="string", example="Unauthorized"),
- *             @OA\Property(property="detail", type="string", example="You do not have permission to view this resource."),
- *             @OA\Property(property="status", type="integer", example=403)
+ *             @OA\Property(property="status", type="integer", example=403),
+ *             @OA\Property(property="detail", type="string", example="You do not have permission to view this resource.")
  *         )
  *     ),
  *     @OA\Response(
@@ -119,9 +117,9 @@ final class AccountingAccountPostController
         } catch (UnauthorizedException) {
             return response()->json([
                 "title" => "Unauthorized",
+                "status" => JsonResponse::HTTP_FORBIDDEN,
                 "detail" => "You do not have permission to view this resource.",
-                "status" => 403,
-            ], 403);
+            ], JsonResponse::HTTP_FORBIDDEN);
         } catch (Exception $e) {
             return new JsonResponse([
                 'title' => 'Internal Server Error',
