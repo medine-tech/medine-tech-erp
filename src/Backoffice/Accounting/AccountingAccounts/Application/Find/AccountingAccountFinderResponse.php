@@ -36,7 +36,7 @@ final readonly class AccountingAccountFinderResponse
         return $this->name;
     }
 
-    public function description(): string
+    public function description(): ?string
     {
         return $this->description;
     }

@@ -128,9 +128,9 @@ final class AccountingAccountPutController
         } catch (ValidationException $e) {
             return new JsonResponse([
                 'title' => 'Validation Error',
-                'status' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
+                'status' => JsonResponse::HTTP_BAD_REQUEST,
                 'errors' => $e->errors(),
-            ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            ], JsonResponse::HTTP_BAD_REQUEST);
         } catch (AccountingAccountNotFound $e) {
             return new JsonResponse([
                 'title' => 'Not Found',
