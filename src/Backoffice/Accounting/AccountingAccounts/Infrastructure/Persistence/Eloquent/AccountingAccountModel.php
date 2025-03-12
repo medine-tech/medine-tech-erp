@@ -7,6 +7,7 @@ namespace MedineTech\Backoffice\Accounting\AccountingAccounts\Infrastructure\Per
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use MedineTech\Backoffice\Accounting\AccountingAccounts\Infrastructure\Persistence\Eloquent\AccountingAccountFilters;
 
 final class AccountingAccountModel extends Model
 {

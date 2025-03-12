@@ -135,7 +135,7 @@ final class AccountingAccountsGetController
             return response()->json([
                 "title" => "Internal Server Error",
                 "status" => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                "detail" => "An unexpected error occurred",
+                "detail" => $detail,
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

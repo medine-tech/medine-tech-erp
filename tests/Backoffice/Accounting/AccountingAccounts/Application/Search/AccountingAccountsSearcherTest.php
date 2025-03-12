@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Accounting\AccountingAccounts\Application\Search;
+namespace Tests\Backoffice\Accounting\AccountingAccounts\Application\Search;
 
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Search\AccountingAccountsSearcher;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Search\AccountingAccountsSearcherRequest;
