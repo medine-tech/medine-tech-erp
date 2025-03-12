@@ -10,42 +10,56 @@ final class AccountingAccount extends AggregateRoot
 {
     public function __construct(
         private readonly string $id,
-        private string $name,
         private string $code,
+        private string $name,
+        private ?string $description,
         private int $type,
-        private string $parentId,
-        private int $status,
-        private string $companyId
+        private string $status,
+        private ?string $parentId,
+        private string $companyId,
+        private int $creatorId,
+        private int $updaterId
     ) {
     }
 
     public static function create(
         string $id,
-        string $name,
         string $code,
+        string $name,
+        ?string $description,
         int $type,
-        string $parentId,
-        int $status,
-        string $companyId
+        ?string $parentId,
+        string $companyId,
+        int $creatorId,
+        int $updaterId
     ): self {
+
+        $status = AccountingAccountStatus::ACTIVE;
+
         $accountingAccount = new self(
             $id,
-            $name,
             $code,
+            $name,
+            $description,
             $type,
-            $parentId,
             $status,
-            $companyId
+            $parentId,
+            $companyId,
+            $creatorId,
+            $updaterId
         );
 
         $accountingAccount->record(new AccountingAccountCreatedDomainEvent(
             $accountingAccount->id(),
-            $accountingAccount->name(),
             $accountingAccount->code(),
+            $accountingAccount->name(),
+            $accountingAccount->description(),
             $accountingAccount->type(),
-            $accountingAccount->parentId(),
             $accountingAccount->status(),
-            $accountingAccount->companyId()
+            $accountingAccount->parentId(),
+            $accountingAccount->companyId(),
+            $accountingAccount->creatorId(),
+            $accountingAccount->updaterId()
         ));
 
         return $accountingAccount;
@@ -53,21 +67,18 @@ final class AccountingAccount extends AggregateRoot
 
     public static function fromPrimitives(array $row): self
     {
-        $requiredKeys = ['id', 'name', 'code', 'type', 'parent_id', 'status', 'company_id'];
-        foreach ($requiredKeys as $key) {
-            if (!array_key_exists($key, $row)) {
-                throw new \InvalidArgumentException("Missing required key: {$key}");
-            }
-        }
 
         return new self(
             (string)$row['id'],
-            (string)$row['name'],
             (string)$row['code'],
+            (string)$row['name'],
+            isset($row['description']) ? (string)$row['description'] : null,
             (int)$row['type'],
-            (string)$row['parent_id'],
-            (int)$row['status'],
-            (string)$row['company_id']
+            (string)$row['status'],
+            isset($row['parent_id']) ? (string)$row['parent_id'] : null,
+            (string)$row['company_id'],
+            (int)$row['creator_id'],
+            (int)$row['updater_id']
         );
     }
 
@@ -75,12 +86,15 @@ final class AccountingAccount extends AggregateRoot
     {
         return [
             'id' => $this->id(),
-            'name' => $this->name(),
             'code' => $this->code(),
+            'name' => $this->name(),
+            'description' => $this->description(),
             'type' => $this->type(),
-            'parent_id' => $this->parentId(),
             'status' => $this->status(),
-            'company_id' => $this->companyId()
+            'parentId' => $this->parentId(),
+            'companyId' => $this->companyId(),
+            'creatorId' => $this->creatorId(),
+            'updaterId' => $this->updaterId()
         ];
     }
 
@@ -89,14 +103,19 @@ final class AccountingAccount extends AggregateRoot
         return $this->id;
     }
 
+    public function code(): string
+    {
+        return $this->code;
+    }
+
     public function name(): string
     {
         return $this->name;
     }
 
-    public function code(): string
+    public function description(): ?string
     {
-        return $this->code;
+        return $this->description;
     }
 
     public function type(): int
@@ -104,18 +123,28 @@ final class AccountingAccount extends AggregateRoot
         return $this->type;
     }
 
-    public function parentId(): string
-    {
-        return $this->parentId;
-    }
-
-    public function status(): int
+    public function status(): string
     {
         return $this->status;
+    }
+
+    public function parentId(): ?string
+    {
+        return $this->parentId;
     }
 
     public function companyId(): string
     {
         return $this->companyId;
+    }
+
+    public function creatorId(): int
+    {
+        return $this->creatorId;
+    }
+
+    public function updaterId(): int
+    {
+        return $this->updaterId;
     }
 }

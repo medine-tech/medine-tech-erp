@@ -10,12 +10,15 @@ final class AccountingAccountCreatedDomainEvent extends DomainEvent
 {
     public function __construct(
         string $aggregateId,
-        private readonly string $name,
         private readonly string $code,
+        private readonly string $name,
+        private readonly ?string $description,
         private readonly int $type,
+        private readonly string $status,
         private readonly string $parentId,
-        private readonly int $status,
         private readonly string $companyId,
+        private readonly int $creatorId,
+        private readonly int $updaterId,
         ?string $eventId = null,
         ?string $occurredOn = null
     ) {
@@ -30,12 +33,15 @@ final class AccountingAccountCreatedDomainEvent extends DomainEvent
     ): DomainEvent {
         return new self(
             $aggregateId,
-            (string)$body['name'],
             (string)$body['code'],
+            (string)$body['name'],
+            isset($body['description']) ? (string)$body['description'] : null,
             (int)$body['type'],
-            (string)$body['parent_id'],
-            (int)$body['status'],
+            (string)$body['status'],
+            isset($body['parent_id']) ? (string)$body['parent_id'] : null,
             (string)$body['company_id'],
+            (int)$body['creator_id'],
+            (int)$body['updater_id'],
             $eventId,
             $occurredOn
         );
@@ -43,18 +49,21 @@ final class AccountingAccountCreatedDomainEvent extends DomainEvent
 
     public static function eventName(): string
     {
-        return "backoffice.accounting_account.created";
+        return "backoffice.accounting.accounting-accounts.created";
     }
 
     public function toPrimitives(): array
     {
         return [
-            'name' => $this->name,
             'code' => $this->code,
+            'name' => $this->name,
+            'description' => $this->description,
             'type' => $this->type,
-            'parent_id' => $this->parentId,
             'status' => $this->status,
-            'company_id' => $this->companyId
+            'parentId' => $this->parentId,
+            'companyId' => $this->companyId,
+            'creatorId' => $this->creatorId,
+            'updaterId' => $this->updaterId
         ];
     }
 }

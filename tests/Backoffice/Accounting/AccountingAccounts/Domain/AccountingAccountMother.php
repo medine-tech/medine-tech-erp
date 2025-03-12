@@ -13,19 +13,23 @@ final class AccountingAccountMother
 {
     public static function create(
         ?string $id = null,
-        ?string $name = null,
         ?string $code = null,
-        ?string $type = null,
-        ?string $parentId = null,
+        ?string $name = null,
+        ?string $description = null,
+        ?int $type = null,
         ?string $status = null,
-        ?string $companyId = null
+        ?string $parentId = null,
+        ?string $companyId = null,
+        ?int $creatorId = null,
+        ?int $updaterId = null
     ): AccountingAccount {
         $faker = Factory::create();
 
         return new AccountingAccount(
             $id ?? $faker->uuid(),
+                $code ?? $faker->uuid(),
             $name ?? $faker->name(),
-            $code ?? $faker->uuid(),
+            $description ?? $faker->text(),
             $type ?? $faker->randomElement([
                 AccountingAccountType::ASSET,
                 AccountingAccountType::LIABILITY,
@@ -33,12 +37,11 @@ final class AccountingAccountMother
                 AccountingAccountType::REVENUE,
                 AccountingAccountType::EXPENSE
             ]),
+                $status ?? AccountingAccountStatus::ACTIVE,
             $parentId ?? $faker->uuid(),
-            $status ?? $faker->randomElement([
-                AccountingAccountStatus::ACTIVE,
-                AccountingAccountStatus::INACTIVE
-            ]),
-            $companyId ?? $faker->uuid()
+            $companyId ?? $faker->uuid(),
+            $creatorId ?? $faker->numberBetween(1, 100),
+            $updaterId ?? $faker->numberBetween(1, 100)
         );
     }
 }

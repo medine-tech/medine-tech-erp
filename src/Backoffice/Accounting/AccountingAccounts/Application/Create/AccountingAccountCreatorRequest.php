@@ -8,12 +8,14 @@ final readonly class AccountingAccountCreatorRequest
 {
     public function __construct(
         private string $id,
-        private string $name,
         private string $code,
+        private string $name,
+        private ?string $description,
         private int $type,
         private ?string $parentId,
-        private int $status,
-        private string $companyId
+        private string $companyId,
+        private int $creatorId,
+        private int $updaterId
     ) {
     }
 
@@ -22,14 +24,19 @@ final readonly class AccountingAccountCreatorRequest
         return $this->id;
     }
 
+    public function code(): string
+    {
+        return $this->code;
+    }
+
     public function name(): string
     {
         return $this->name;
     }
 
-    public function code(): string
+    public function description(): ?string
     {
-        return $this->code;
+        return $this->description;
     }
 
     public function type(): int
@@ -42,13 +49,18 @@ final readonly class AccountingAccountCreatorRequest
         return $this->parentId;
     }
 
-    public function status(): int
-    {
-        return $this->status;
-    }
-
     public function companyId(): string
     {
         return $this->companyId;
+    }
+
+    public function creatorId(): int
+    {
+        return $this->creatorId;
+    }
+
+    public function updaterId(): int
+    {
+        return $this->updaterId;
     }
 }

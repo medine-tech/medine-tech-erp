@@ -9,31 +9,35 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\AccountingAccountCreator;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\AccountingAccountCreatorRequest;
+use MedineTech\Backoffice\Accounting\AccountingAccounts\Infrastructure\Authorization\AccountingAccountsPermissions;
+use Spatie\Permission\Exceptions\UnauthorizedException;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @OA\Post(
- *     path="/api/backoffice/accounting-accounts",
- *     tags={"Backoffice - accounting Accounts"},
+ *     path="/api/backoffice/{tenant}/accounting/accounting-accounts",
+ *     tags={"Backoffice - Accounting - Accounting Accounts"},
  *     summary="Create a new accounting account",
  *     security={ {"bearerAuth": {} } },
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
  *             type="object",
- *             required={"id", "name", "code", "type", "status", "company_id"},
+ *             required={"id", "name", "code", "type", "status"},
  *             @OA\Property(property="id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426655440000"),
  *             @OA\Property(property="name", type="string", example="Cash Account"),
+ *             @OA\Property(property="description", type="string", example="Cash account for the company", nullable=true),
  *             @OA\Property(property="code", type="string", example="101"),
  *             @OA\Property(property="type", type="integer", example=1, description="1 = asset, 2 = liability, 3 = equity, 4 = revenue, 5 = expense"),
+ *             @OA\Property(property="status", type="string", example="active", description="Account status: active or inactive"),
  *             @OA\Property(property="parent_id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426655440001", nullable=true),
- *             @OA\Property(property="status", type="integer", example=1, description="1 = active, 0 = inactive"),
- *             @OA\Property(property="company_id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426655440002", nullable=true)
  *         )
  *     ),
  *     @OA\Response(
  *         response=201,
- *         description="accounting account created successfully"
+ *         description="Accounting account created successfully"
  *     ),
  *     @OA\Response(
  *         response=400,
@@ -44,6 +48,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *             @OA\Property(property="status", type="integer", example=400),
  *             @OA\Property(property="detail", type="string", example="The given data was invalid."),
  *             @OA\Property(property="errors", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="title", type="string", example="Unauthorized"),
+ *             @OA\Property(property="detail", type="string", example="You do not have permission to view this resource."),
+ *             @OA\Property(property="status", type="integer", example=403)
  *         )
  *     ),
  *     @OA\Response(
@@ -67,25 +81,42 @@ final class AccountingAccountPostController
     public function __invoke(Request $request): JsonResponse
     {
         try {
+            $user = $request->user();
+
+            Role::create(['name' => 'developer']);
+            Permission::create(['name' => AccountingAccountsPermissions::CREATE]);
+
+
+            $role = Role::findByName('developer');
+            $permission = Permission::findByName(AccountingAccountsPermissions::VIEW->value);
+            $role->syncPermissions([$permission]);
+            $user->syncRoles([$role->name]);
+
+            if (!$request->user()->can(AccountingAccountsPermissions::CREATE)) {
+                throw new UnauthorizedException(403);
+            }
+
             $validatedData = $request->validate([
                 'id' => 'required|string|uuid',
-                'name' => 'required|string|min:3|max:40',
                 'code' => 'required|string|min:3|max:40',
+                'name' => 'required|string|min:3|max:40',
+                'description' => 'nullable|string|min:3|max:100',
                 'type' => 'required|int',
                 'parent_id' => 'nullable|string|uuid',
-                'status' => 'required|int',
             ]);
 
-            $companyId = $request->user()->company_id;
+            $userId = $request->user()->id;
 
             $creatorRequest = new AccountingAccountCreatorRequest(
                 $validatedData['id'],
-                $validatedData['name'],
                 $validatedData['code'],
+                $validatedData['name'],
+                $validatedData['description'] ?? null,
                 $validatedData['type'],
-                $validatedData['parent_id'],
-                $validatedData['status'],
-                $companyId
+                $validatedData['parent_id'] ?? null,
+                $request->tenant('id'),
+                $userId,
+                $userId
             );
 
             ($this->creator)($creatorRequest);
@@ -98,6 +129,12 @@ final class AccountingAccountPostController
                 'detail' => 'The given data was invalid.',
                 'errors' => $e->errors(),
             ], JsonResponse::HTTP_BAD_REQUEST);
+        } catch (UnauthorizedException) {
+            return response()->json([
+                "title" => "Unauthorized",
+                "detail" => "You do not have permission to view this resource.",
+                "status" => 403,
+            ], 403);
         } catch (Exception $e) {
             return new JsonResponse([
                 'title' => 'Internal Server Error',

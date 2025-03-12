@@ -20,12 +20,14 @@ class AccountingAccountCreator
         try {
             $accountingAccount = AccountingAccount::create(
                 $request->id(),
-                $request->name(),
                 $request->code(),
+                $request->name(),
+                $request->description(),
                 $request->type(),
                 $request->parentId(),
-                $request->status(),
-                $request->companyId()
+                $request->companyId(),
+                $request->creatorId(),
+                $request->updaterId()
             );
 
             $this->repository->save($accountingAccount);

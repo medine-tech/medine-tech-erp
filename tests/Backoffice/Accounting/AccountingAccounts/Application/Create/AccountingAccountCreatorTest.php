@@ -28,12 +28,15 @@ final class AccountingAccountCreatorTest extends UnitTestCase
         $eventBus = $this->eventBus();
         $domainEvent = new AccountingAccountCreatedDomainEvent(
             $accountingAccount->id(),
-            $accountingAccount->name(),
             $accountingAccount->code(),
+            $accountingAccount->name(),
+            $accountingAccount->description(),
             $accountingAccount->type(),
-            $accountingAccount->parentId(),
             $accountingAccount->status(),
-            $accountingAccount->companyId()
+            $accountingAccount->parentId(),
+            $accountingAccount->companyId(),
+            $accountingAccount->creatorId(),
+            $accountingAccount->updaterId()
         );
         $this->shouldPublishDomainEvent($domainEvent);
 
@@ -45,12 +48,14 @@ final class AccountingAccountCreatorTest extends UnitTestCase
 
         ($creator)(new AccountingAccountCreatorRequest(
             $accountingAccount->id(),
-            $accountingAccount->name(),
             $accountingAccount->code(),
+            $accountingAccount->name(),
+            $accountingAccount->description(),
             $accountingAccount->type(),
             $accountingAccount->parentId(),
-            $accountingAccount->status(),
-            $accountingAccount->companyId()
+            $accountingAccount->companyId(),
+            $accountingAccount->creatorId(),
+            $accountingAccount->updaterId()
         ));
     }
 }
