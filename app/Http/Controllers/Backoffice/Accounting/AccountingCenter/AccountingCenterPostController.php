@@ -1,19 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Backoffice\Accounting;
+namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenter;
 
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\AccountingCenterCreator;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\AccountingCenterCreatorRequest;
+use MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Authorization\AccountingCenterPermissions;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Spatie\Permission\Exceptions\UnauthorizedException;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 /**
  * @OA\Post(
- *     path="/api/backoffice/accounting-centers",
- *     tags={"Backoffice - Accounting Centers"},
+ *     path="/api/backoffice/{tenant}/accounting/accounting-centers",
+ *     tags={"Backoffice - Accounting - Accounting Centers"},
  *     summary="Create a new accounting center",
  *     security={ {"bearerAuth": {} } },
  *     @OA\RequestBody(
@@ -44,6 +48,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *             @OA\Property(property="errors", type="object")
  *         )
  *     ),
+ *
+ *     @OA\Response(
+ *         response=403,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Unauthorized"),
+ *             @OA\Property(property="status", type="integer", example=403),
+ *             @OA\Property(property="detail", type="string", example="You do not have permission to view this resource.")
+ *         )
+ *     ),
  *     @OA\Response(
  *         response=500,
  *         description="Internal server error",
@@ -65,16 +79,28 @@ final class AccountingCenterPostController
     public function __invoke(Request $request): JsonResponse
     {
         try {
+            $user = $request->user();
+            Role::create(['name' => 'developer']);
+            Permission::create(['name' => AccountingCenterPermissions::CREATE]);
+
+            $role = Role::findByName('developer');
+            $permission = Permission::findByName(AccountingCenterPermissions::VIEW->value);
+            $role->syncPermissions([$permission]);
+            $user->syncRoles([$role->name]);
+
+            if (!$request->user()->can(AccountingCenterPermissions::CREATE)) {
+                throw new UnauthorizedException(403);
+            }
+
             $validatedData = $request->validate([
                 'id' => 'required|string|uuid',
                 'code' => 'required|string|max:50',
                 'name' => 'required|string|min:3|max:40',
                 'description' => 'nullable|string',
-                'status' => 'required|integer|in:0,1',
+                'status' => 'required|string|in:active,inactive',
                 'parent_id' => 'nullable|string|uuid',
             ]);
 
-            $companyId = $request->user()->company_id;
             $userId = $request->user()->id;
 
             $creatorRequest = new AccountingCenterCreatorRequest(
@@ -82,11 +108,10 @@ final class AccountingCenterPostController
                 $validatedData['code'],
                 $validatedData['name'],
                 $validatedData['description'] ?? null,
-                (int)$validatedData['status'],
+                $validatedData['status'],
                 $validatedData['parent_id'] ?? null,
-                $companyId,
+                $request->tenant('id'),
                 $userId,
-                $userId
             );
 
             ($this->creator)($creatorRequest);
@@ -99,7 +124,14 @@ final class AccountingCenterPostController
                 'detail' => 'The given data was invalid.',
                 'errors' => $e->errors(),
             ], JsonResponse::HTTP_BAD_REQUEST);
-        } catch (Exception $e) {
+        } catch (UnauthorizedException) {
+            return response()->json([
+                "title" => "Unauthorized",
+                "detail" => "You do not have permission to view this resource.",
+                "status" => 403,
+            ], 403);
+        }
+        catch (Exception $e) {
             return new JsonResponse([
                 'title' => 'Internal Server Error',
                 'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,

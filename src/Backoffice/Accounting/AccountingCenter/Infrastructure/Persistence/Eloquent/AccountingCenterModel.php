@@ -8,7 +8,7 @@ use Stancl\Tenancy\Database\Models\Tenant;
 
 final class AccountingCenterModel extends Tenant
 {
-    protected $table = 'accounting_centers';
+    protected $table = 'backoffice__accounting__accounting_centers';
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -20,7 +20,7 @@ final class AccountingCenterModel extends Tenant
         'status',
         'parent_id',
         'company_id',
-        'created_by',
-        'updated_by'
+        'creator_id',
+        'updater_id'
     ];
 }

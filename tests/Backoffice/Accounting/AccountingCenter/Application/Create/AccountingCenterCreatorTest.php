@@ -1,10 +1,8 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Tests\Backoffice\Accounting\AccountingCenter\Application\Create;
 
-use Mockery;
 use Tests\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterMother;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\AccountingCenterCreator;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\AccountingCenterCreatorRequest;
@@ -20,39 +18,40 @@ final class AccountingCenterCreatorTest extends UnitTestCase
     {
         $accountingCenter = AccountingCenterMother::create();
 
-        /** @var AccountingCenterRepository|Mockery\MockInterface $repository */
-        $repository = Mockery::mock(AccountingCenterRepository::class);
+        $repository = $this->mock(AccountingCenterRepository::class);
         $repository->shouldReceive('save')
             ->once()
             ->with($this->similarTo($accountingCenter))
             ->andReturnNull();
 
-        $eventBus = $this->eventBus();
+        $defaultStatus = 'active';
         $domainEvent = new AccountingCenterCreatedDomainEvent(
             $accountingCenter->id(),
             $accountingCenter->code(),
             $accountingCenter->name(),
             $accountingCenter->description(),
-            $accountingCenter->status(),
+            $defaultStatus,
             $accountingCenter->parentId(),
             $accountingCenter->companyId(),
-            $accountingCenter->createdBy(),
-            $accountingCenter->updatedBy()
+            $accountingCenter->creatorId(),
+            $accountingCenter->updaterId()
         );
+
         $this->shouldPublishDomainEvent($domainEvent);
 
-        $creator = new AccountingCenterCreator($repository);
+        $eventBus = $this->eventBus();
+
+        $creator = new AccountingCenterCreator($repository, $eventBus);
 
         ($creator)(new AccountingCenterCreatorRequest(
             $accountingCenter->id(),
             $accountingCenter->code(),
             $accountingCenter->name(),
             $accountingCenter->description(),
-            $accountingCenter->status(),
             $accountingCenter->parentId(),
             $accountingCenter->companyId(),
-            $accountingCenter->createdBy(),
-            $accountingCenter->updatedBy()
+            $accountingCenter->creatorId(),
+            $accountingCenter->updaterId()
         ));
     }
 }

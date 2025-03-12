@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create;
@@ -11,11 +10,11 @@ final readonly class AccountingCenterCreatorRequest
         private string $code,
         private string $name,
         private ?string $description,
-        private int $status,
         private ?string $parentId,
         private string $companyId,
-        private string $createdBy,
-        private string $updatedBy
+        private int $creatorId,
+        private int $updaterId
+
     ) {
     }
 
@@ -39,11 +38,6 @@ final readonly class AccountingCenterCreatorRequest
         return $this->description;
     }
 
-    public function status(): int
-    {
-        return $this->status;
-    }
-
     public function parentId(): ?string
     {
         return $this->parentId;
@@ -54,13 +48,13 @@ final readonly class AccountingCenterCreatorRequest
         return $this->companyId;
     }
 
-    public function createdBy(): string
+    public function creatorId(): int
     {
-        return $this->createdBy;
+        return $this->creatorId;
     }
 
-    public function updatedBy(): string
+    public function updaterId(): int
     {
-        return $this->updatedBy;
+        return $this->updaterId;
     }
 }

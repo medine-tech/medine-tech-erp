@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create;
@@ -21,11 +20,10 @@ class AccountingCenterCreator
             $request->code(),
             $request->name(),
             $request->description(),
-            $request->status(),
             $request->parentId(),
             $request->companyId(),
-            $request->createdBy(),
-            $request->updatedBy()
+            $request->creatorId(),
+            $request->updaterId()
         );
 
         $this->repository->save($accountingCenter);

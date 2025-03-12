@@ -1,11 +1,12 @@
 <?php
-
+// File: `tests/Backoffice/Accounting/AccountingCenter/Domain/AccountingCenterMother.php`
 declare(strict_types=1);
 
 namespace Tests\Backoffice\Accounting\AccountingCenter\Domain;
 
 use Faker\Factory;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenter;
+use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterStatus;
 
 final class AccountingCenterMother
 {
@@ -14,11 +15,11 @@ final class AccountingCenterMother
         ?string $code = null,
         ?string $name = null,
         ?string $description = null,
-        ?int $status = null,
+        ?string $status = null,
         ?string $parentId = null,
         ?string $companyId = null,
-        ?string $createdBy = null,
-        ?string $updatedBy = null
+        ?int $creatorId = null,
+        ?int $updaterId = null
     ): AccountingCenter {
         $faker = Factory::create();
 
@@ -27,11 +28,11 @@ final class AccountingCenterMother
             $code ?? $faker->uuid(),
             $name ?? $faker->company(),
             $description ?? $faker->optional()->sentence(),
-            $status ?? $faker->randomElement([1, 0]),
+            $status ?? AccountingCenterStatus::ACTIVE,
             $parentId ?? $faker->optional()->uuid(),
             $companyId ?? $faker->uuid(),
-            $createdBy ?? $faker->uuid(),
-            $updatedBy ?? $faker->uuid()
+                $creatorId ?? $faker->numberBetween(1, 100),
+                $updaterId ?? $faker->numberBetween(1, 100)
         );
     }
 }

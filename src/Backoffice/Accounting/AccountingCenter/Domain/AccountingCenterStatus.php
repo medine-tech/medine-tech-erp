@@ -8,17 +8,15 @@ use InvalidArgumentException;
 
 class AccountingCenterStatus
 {
-
-    public const ACTIVE = 1;
-    public const INACTIVE = 0;
+    public const ACTIVE = 'active';
+    public const INACTIVE = 'inactive';
 
     private static array $statusNone = [
-        self::ACTIVE => 'active',
-        self::INACTIVE => 'inactive'
+        self::ACTIVE => 'activo',
+        self::INACTIVE => 'inactivo'
     ];
 
     private readonly string $value;
-
 
     public function __construct(string $value)
     {
@@ -33,7 +31,7 @@ class AccountingCenterStatus
 
     private function ensureIsValidStatus(string $value): void
     {
-        if (!in_array($value,[
+        if (!in_array($value, [
             self::ACTIVE,
             self::INACTIVE
         ])) {

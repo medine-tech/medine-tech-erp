@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Accounting\AccountingCenter\Domain;
@@ -13,11 +12,11 @@ final class AccountingCenter extends AggregateRoot
         private string $code,
         private string $name,
         private ?string $description,
-        private int $status,
+        private string $status,
         private ?string $parentId,
         private string $companyId,
-        private string $createdBy,
-        private string $updatedBy
+        private int $creatorId,
+        private int $updaterId
     ) {
     }
 
@@ -26,22 +25,22 @@ final class AccountingCenter extends AggregateRoot
         string $code,
         string $name,
         ?string $description,
-        int $status,
         ?string $parentId,
         string $companyId,
-        string $createdBy,
-        string $updatedBy
+        int $creatorId,
+        int $updaterId
     ): self {
+        $defaultStatus = AccountingCenterStatus::ACTIVE;
         $accountingCenter = new self(
             $id,
             $code,
             $name,
             $description,
-            $status,
+            $defaultStatus,
             $parentId,
             $companyId,
-            $createdBy,
-            $updatedBy
+            $creatorId,
+            $updaterId
         );
 
         $accountingCenter->record(new AccountingCenterCreatedDomainEvent(
@@ -52,8 +51,8 @@ final class AccountingCenter extends AggregateRoot
             $accountingCenter->status(),
             $accountingCenter->parentId(),
             $accountingCenter->companyId(),
-            $accountingCenter->createdBy(),
-            $accountingCenter->updatedBy()
+            $accountingCenter->creatorId(),
+            $accountingCenter->updaterId()
         ));
 
         return $accountingCenter;
@@ -66,11 +65,11 @@ final class AccountingCenter extends AggregateRoot
             (string)$row['code'],
             (string)$row['name'],
             isset($row['description']) ? (string)$row['description'] : null,
-            (int)$row['status'],
+            (string)$row['status'],
             isset($row['parent_id']) ? (string)$row['parent_id'] : null,
             (string)$row['company_id'],
-            (string)$row['created_by'],
-            (string)$row['updated_by']
+            (int)$row['creator_id'],
+            (int)$row['updater_id']
         );
     }
 
@@ -82,10 +81,10 @@ final class AccountingCenter extends AggregateRoot
             'name' => $this->name,
             'description' => $this->description,
             'status' => $this->status,
-            'parent_id' => $this->parentId,
-            'company_id' => $this->companyId,
-            'created_by' => $this->createdBy,
-            'updated_by' => $this->updatedBy
+            'parentId' => $this->parentId,
+            'companyId' => $this->companyId,
+            'creatorId' => $this->creatorId,
+            'updaterId' => $this->updaterId
         ];
     }
 
@@ -109,7 +108,7 @@ final class AccountingCenter extends AggregateRoot
         return $this->description;
     }
 
-    public function status(): int
+    public function status(): string
     {
         return $this->status;
     }
@@ -124,13 +123,13 @@ final class AccountingCenter extends AggregateRoot
         return $this->companyId;
     }
 
-    public function createdBy(): string
+    public function creatorId(): int
     {
-        return $this->createdBy;
+        return $this->creatorId;
     }
 
-    public function updatedBy(): string
+    public function updaterId(): int
     {
-        return $this->updatedBy;
+        return $this->updaterId;
     }
 }
