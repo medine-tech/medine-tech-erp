@@ -5,7 +5,7 @@ namespace MedineTech\Backoffice\Accounting\AccountingAccounts\Infrastructure\Aut
 enum AccountingAccountsPermissions: string
 {
     case CREATE = 'backoffice.accounting.accounting-accounts.created';
-    case UPDATE = 'backoffice.accounting.accounting-accounts.update';
+    case UPDATE = 'backoffice.accounting.accounting-accounts.updated';
     case VIEW = 'backoffice.accounting.accounting-accounts.view';
 
     public function label(): string

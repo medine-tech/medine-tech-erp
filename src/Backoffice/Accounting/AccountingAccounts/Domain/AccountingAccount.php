@@ -147,4 +147,58 @@ final class AccountingAccount extends AggregateRoot
     {
         return $this->companyId;
     }
+
+    public function changeName(string $name): void
+    {
+        if ($name === $this->name()) {
+            return;
+        }
+
+        $this->name = $name;
+    }
+
+    public function changeDescription(?string $description): void
+    {
+        if ($description === $this->description()) {
+            return;
+        }
+
+        $this->description = $description;
+    }
+
+    public function changeType(int $type): void
+    {
+        if ($type === $this->type()) {
+            return;
+        }
+
+        $this->type = $type;
+    }
+
+    public function changeStatus(string $status): void
+    {
+        if ($status === $this->status()) {
+            return;
+        }
+
+        $this->status = $status;
+    }
+
+    public function changeUpdaterId(int $updaterId): void
+    {
+        if ($updaterId === $this->updaterId()) {
+            return;
+        }
+
+        $this->updaterId = $updaterId;
+    }
+
+    public function changeParentId(?string $parentId): void
+    {
+        if ($parentId === $this->parentId()) {
+            return;
+        }
+
+        $this->parentId = $parentId;
+    }
 }

@@ -1,0 +1,6 @@
+GET http://localhost/api/backoffice/{{tenant}}/accounting/accounting-accounts/36afa65f-fa7a-4965-8a9f-db0d797f1e09
+accept: application/json
+content-type: application/json
+Authorization: Bearer {{token}}
+
+###

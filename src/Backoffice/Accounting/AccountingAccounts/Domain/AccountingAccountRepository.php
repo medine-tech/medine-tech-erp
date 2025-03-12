@@ -7,4 +7,6 @@ namespace MedineTech\Backoffice\Accounting\AccountingAccounts\Domain;
 interface AccountingAccountRepository
 {
     public function save(AccountingAccount $accountingAccount): void;
+
+    public function find(string $id): ?AccountingAccount;
 }
