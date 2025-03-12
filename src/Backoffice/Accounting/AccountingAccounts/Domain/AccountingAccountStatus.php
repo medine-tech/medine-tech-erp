@@ -8,8 +8,8 @@ use InvalidArgumentException;
 
 class AccountingAccountStatus
 {
-    public const ACTIVE = "active";
-    public const INACTIVE = "inactive";
+    public const ACTIVE = 'active';
+    public const INACTIVE = 'inactive';
 
     private static array $statusName = [
         self::ACTIVE => 'Activo',

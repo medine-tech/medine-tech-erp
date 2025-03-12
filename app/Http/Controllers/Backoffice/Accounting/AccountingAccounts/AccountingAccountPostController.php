@@ -80,17 +80,6 @@ final class AccountingAccountPostController
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            $user = $request->user();
-
-//            Role::create(['name' => 'developer']);
-//            Permission::create(['name' => AccountingAccountsPermissions::CREATE]);
-
-
-            $role = Role::findByName('developer');
-            $permission = Permission::findByName(AccountingAccountsPermissions::CREATE->value);
-            $role->syncPermissions([$permission]);
-            $user->syncRoles([$role->name]);
-
             if (!$request->user()->can(AccountingAccountsPermissions::CREATE)) {
                 throw new UnauthorizedException(403);
             }
@@ -113,7 +102,6 @@ final class AccountingAccountPostController
                 $validatedData['description'] ?? null,
                 $validatedData['type'],
                 $validatedData['parent_id'] ?? null,
-                $userId,
                 $userId,
                 tenant('id')
             );
@@ -139,7 +127,6 @@ final class AccountingAccountPostController
                 'title' => 'Internal Server Error',
                 'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
                 'detail' => 'An unexpected error occurred while processing your request.',
-                'message' => $e->getMessage()
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

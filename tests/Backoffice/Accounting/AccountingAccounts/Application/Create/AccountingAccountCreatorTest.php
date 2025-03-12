@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Backoffice\Accounting\AccountingAccounts\Application\Create;
 
+use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountStatus;
 use Tests\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountMother;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\AccountingAccountCreator;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\AccountingAccountCreatorRequest;
@@ -17,7 +18,9 @@ final class AccountingAccountCreatorTest extends UnitTestCase
     #[test]
     public function it_should_create_an_accounting_account(): void
     {
-        $accountingAccount = AccountingAccountMother::create();
+        $accountingAccount = AccountingAccountMother::create(
+            status: AccountingAccountStatus::ACTIVE
+        );
 
         $accountingAccountRepository = $this->mock(AccountingAccountRepository::class);
         $accountingAccountRepository->shouldReceive('save')
@@ -54,7 +57,6 @@ final class AccountingAccountCreatorTest extends UnitTestCase
             $accountingAccount->type(),
             $accountingAccount->parentId(),
             $accountingAccount->creatorId(),
-            $accountingAccount->updaterId(),
             $accountingAccount->companyId()
         ));
     }

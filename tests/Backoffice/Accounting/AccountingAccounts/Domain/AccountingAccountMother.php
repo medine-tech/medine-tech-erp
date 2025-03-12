@@ -25,6 +25,8 @@ final class AccountingAccountMother
     ): AccountingAccount {
         $faker = Factory::create();
 
+        $userId = $faker->numberBetween(1, 100);
+
         return new AccountingAccount(
             $id ?? $faker->uuid(),
                 $code ?? $faker->uuid(),
@@ -37,10 +39,13 @@ final class AccountingAccountMother
                 AccountingAccountType::REVENUE,
                 AccountingAccountType::EXPENSE
             ]),
-                $status ?? AccountingAccountStatus::ACTIVE,
+                $status ?? $faker->randomElement([
+                    AccountingAccountStatus::ACTIVE,
+                    AccountingAccountStatus::INACTIVE
+                ]),
             $parentId ?? $faker->uuid(),
-                $creatorId ?? $faker->numberBetween(1, 100),
-                $updaterId ?? $faker->numberBetween(1, 100),
+                $creatorId ?? $userId,
+                $updaterId ?? $userId,
             $companyId ?? $faker->uuid()
 
         );

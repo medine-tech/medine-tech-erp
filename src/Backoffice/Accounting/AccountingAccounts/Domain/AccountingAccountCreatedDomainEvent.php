@@ -35,10 +35,10 @@ final class AccountingAccountCreatedDomainEvent extends DomainEvent
             $aggregateId,
             (string)$body['code'],
             (string)$body['name'],
-            isset($body['description']) ? (string)$body['description'] : null,
+            (string)($row['description'] ?? null),
             (int)$body['type'],
             (string)$body['status'],
-            isset($body['parent_id']) ? (string)$body['parent_id'] : null,
+            (string)($row['parent_id'] ?? null),
             (int)$body['creator_id'],
             (int)$body['updater_id'],
             (string)$body['company_id'],
@@ -55,15 +55,60 @@ final class AccountingAccountCreatedDomainEvent extends DomainEvent
     public function toPrimitives(): array
     {
         return [
-            'code' => $this->code,
-            'name' => $this->name,
-            'description' => $this->description,
-            'type' => $this->type,
-            'status' => $this->status,
-            'parentId' => $this->parentId,
-            'creatorId' => $this->creatorId,
-            'updaterId' => $this->updaterId,
-            'companyId' => $this->companyId
+            'code' => $this->code(),
+            'name' => $this->name(),
+            'description' => $this->description(),
+            'type' => $this->type(),
+            'status' => $this->status(),
+            'parentId' => $this->parentId(),
+            'creatorId' => $this->creatorId(),
+            'updaterId' => $this->updaterId(),
+            'companyId' => $this->companyId()
         ];
+    }
+
+    public function code(): string
+    {
+        return $this->code;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function description(): ?string
+    {
+        return $this->description;
+    }
+
+    public function type(): int
+    {
+        return $this->type;
+    }
+
+    public function status(): string
+    {
+        return $this->status;
+    }
+
+    public function parentId(): ?string
+    {
+        return $this->parentId;
+    }
+
+    public function creatorId(): int
+    {
+        return $this->creatorId;
+    }
+
+    public function updaterId(): int
+    {
+        return $this->updaterId;
+    }
+
+    public function companyId(): string
+    {
+        return $this->companyId;
     }
 }

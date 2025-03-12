@@ -26,7 +26,6 @@ class AccountingAccountCreator
                 $request->type(),
                 $request->parentId(),
                 $request->creatorId(),
-                $request->updaterId(),
                 $request->companyId()
             );
 

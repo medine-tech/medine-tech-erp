@@ -30,11 +30,11 @@ final class AccountingAccount extends AggregateRoot
         int $type,
         ?string $parentId,
         int $creatorId,
-        int $updaterId,
         string $companyId
     ): self {
 
         $status = AccountingAccountStatus::ACTIVE;
+        $updaterId = $creatorId;
 
         $accountingAccount = new self(
             $id,
@@ -72,10 +72,10 @@ final class AccountingAccount extends AggregateRoot
             (string)$row['id'],
             (string)$row['code'],
             (string)$row['name'],
-            isset($row['description']) ? (string)$row['description'] : null,
+            (string)($row['description'] ?? null),
             (int)$row['type'],
             (string)$row['status'],
-            isset($row['parent_id']) ? (string)$row['parent_id'] : null,
+            (string)($row['parent_id'] ?? null),
             (int)$row['creator_id'],
             (int)$row['updater_id'],
             (string)$row['company_id']

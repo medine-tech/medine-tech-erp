@@ -23,9 +23,9 @@ final class EloquentAccountingAccountRepository implements AccountingAccountRepo
                 'type' => $accountingAccount->type(),
                 'status' => $accountingAccount->status(),
                 'parent_id' => $accountingAccount->parentId(),
-                'company_id' => $accountingAccount->companyId(),
                 'creator_id' => $accountingAccount->creatorId(),
-                'updater_id' => $accountingAccount->updaterId()
+                'updater_id' => $accountingAccount->updaterId(),
+                'company_id' => $accountingAccount->companyId()
             ];
 
             AccountingAccountModel::updateOrCreate(

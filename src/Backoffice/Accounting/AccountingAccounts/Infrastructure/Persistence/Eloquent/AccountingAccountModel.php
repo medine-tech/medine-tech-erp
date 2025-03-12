@@ -23,8 +23,6 @@ final class AccountingAccountModel extends Model
         'parent_id',
         'creator_id',
         'updater_id',
-        'company_id',
-        'created_at',
-        'updated_at'
+        'company_id'
     ];
 }
