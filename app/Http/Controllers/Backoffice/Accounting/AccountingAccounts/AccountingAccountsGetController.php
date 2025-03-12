@@ -98,7 +98,7 @@ final class AccountingAccountsGetController
             }
 
             $filters = (array)$request->query();
-            $filters["userId"] = $request->user()->id;
+            $filters["company_id"] = $request->user()->id;
 
             $searcherRequest = new AccountingAccountsSearcherRequest($filters);
             $searcherResponse = ($this->searcher)($searcherRequest);
