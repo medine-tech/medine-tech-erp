@@ -29,7 +29,7 @@ use Spatie\Permission\Models\Role;
  *             @OA\Property(property="code", type="string", example="AC-001", maxLength=50),
  *             @OA\Property(property="name", type="string", example="Main Accounting Center", minLength=3, maxLength=40),
  *             @OA\Property(property="description", type="string", example="Main accounting center description", nullable=true),
- *             @OA\Property(property="status", type="integer", example=1, description="1 = active, 0 = inactive"),
+ *             @OA\Property(property="status", type="string", example="active", description="active or inactive"),
  *             @OA\Property(property="parent_id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426655440001", nullable=true)
  *         )
  *     ),
@@ -48,7 +48,6 @@ use Spatie\Permission\Models\Role;
  *             @OA\Property(property="errors", type="object")
  *         )
  *     ),
- *
  *     @OA\Response(
  *         response=403,
  *         description="Unauthorized",
@@ -79,14 +78,14 @@ final class AccountingCenterPostController
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            $user = $request->user();
-            Role::create(['name' => 'developer']);
-            Permission::create(['name' => AccountingCenterPermissions::CREATE]);
-
-            $role = Role::findByName('developer');
-            $permission = Permission::findByName(AccountingCenterPermissions::VIEW->value);
-            $role->syncPermissions([$permission]);
-            $user->syncRoles([$role->name]);
+//            $user = $request->user();
+//            Role::create(['name' => 'developer']);
+//            Permission::create(['name' => AccountingCenterPermissions::CREATE]);
+//
+//            $role = Role::findByName('developer');
+//            $permission = Permission::findByName(AccountingCenterPermissions::VIEW->value);
+//            $role->syncPermissions([$permission]);
+//            $user->syncRoles([$role->name]);
 
             if (!$request->user()->can(AccountingCenterPermissions::CREATE)) {
                 throw new UnauthorizedException(403);
@@ -111,7 +110,7 @@ final class AccountingCenterPostController
                 $validatedData['status'],
                 $validatedData['parent_id'] ?? null,
                 $request->tenant('id'),
-                $userId,
+                $userId
             );
 
             ($this->creator)($creatorRequest);
