@@ -64,9 +64,9 @@ final class AccountingCenter extends AggregateRoot
             (string)$row['id'],
             (string)$row['code'],
             (string)$row['name'],
-            (string)($row['description'] ?? null),
+            $row['description'] ?? null,
             (string)$row['status'],
-            (string)($row['parent_id'] ?? null),
+            $row['parent_id'] ?? null,
             (int)$row['creator_id'],
             (int)$row['updater_id'],
             (string)$row['company_id']

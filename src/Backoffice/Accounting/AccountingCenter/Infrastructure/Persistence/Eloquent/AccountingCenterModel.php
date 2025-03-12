@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use MedineTech\Backoffice\CompanyUsers\Infrastructure\Persistence\Eloquent\CompanyUserModel;
+use MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Persistence\Eloquent\AccountingCenterFilters;
+
 
 final class AccountingCenterModel extends Model
 {

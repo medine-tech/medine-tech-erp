@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Accounting\AccountingCenter\Application\Search;
@@ -9,7 +10,7 @@ final class AccountingCenterSearcherResponse
         private string $id,
         private string $code,
         private string $name,
-        private string $description,
+        private ?string $description,
         private string $status,
         private ?string $parentId,
         private int $creatorId,
@@ -33,7 +34,7 @@ final class AccountingCenterSearcherResponse
         return $this->name;
     }
 
-    public function description(): string
+    public function description(): ?string
     {
         return $this->description;
     }

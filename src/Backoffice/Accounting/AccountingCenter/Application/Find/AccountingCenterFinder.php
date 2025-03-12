@@ -15,7 +15,7 @@ final class AccountingCenterFinder
     public function __invoke(AccountingCenterFinderRequest $request): AccountingCenterFinderResponse
     {
         $accountingCenter = $this->repository->find($request->id());
-        if (null === $accountingCenter) {
+        if ($accountingCenter === null) {
             throw new AccountingCenterNotFound($request->id());
         }
 
