@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenter;
+namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenters;
 
 use Exception;
 use Illuminate\Http\Request;
@@ -29,7 +29,6 @@ use Spatie\Permission\Models\Role;
  *             @OA\Property(property="code", type="string", example="AC-001", maxLength=50),
  *             @OA\Property(property="name", type="string", example="Main Accounting Center", minLength=3, maxLength=40),
  *             @OA\Property(property="description", type="string", example="Main accounting center description", nullable=true),
- *             @OA\Property(property="status", type="string", example="active", description="active or inactive"),
  *             @OA\Property(property="parent_id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426655440001", nullable=true)
  *         )
  *     ),
@@ -127,13 +126,11 @@ final class AccountingCenterPostController
                 "detail" => "You do not have permission to view this resource.",
                 "status" => 403,
             ], 403);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse([
                 'title' => 'Internal Server Error',
                 'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
                 'detail' => 'An unexpected error occurred while processing your request.',
-                'message' => $e->getMessage()
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

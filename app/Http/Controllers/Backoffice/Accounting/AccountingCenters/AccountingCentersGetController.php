@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenter;
+namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenters;
 
 use Exception;
 use Illuminate\Http\Request;
@@ -16,7 +16,7 @@ use App\Http\Controllers\Controller;
  * @OA\Get(
  *     path="/api/backoffice/{tenant}/accounting/accounting-centers",
  *     summary="Search accounting centers based on filters",
- *     tags={"Backoffice - Accounting Centers"},
+ *     tags={"Backoffice - Accounting -Accounting Centers"},
  *     security={
  *         {"bearerAuth": {}}
  *     },
@@ -86,7 +86,8 @@ final class AccountingCentersGetController extends Controller
 {
     public function __construct(
         private readonly AccountingCentersSearcher $searcher
-    ) {
+    )
+    {
     }
 
     public function __invoke(Request $request): JsonResponse
@@ -104,34 +105,34 @@ final class AccountingCentersGetController extends Controller
 
             $centers = array_map(function ($center) {
                 return [
-                    "id"          => $center->id(),
-                    "code"        => $center->code(),
-                    "name"        => $center->name(),
+                    "id" => $center->id(),
+                    "code" => $center->code(),
+                    "name" => $center->name(),
                     "description" => $center->description(),
-                    "status"      => $center->status(),
-                    "parentId"    => $center->parentId(),
-                    "creatorId"   => $center->creatorId(),
-                    "updaterId"   => $center->updaterId(),
-                    "companyId"   => $center->companyId(),
+                    "status" => $center->status(),
+                    "parentId" => $center->parentId(),
+                    "creatorId" => $center->creatorId(),
+                    "updaterId" => $center->updaterId(),
+                    "companyId" => $center->companyId(),
                 ];
             }, $searcherResponse->items());
 
             return response()->json([
-                "items"        => $centers,
-                "total"        => $searcherResponse->total(),
-                "per_page"     => $searcherResponse->perPage(),
+                "items" => $centers,
+                "total" => $searcherResponse->total(),
+                "per_page" => $searcherResponse->perPage(),
                 "current_page" => $searcherResponse->currentPage()
             ]);
         } catch (UnauthorizedException) {
             return response()->json([
-                "title"  => "Unauthorized",
+                "title" => "Unauthorized",
                 "status" => JsonResponse::HTTP_FORBIDDEN,
                 "detail" => "You do not have permission to view this resource.",
             ], JsonResponse::HTTP_FORBIDDEN);
         } catch (Exception $e) {
             $detail = config('app.env') !== 'production' ? $e->getMessage() : "An unexpected error occurred";
             return response()->json([
-                "title"  => "Internal Server Error",
+                "title" => "Internal Server Error",
                 "status" => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
                 "detail" => $detail,
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);

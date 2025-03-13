@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenter;
+namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenters;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -74,7 +74,6 @@ use Spatie\Permission\Exceptions\UnauthorizedException;
  *     }
  * )
  */
-
 final class AccountingCenterGetController
 {
     public function __construct(private AccountingCenterFinder $finder)
@@ -105,19 +104,19 @@ final class AccountingCenterGetController
 
         } catch (AccountingCenterNotFound $e) {
             return new JsonResponse([
-                'title'  => 'Accounting Center Not Found',
+                'title' => 'Accounting Center Not Found',
                 'status' => JsonResponse::HTTP_NOT_FOUND,
                 'detail' => "Accounting Center with ID {$id} does not exist"
             ], JsonResponse::HTTP_NOT_FOUND);
         } catch (UnauthorizedException) {
             return response()->json([
-                'title'  => 'Unauthorized',
+                'title' => 'Unauthorized',
                 'detail' => 'You do not have permission to view this resource.',
                 'status' => 403,
             ], 403);
         } catch (Exception $e) {
             return new JsonResponse([
-                'title'  => 'Internal Server Error',
+                'title' => 'Internal Server Error',
                 'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
                 'detail' => 'An unexpected error occurred'
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);

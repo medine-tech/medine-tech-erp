@@ -9,26 +9,28 @@ final class AccountingCenter extends AggregateRoot
 {
     public function __construct(
         private readonly string $id,
-        private string $code,
-        private string $name,
-        private ?string $description,
-        private string $status,
-        private ?string $parentId,
-        private int $creatorId,
-        private int $updaterId,
-        private string $companyId
-    ) {
+        private string          $code,
+        private string          $name,
+        private ?string         $description,
+        private string          $status,
+        private ?string         $parentId,
+        private int             $creatorId,
+        private int             $updaterId,
+        private string          $companyId
+    )
+    {
     }
 
     public static function create(
-        string $id,
-        string $code,
-        string $name,
+        string  $id,
+        string  $code,
+        string  $name,
         ?string $description,
         ?string $parentId,
-        int $creatorId,
-        string $companyId,
-    ): self {
+        int     $creatorId,
+        string  $companyId
+    ): self
+    {
         $defaultStatus = AccountingCenterStatus::ACTIVE;
         $defaultUpdaterId = $creatorId;
         $accountingCenter = new self(
@@ -40,7 +42,7 @@ final class AccountingCenter extends AggregateRoot
             $parentId,
             $creatorId,
             $defaultUpdaterId,
-            $companyId,
+            $companyId
         );
 
         $accountingCenter->record(new AccountingCenterCreatedDomainEvent(
@@ -52,7 +54,7 @@ final class AccountingCenter extends AggregateRoot
             $accountingCenter->parentId(),
             $accountingCenter->creatorId(),
             $accountingCenter->updaterId(),
-            $accountingCenter->companyId(),
+            $accountingCenter->companyId()
         ));
 
         return $accountingCenter;
@@ -138,7 +140,6 @@ final class AccountingCenter extends AggregateRoot
         if ($name === $this->name()) {
             return;
         }
-
         $this->name = $name;
     }
 
@@ -147,7 +148,6 @@ final class AccountingCenter extends AggregateRoot
         if ($description === $this->description()) {
             return;
         }
-
         $this->description = $description;
     }
 
@@ -156,7 +156,6 @@ final class AccountingCenter extends AggregateRoot
         if ($status === $this->status()) {
             return;
         }
-
         $this->status = $status;
     }
 
@@ -165,7 +164,6 @@ final class AccountingCenter extends AggregateRoot
         if ($updaterId === $this->updaterId()) {
             return;
         }
-
         $this->updaterId = $updaterId;
     }
 
@@ -174,7 +172,6 @@ final class AccountingCenter extends AggregateRoot
         if ($parentId === $this->parentId()) {
             return;
         }
-
         $this->parentId = $parentId;
     }
 }

@@ -2,10 +2,10 @@ GET http://localhost/api/backoffice/{{tenant}}/accounting/accounting-centers/246
 accept: application/json
 Authorization: Bearer {{token}}
 
-#####
+###
 
-#GET http://localhost/api/backoffice/{{tenant}}/accounting/accounting-centers
-#accept: application/json
-#Authorization: Bearer {{token}}
-#
-####
+GET http://localhost/api/backoffice/{{tenant}}/accounting/accounting-centers
+accept: application/json
+Authorization: Bearer {{token}}
+
+###

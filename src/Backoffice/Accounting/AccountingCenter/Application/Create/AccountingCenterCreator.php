@@ -5,12 +5,15 @@ namespace MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create;
 
 use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenter;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterRepository;
+use MedineTech\Shared\Domain\Bus\Event\EventBus;
 
 class AccountingCenterCreator
 {
     public function __construct(
-        private readonly AccountingCenterRepository $repository
-    ) {
+        private readonly AccountingCenterRepository $repository,
+        private readonly EventBus                   $eventBus
+    )
+    {
     }
 
     public function __invoke(AccountingCenterCreatorRequest $request): void
@@ -26,5 +29,7 @@ class AccountingCenterCreator
         );
 
         $this->repository->save($accountingCenter);
+
+        $this->eventBus->publish(...$accountingCenter->pullDomainEvents());
     }
 }

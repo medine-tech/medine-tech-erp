@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Accounting\AccountingCenter\Domain;
@@ -9,27 +8,29 @@ use MedineTech\Shared\Domain\Bus\Event\DomainEvent;
 final class AccountingCenterCreatedDomainEvent extends DomainEvent
 {
     public function __construct(
-        string $aggregateId,
-        private readonly string $code,
-        private readonly string $name,
+        string                   $aggregateId,
+        private readonly string  $code,
+        private readonly string  $name,
         private readonly ?string $description,
-        private readonly string $status,
+        private readonly string  $status,
         private readonly ?string $parentId,
-        private readonly int $creatorId,
-        private readonly int $updaterId,
-        private readonly string $companyId,
-        ?string $eventId = null,
-        ?string $occurredOn = null
-    ) {
+        private readonly int     $creatorId,
+        private readonly int     $updaterId,
+        private readonly string  $companyId,
+        ?string                  $eventId = null,
+        ?string                  $occurredOn = null
+    )
+    {
         parent::__construct($aggregateId, $eventId, $occurredOn);
     }
 
     public static function fromPrimitives(
         string $aggregateId,
-        array $body,
+        array  $body,
         string $eventId,
         string $occurredOn
-    ): DomainEvent {
+    ): DomainEvent
+    {
         return new self(
             $aggregateId,
             (string)$body['code'],
@@ -63,7 +64,6 @@ final class AccountingCenterCreatedDomainEvent extends DomainEvent
             'companyId' => $this->companyId()
         ];
     }
-
 
     public function code(): string
     {
