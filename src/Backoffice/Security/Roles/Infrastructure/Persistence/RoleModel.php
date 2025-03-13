@@ -11,7 +11,6 @@ class RoleModel extends Role
     public $incrementing = true;
     protected $keyType = 'string';
     protected $fillable = [
-        'id',
         'code',
         'name',
         'description',
@@ -19,6 +18,7 @@ class RoleModel extends Role
         'creator_id',
         'updater_id',
         'company_id',
+        'guard_name'
     ];
 
     public function scopeFromFilters(Builder $builder, array $filters): void

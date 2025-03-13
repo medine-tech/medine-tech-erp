@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Security\Roles\Domain;
@@ -9,51 +8,53 @@ use MedineTech\Shared\Domain\Aggregate\AggregateRoot;
 final class Role extends AggregateRoot
 {
     public function __construct(
-        private int $id,
-        private string $code,
-        private string $name,
+        private ?int    $id,
+        private string  $code,
+        private string  $name,
         private ?string $description,
-        private string $status,
-        private int $creatorId,
-        private int $updaterId,
-        private string $companyId
+        private string  $status,
+        private int     $creatorId,
+        private int     $updaterId,
+        private string  $companyId,
+        private string  $guardName
     )
     {
     }
 
     public static function create(
-        int $id,
-        string $code,
-        string $name,
+        string  $code,
+        string  $name,
         ?string $description,
-        int $creatorId,
-        string $companyId
+        int     $creatorId,
+        string  $companyId
     ): self
     {
-
         $status = RoleStatus::ACTIVE;
         $updaterId = $creatorId;
+        $guardName = 'sanctum';
 
         $role = new self(
-            $id,
+            null,
             $code,
             $name,
             $description,
             $status,
             $creatorId,
             $updaterId,
-            $companyId
+            $companyId,
+            $guardName
         );
 
         $role->record(new RoleCreatedDomainEvent(
-            (string)$role->id(),
+            (string)($role->id() ?? 0),
             $role->code(),
             $role->name(),
-            $role->description(),
+            $role->description() ?? '',
             $role->status(),
             $role->creatorId(),
             $role->updaterId(),
-            $role->companyId()
+            $role->companyId(),
+            $role->guardName()
         ));
 
         return $role;
@@ -62,14 +63,15 @@ final class Role extends AggregateRoot
     public static function fromPrimitives(array $primitives): self
     {
         return new self(
-            (int)$primitives['id'],
+            isset($primitives['id']) ? (int)$primitives['id'] : null,
             (string)$primitives['code'],
             (string)$primitives['name'],
             (string)$primitives['description'],
             (string)$primitives['status'],
             (int)$primitives['creatorId'],
             (int)$primitives['updaterId'],
-            (string)$primitives['companyId']
+            (string)$primitives['companyId'],
+            isset($primitives['guard_name']) ? (string)$primitives['guard_name'] : 'sanctum'
         );
     }
 
@@ -83,11 +85,12 @@ final class Role extends AggregateRoot
             'status' => $this->status(),
             'creatorId' => $this->creatorId(),
             'updaterId' => $this->updaterId(),
-            'companyId' => $this->companyId()
+            'companyId' => $this->companyId(),
+            'guard_name' => $this->guardName()
         ];
     }
 
-    public function id(): int
+    public function id(): ?int
     {
         return $this->id;
     }
@@ -125,5 +128,10 @@ final class Role extends AggregateRoot
     public function companyId(): string
     {
         return $this->companyId;
+    }
+
+    public function guardName(): string
+    {
+        return $this->guardName;
     }
 }

@@ -4,7 +4,6 @@ content-type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "id": "{{$random.uuid}}",
   "name": "{{$random.name.fullName}}",
   "description": null
 }

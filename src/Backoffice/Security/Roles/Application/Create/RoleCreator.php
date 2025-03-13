@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Security\Roles\Application\Create;
@@ -13,16 +12,14 @@ class RoleCreator
     public function __construct(
         private readonly RoleRepository $repository,
         private readonly EventBus $eventBus
-    )
-    {
+    ) {
     }
 
     public function __invoke(RoleCreatorRequest $request): void
     {
-        $code = $this->repository->nextCode('company_id');
+        $code = $this->repository->nextCode($request->companyId());
 
         $role = Role::create(
-            $request->id(),
             $code,
             $request->name(),
             $request->description(),
@@ -31,7 +28,6 @@ class RoleCreator
         );
 
         $this->repository->save($role);
-
         $this->eventBus->publish(...$role->pullDomainEvents());
     }
 }

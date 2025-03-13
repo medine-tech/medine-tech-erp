@@ -28,7 +28,6 @@ final class RolePostController
 //            }
 
             $validatedData = $request->validate([
-                'id' => 'required|string|uuid',
                 'name' => 'required|string|min:3|max:40',
                 'description' => 'nullable|string|min:3|max:100'
             ]);
@@ -36,7 +35,6 @@ final class RolePostController
             $userId = $request->user()->id;
 
             $creatorRequest = new RoleCreatorRequest(
-                $validatedData['id'],
                 $validatedData['name'],
                 $validatedData['description'],
                 $userId,

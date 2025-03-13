@@ -9,6 +9,7 @@ class AddRolesTable extends Migration
     public function up()
     {
         Schema::table('roles', function (Blueprint $table) {
+            $table->string('code');
             $table->string('description')->nullable();
             $table->string('status')->default('active');
             $table->unsignedBigInteger('creator_id');

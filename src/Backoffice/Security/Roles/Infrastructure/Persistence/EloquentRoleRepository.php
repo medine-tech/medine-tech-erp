@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Security\Roles\Infrastructure\Persistence;
@@ -17,14 +16,18 @@ final class EloquentRoleRepository implements RoleRepository
     public function save(Role $role): void
     {
         try {
+            $roleData = $role->toPrimitives();
             $data = [
-                'id' => $role->id(),
-                'code' => $role->code(),
-                'name' => $role->name(),
-                'description' => $role->description(),
-                'status' => $role->status(),
-                'creator_id' => $role->creatorId(),
-                'company_id' => $role->companyId(),
+                'code' => $roleData['code'],
+                'name' => $roleData['name'],
+                'description' => $roleData['description'],
+                'status' => $roleData['status'],
+                'creator_id' => $roleData['creatorId'],
+                'updater_id' => $roleData['updaterId'],
+                'company_id' => $roleData['companyId'],
+                'guard_name' => $roleData['guard_name'],
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
 
             RoleModel::updateOrCreate(
@@ -76,10 +79,8 @@ final class EloquentRoleRepository implements RoleRepository
             ->value('code');
 
         $lastValue = $lastCode ? substr($lastCode, -6) : '000000';
-
         $nextValueInt = intval($lastValue) + 1;
         $nextValue = str_pad((string)$nextValueInt, 6, '0', STR_PAD_LEFT);
-
         $newCode = $rol . $year . $nextValue;
 
         return $newCode;
