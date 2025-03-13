@@ -113,15 +113,15 @@ final class RoleGetController
             ], JsonResponse::HTTP_OK);
         }catch (RoleNotFound $e) {
             return new JsonResponse([
-                'title' => 'Accounting account not found',
+                'title' => 'Role not found',
                 'status' => JsonResponse::HTTP_NOT_FOUND,
-                'detail' => "The accounting account with id <$id> does not exist."
+                'detail' => "The role account with id <$id> does not exist."
             ], JsonResponse::HTTP_NOT_FOUND);
         } catch (UnauthorizedException $e) {
             return new JsonResponse([
                 'title' => 'Unauthorized',
                 'status' => JsonResponse::HTTP_FORBIDDEN,
-                'detail' => 'You are not authorized to view this accounting account.'
+                'detail' => 'You are not authorized to view this role.'
             ], JsonResponse::HTTP_FORBIDDEN);
         } catch (Exception $e) {
             return new JsonResponse([

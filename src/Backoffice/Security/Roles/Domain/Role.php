@@ -63,7 +63,7 @@ final class Role extends AggregateRoot
     public static function fromPrimitives(array $primitives): self
     {
         return new self(
-            isset($primitives['id']) ? (int)$primitives['id'] : null,
+            (int)($primitives['id'] ?? null),
             (string)$primitives['code'],
             (string)$primitives['name'],
             (string)$primitives['description'],
@@ -71,7 +71,7 @@ final class Role extends AggregateRoot
             (int)$primitives['creatorId'],
             (int)$primitives['updaterId'],
             (string)$primitives['companyId'],
-            isset($primitives['guard_name']) ? (string)$primitives['guard_name'] : 'sanctum'
+            (string)($primitives['guard_name'] ?? 'sanctum')
         );
     }
 

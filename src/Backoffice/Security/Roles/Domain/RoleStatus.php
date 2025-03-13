@@ -46,6 +46,6 @@ class RoleStatus
 
     public function statusName(): string
     {
-        return self::$statusName[$this->value] ?? self::INACTIVE;
+        return self::$statusName[$this->value] ?? self::$statusName[self::INACTIVE];
     }
 }

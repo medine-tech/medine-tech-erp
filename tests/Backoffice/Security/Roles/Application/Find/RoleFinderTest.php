@@ -14,7 +14,7 @@ use Tests\Backoffice\Security\Roles\Domain\RoleMother;
 class RoleFinderTest extends RoleUnitTestCase
 {
     #[Test]
-    public function it_should_find_an_roles(): void
+    public function it_should_find_a_role(): void
     {
         $id = 1;
         $role = RoleMother::create($id);

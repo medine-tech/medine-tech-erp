@@ -18,6 +18,7 @@ final class RoleMother
         ?string $status = null,
         ?int $creatorId = null,
         ?int $companyId = null,
+        ?int $updaterId = null,
         ?string $guardName = null,
     ): Role {
         $faker = Factory::create();

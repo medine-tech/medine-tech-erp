@@ -97,7 +97,8 @@ final class EloquentRoleRepository implements RoleRepository
                 'status' => $data['status'],
                 'creatorId' => $data['creator_id'],
                 'updaterId' => $data['updater_id'],
-                'companyId' => $data['company_id']
+                'companyId' => $data['company_id'],
+                'guardName' => $data['guard_name']
             ]);
         };
     }

@@ -4,6 +4,7 @@ namespace MedineTech\Backoffice\Security\Roles\Infrastructure\Persistence;
 
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Permission\Models\Role;
+use MedineTech\Backoffice\Security\Roles\Infrastructure\Persistence\RoleFilters;
 
 class RoleModel extends Role
 {

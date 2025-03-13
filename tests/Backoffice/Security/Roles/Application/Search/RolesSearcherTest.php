@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Security\Roles\Application\Search;
+namespace Tests\Backoffice\Security\Roles\Application\Search;
 
 use MedineTech\Backoffice\Security\Roles\Application\Search\RolesSearcher;
 use MedineTech\Backoffice\Security\Roles\Application\Search\RolesSearcherRequest;

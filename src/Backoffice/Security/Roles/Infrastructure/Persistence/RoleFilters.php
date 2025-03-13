@@ -9,7 +9,7 @@ use MedineTech\Shared\Infrastructure\Persistence\Eloquent\EloquentFilters;
 
 final class RoleFilters extends EloquentFilters
 {
-    protected function roleId($value): void
+    protected function companyId($value): void
     {
         $value = $this->getValue($value);
         $this->builder->whereHas('company_users', function (Builder $query) use ($value) {

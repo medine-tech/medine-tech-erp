@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddRolesTable extends Migration
+class AddColumnsToRolesTable extends Migration
 {
     public function up()
     {
@@ -20,7 +20,7 @@ class AddRolesTable extends Migration
     public function down()
     {
         Schema::table('roles', function (Blueprint $table) {
-            $table->dropColumn(['description', 'status', 'creator_id', 'updater_id']);
+            $table->dropColumn(['code', 'description', 'status', 'creator_id', 'updater_id']);
         });
     }
 }

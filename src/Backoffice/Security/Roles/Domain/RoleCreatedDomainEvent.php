@@ -45,7 +45,7 @@ final class RoleCreatedDomainEvent extends DomainEvent
 
     public static function eventName(): string
     {
-        return "backoffice.role.created";
+        return "backoffice.security.role.create";
     }
 
     public function toPrimitives(): array
