@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backoffice\Security\Roles\RoleGetController;
 use App\Http\Controllers\Backoffice\Security\Roles\RolePostController;
+use App\Http\Controllers\Backoffice\Security\Roles\RolePutController;
 use App\Http\Controllers\Backoffice\Security\Roles\RolesGetController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,3 +14,6 @@ Route::get('/roles/{id}', RoleGetController::class)
 
 Route::get('/roles', RolesGetController::class)
     ->name('roles.search');
+
+Route::put('/roles/{id}', RolePutController::class)
+    ->name('roles.update');

@@ -1,30 +1,25 @@
 <?php
 
-namespace MedineTech\Backoffice\Security\Roles\Application\Search;
+declare(strict_types=1);
 
-final readonly class RoleSearcherResponse
+namespace MedineTech\Backoffice\Security\Roles\Application\Update;
+
+class RoleUpdaterRequest
 {
     public function __construct(
-        private readonly ?int $id,
-        private readonly string $code,
+        private readonly int $id,
         private readonly string $name,
         private readonly ?string $description,
-        private readonly string $status,
-        private readonly int $creatorId,
+        private readonly ?string $status,
         private readonly int $updaterId,
         private readonly string $companyId
     )
     {
     }
 
-    public function id(): ?int
+    public function id(): int
     {
         return $this->id;
-    }
-
-    public function code(): string
-    {
-        return $this->code;
     }
 
     public function name(): string
@@ -37,14 +32,9 @@ final readonly class RoleSearcherResponse
         return $this->description;
     }
 
-    public function status(): string
+    public function status(): ?string
     {
         return $this->status;
-    }
-
-    public function creatorId(): int
-    {
-        return $this->creatorId;
     }
 
     public function updaterId(): int

@@ -7,34 +7,49 @@ namespace App\Http\Controllers\Backoffice\Security\Roles;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use MedineTech\Backoffice\Security\Roles\Application\Create\RoleCreator;
-use MedineTech\Backoffice\Security\Roles\Application\Create\RoleCreatorRequest;
+use MedineTech\Backoffice\Security\Roles\Application\Update\RoleUpdater;
+use MedineTech\Backoffice\Security\Roles\Application\Update\RoleUpdaterRequest;
+use MedineTech\Backoffice\Security\Roles\Domain\RoleNotFound;
 use MedineTech\Backoffice\Security\Roles\Infrastructure\Authorization\RolesPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * @OA\Post(
- *     path="/api/backoffice/{tenant}/security/roles",
+ * @OA\Put(
+ *     path="/api/backoffice/{tenant}/security/roles/{id}",
  *     tags={"Backoffice - Security - Roles"},
- *     summary="Create a new role",
- *     description="Creates a new role with the provided details.",
+ *     summary="Update an existing role",
+ *     description="Updates an existing role with the provided details.",
  *     security={ {"bearerAuth": {} } },
+ *     @OA\Parameter(
+ *         name="tenant",
+ *         in="path",
+ *         required=true,
+ *         description="The tenant ID",
+ *         @OA\Schema(type="string")
+ *     ),
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="The ID of the role to update",
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             type="object",
- *             required={"name"},
- *             @OA\Property(property="name", type="string", example="Admin", description="The name of the role."),
- *             @OA\Property(property="description", type="string", example="Administrator role", nullable=true, description="A brief description of the role.")
+ *             required={"name", "status"},
+ *             @OA\Property(property="name", type="string", example="Updated Role Name", description="The name of the role."),
+ *             @OA\Property(property="description", type="string", example="Updated role description", nullable=true, description="A brief description of the role."),
+ *             @OA\Property(property="status", type="string", example="INACTIVE", description="Role status")
  *         )
  *     ),
  *     @OA\Response(
- *         response=201,
- *         description="Role created successfully",
+ *         response=200,
+ *         description="Role updated successfully",
  *         @OA\JsonContent(
  *             type="object",
- *             @OA\Property(property="message", type="string", example="Role created successfully.")
+ *             @OA\Property(property="message", type="string", example="Role updated successfully.")
  *         )
  *     ),
  *     @OA\Response(
@@ -49,13 +64,23 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *         )
  *     ),
  *     @OA\Response(
+ *         response=404,
+ *         description="Role not found",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="title", type="string", example="Not Found"),
+ *             @OA\Property(property="status", type="integer", example=404),
+ *             @OA\Property(property="detail", type="string", example="Role not found with the provided ID.")
+ *         )
+ *     ),
+ *     @OA\Response(
  *         response=403,
  *         description="Unauthorized",
  *         @OA\JsonContent(
  *             type="object",
  *             @OA\Property(property="title", type="string", example="Unauthorized"),
  *             @OA\Property(property="status", type="integer", example=403),
- *             @OA\Property(property="detail", type="string", example="You do not have permission to create this resource.")
+ *             @OA\Property(property="detail", type="string", example="You do not have permission to update this resource.")
  *         )
  *     ),
  *     @OA\Response(
@@ -70,15 +95,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
-final class RolePostController
+final class RolePutController
 {
     public function __construct(
-        private readonly RoleCreator $creator
+        private readonly RoleUpdater $updater
     )
     {
     }
 
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(int $id, Request $request): JsonResponse
     {
         try {
             if (!$request->user()->can(RolesPermissions::UPDATE)) {
@@ -86,42 +111,49 @@ final class RolePostController
             }
 
             $validatedData = $request->validate([
-                'name' => 'required|string|min:3|max:40',
-                'description' => 'nullable|string|min:3|max:100'
+                'name' => 'required|string',
+                'description' => 'nullable|string',
+                'status' => 'required|string',
             ]);
 
             $userId = $request->user()->id;
 
-            $creatorRequest = new RoleCreatorRequest(
+            $updaterRequest = new RoleUpdaterRequest(
+                $id,
                 $validatedData['name'],
                 $validatedData['description'],
+                $validatedData['status'],
                 $userId,
                 tenant('id')
             );
 
-            ($this->creator)($creatorRequest);
+            ($this->updater)($updaterRequest);
 
-            return new JsonResponse(null, 201);
-        } catch (ValidationException $exception) {
+            return new JsonResponse(null, JsonResponse::HTTP_OK);
+        } catch (ValidationException $e) {
             return new JsonResponse([
                 'title' => 'Validation Error',
                 'status' => JsonResponse::HTTP_BAD_REQUEST,
-                'detail' => 'The given data was invalid.',
-                'errors' => $exception->errors(),
+                'errors' => $e->errors(),
             ], JsonResponse::HTTP_BAD_REQUEST);
-        } catch (UnauthorizedException $exception) {
+        } catch (RoleNotFound $e) {
+            return new JsonResponse([
+                'title' => 'Not Found',
+                'status' => JsonResponse::HTTP_NOT_FOUND,
+                'detail' => 'Accounting account not found with the provided ID.',
+            ], JsonResponse::HTTP_NOT_FOUND);
+        } catch (UnauthorizedException $e) {
             return new JsonResponse([
                 'title' => 'Unauthorized',
                 'status' => JsonResponse::HTTP_FORBIDDEN,
                 'detail' => 'You do not have permission to view this resource.',
             ], JsonResponse::HTTP_FORBIDDEN);
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
             return new JsonResponse([
-                'title' => 'Internal Server Error',
+                'title' => 'Error',
                 'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
                 'detail' => 'An unexpected error occurred while processing your request.'
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
-
     }
 }

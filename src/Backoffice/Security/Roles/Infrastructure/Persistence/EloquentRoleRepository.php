@@ -16,18 +16,15 @@ final class EloquentRoleRepository implements RoleRepository
     public function save(Role $role): void
     {
         try {
-            $roleData = $role->toPrimitives();
             $data = [
-                'code' => $roleData['code'],
-                'name' => $roleData['name'],
-                'description' => $roleData['description'],
-                'status' => $roleData['status'],
-                'creator_id' => $roleData['creatorId'],
-                'updater_id' => $roleData['updaterId'],
-                'company_id' => $roleData['companyId'],
-                'guard_name' => $roleData['guard_name'],
-                'created_at' => now(),
-                'updated_at' => now(),
+                'code' => $role->code(),
+                'name' => $role->name(),
+                'description' => $role->description(),
+                'status' => $role->status(),
+                'creator_id' => $role->creatorId(),
+                'updater_id' => $role->updaterId(),
+                'company_id' => $role->companyId(),
+                'guard_name' => $role->guardName()
             ];
 
             RoleModel::updateOrCreate(
@@ -47,11 +44,9 @@ final class EloquentRoleRepository implements RoleRepository
             return null;
         }
 
-//        $roleData = $model->toArray();
-//        $roleData['password'] = $model->password;
-
+        $data = $model->toArray();
         $fromDatabase = $this->fromDatabase();
-        return $fromDatabase($model);
+        return $fromDatabase($data);
     }
 
     public function search(array $filters, int $perPage = 20): array
@@ -89,15 +84,21 @@ final class EloquentRoleRepository implements RoleRepository
 
     private function fromDatabase(): Closure
     {
-        return fn(RoleModel $model) => Role::fromPrimitives([
-            'id' => $model['id'],
-            'code' => $model['code'],
-            'name' => $model['name'],
-            'description' => $model['description'],
-            'status' => $model['status'],
-            'creatorId' => $model['creator_id'],
-            'updaterId' => $model['updater_id'],
-            'companyId' => $model['company_id'],
-        ]);
+        return function ($data): Role {
+            if ($data instanceof RoleModel) {
+                $data = $data->toArray();
+            }
+
+            return Role::fromPrimitives([
+                'id' => $data['id'],
+                'code' => $data['code'],
+                'name' => $data['name'],
+                'description' => $data['description'],
+                'status' => $data['status'],
+                'creatorId' => $data['creator_id'],
+                'updaterId' => $data['updater_id'],
+                'companyId' => $data['company_id']
+            ]);
+        };
     }
 }

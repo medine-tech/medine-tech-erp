@@ -20,7 +20,6 @@ final class RoleCreatorTest extends UnitTestCase
     {
         $roleId = 1;
         $role = RoleMother::create(
-            id: $roleId,
             status: RoleStatus::ACTIVE
         );
 
@@ -56,7 +55,6 @@ final class RoleCreatorTest extends UnitTestCase
         );
 
         ($creator)(new RoleCreatorRequest(
-            $roleId,
             $role->name(),
             $role->description(),
             $role->creatorId(),
