@@ -7,15 +7,16 @@ namespace MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create
 final readonly class AccountingAccountCreatorRequest
 {
     public function __construct(
-        private string $id,
-        private string $code,
-        private string $name,
+        private string  $id,
+        private string  $code,
+        private string  $name,
         private ?string $description,
-        private int $type,
+        private int     $type,
         private ?string $parentId,
-        private int $creatorId,
-        private string $companyId
-    ) {
+        private int     $creatorId,
+        private string  $companyId
+    )
+    {
     }
 
     public function id(): string

@@ -22,7 +22,8 @@ final class AccountingAccountMother
         ?int $creatorId = null,
         ?int $updaterId = null,
         ?string $companyId = null
-    ): AccountingAccount {
+    ): AccountingAccount
+    {
         $faker = Factory::create();
 
         $userId = $faker->numberBetween(1, 100);

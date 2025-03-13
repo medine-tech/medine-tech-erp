@@ -10,7 +10,8 @@ final class AccountingAccountsSearcherRequest
 
     public function __construct(
         array $filters,
-    ) {
+    )
+    {
         $this->filters = $filters;
     }
 

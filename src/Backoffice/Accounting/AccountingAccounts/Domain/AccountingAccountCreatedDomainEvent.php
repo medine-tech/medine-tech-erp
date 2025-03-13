@@ -21,7 +21,8 @@ final class AccountingAccountCreatedDomainEvent extends DomainEvent
         private readonly string $companyId,
         ?string $eventId = null,
         ?string $occurredOn = null
-    ) {
+    )
+    {
         parent::__construct($aggregateId, $eventId, $occurredOn);
     }
 
@@ -30,7 +31,8 @@ final class AccountingAccountCreatedDomainEvent extends DomainEvent
         array $body,
         string $eventId,
         string $occurredOn
-    ): DomainEvent {
+    ): DomainEvent
+    {
         return new self(
             $aggregateId,
             (string)$body['code'],

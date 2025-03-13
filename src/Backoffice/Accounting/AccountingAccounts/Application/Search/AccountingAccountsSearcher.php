@@ -12,7 +12,8 @@ class AccountingAccountsSearcher
 {
     public function __construct(
         private readonly AccountingAccountRepository $repository
-    ) {
+    )
+    {
     }
 
     public function __invoke(AccountingAccountsSearcherRequest $request): AccountingAccountsSearcherResponse

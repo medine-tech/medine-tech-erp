@@ -8,10 +8,11 @@ final class AccountingAccountsSearcherResponse
 {
     public function __construct(
         private array $items,
-        private int $total,
-        private int $perPage,
-        private int $currentPage,
-    ) {
+        private int   $total,
+        private int   $perPage,
+        private int   $currentPage,
+    )
+    {
     }
 
     public function items(): array

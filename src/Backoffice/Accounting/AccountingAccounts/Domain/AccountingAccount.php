@@ -31,7 +31,8 @@ final class AccountingAccount extends AggregateRoot
         ?string $parentId,
         int $creatorId,
         string $companyId
-    ): self {
+    ): self
+    {
 
         $status = AccountingAccountStatus::ACTIVE;
         $updaterId = $creatorId;

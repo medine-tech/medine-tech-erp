@@ -92,7 +92,8 @@ final class AccountingAccountPutController
 {
     public function __construct(
         private AccountingAccountUpdater $updater,
-    ) {
+    )
+    {
     }
 
     public function __invoke(string $id, Request $request): JsonResponse

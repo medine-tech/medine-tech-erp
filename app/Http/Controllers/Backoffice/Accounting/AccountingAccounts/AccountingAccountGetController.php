@@ -89,7 +89,8 @@ final class AccountingAccountGetController
 {
     public function __construct(
         private AccountingAccountFinder $finder,
-    ) {
+    )
+    {
     }
 
     public function __invoke(string $id, Request $request): JsonResponse
@@ -100,7 +101,7 @@ final class AccountingAccountGetController
             }
 
             $response = ($this->finder)(
-                new AccountingAccountFinderRequest((string) $id)
+                new AccountingAccountFinderRequest((string)$id)
             );
 
             return new JsonResponse([

@@ -12,7 +12,8 @@ class AccountingAccountCreator
 {
     public function __construct(
         private readonly AccountingAccountRepository $repository
-    ) {
+    )
+    {
     }
 
     public function __invoke(AccountingAccountCreatorRequest $request): void

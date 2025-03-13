@@ -87,7 +87,8 @@ final class AccountingAccountsGetController
 {
     public function __construct(
         private readonly AccountingAccountsSearcher $searcher
-    ) {
+    )
+    {
     }
 
     public function __invoke(Request $request): JsonResponse
