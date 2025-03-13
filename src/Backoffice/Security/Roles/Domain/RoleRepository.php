@@ -8,5 +8,9 @@ interface RoleRepository
 {
     public function save(Role $role): void;
 
+    public function find(int $id): ?Role;
+
+    public function search(array $filters): array;
+
     public function nextCode(string $company_id): string;
 }

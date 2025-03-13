@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Security\Roles\Infrastructure\Persistence;
 
+use Closure;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use MedineTech\Backoffice\Security\Roles\Domain\RoleRepository;
 use MedineTech\Backoffice\Security\Roles\Domain\Role;
 use RuntimeException;
+use function Lambdish\Phunctional\map;
 
 final class EloquentRoleRepository implements RoleRepository
 {
@@ -34,6 +36,34 @@ final class EloquentRoleRepository implements RoleRepository
         }
     }
 
+    public function find(int $id): ?Role
+    {
+        $model = RoleModel::find($id);
+
+        if (!$model) {
+            return null;
+        }
+
+//        $roleData = $model->toArray();
+//        $roleData['password'] = $model->password;
+
+        $fromDatabase = $this->fromDatabase();
+        return $fromDatabase($model);
+    }
+
+    public function search(array $filters, int $perPage = 20): array
+    {
+        $paginator = RoleModel::fromFilters($filters)
+            ->paginate($perPage);
+
+        return [
+            'items' => map($this->fromDatabase(), $paginator->items()),
+            'total' => $paginator->total(),
+            'perPage' => $paginator->perPage(),
+            'currentPage' => $paginator->currentPage(),
+        ];
+    }
+
     public function nextCode(string $company_id): string
     {
         $rol = "ROL";
@@ -53,5 +83,20 @@ final class EloquentRoleRepository implements RoleRepository
         $newCode = $rol . $year . $nextValue;
 
         return $newCode;
+    }
+
+
+    private function fromDatabase(): Closure
+    {
+        return fn(RoleModel $model) => Role::fromPrimitives([
+            'id' => $model['id'],
+            'code' => $model['code'],
+            'name' => $model['name'],
+            'description' => $model['description'],
+            'status' => $model['status'],
+            'creatorId' => $model['creator_id'],
+            'updaterId' => $model['updater_id'],
+            'companyId' => $model['company_id'],
+        ]);
     }
 }

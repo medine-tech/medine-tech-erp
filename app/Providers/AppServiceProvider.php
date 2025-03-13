@@ -12,6 +12,8 @@ use MedineTech\Backoffice\CompanyUsers\Infrastructure\Persistence\Eloquent\Eloqu
 use MedineTech\Backoffice\FirstCompanies\Domain\FirstCompanyRepository;
 use MedineTech\Backoffice\FirstCompanies\Infrastructure\Persistence\Eloquent\EloquentFirstCompanyRepository;
 use MedineTech\Backoffice\Roles\Application\Create\CreateAdminRoleOnCompanyCreated;
+use MedineTech\Backoffice\Security\Roles\Domain\RoleRepository;
+use MedineTech\Backoffice\Security\Roles\Infrastructure\Persistence\EloquentRoleRepository;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
 use MedineTech\Backoffice\Users\Infrastructure\Persistence\Eloquent\EloquentUserRepository;
 use MedineTech\Shared\Domain\Bus\Event\EventBus;
@@ -46,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CompanyRepository::class, EloquentCompanyRepository::class);
         $this->app->bind(CompanyUserRepository::class, EloquentCompanyUserRepository::class);
         $this->app->bind(FirstCompanyRepository::class, EloquentFirstCompanyRepository::class);
+        $this->app->bind(RoleRepository::class, EloquentRoleRepository::class);
     }
 
     /**
