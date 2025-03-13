@@ -148,8 +148,7 @@ final class AccountingAccountPutController
             return new JsonResponse([
                 'title' => 'Error',
                 'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An unexpected error occurred while processing your request.',
-                'message' => $e->getMessage(),
+                'detail' => 'An unexpected error occurred while processing your request.'
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

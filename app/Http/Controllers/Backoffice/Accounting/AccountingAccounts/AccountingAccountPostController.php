@@ -124,7 +124,7 @@ final class AccountingAccountPostController
             return new JsonResponse([
                 'title' => 'Internal Server Error',
                 'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An unexpected error occurred while processing your request.',
+                'detail' => 'An unexpected error occurred while processing your request.'
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
