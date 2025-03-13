@@ -18,3 +18,14 @@ Route::group([
     require __DIR__ . '/backoffice/companies.php';
     require __DIR__ . '/backoffice/users.php';
 });
+
+Route::group([
+    'prefix' => 'backoffice/{tenant}/security',
+    'middleware' => [
+        'auth:sanctum',
+        InitializeTenancyByPath::class,
+        TeamsPermission::class,
+    ],
+], function () {
+    require __DIR__ . '/backoffice/security/roles/roles.php';
+});
