@@ -133,8 +133,7 @@ final class AccountingAccountGetController
             return new JsonResponse([
                 'title' => 'Internal Server Error',
                 'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An error occurred while processing your request.',
-                'message' => $e->getMessage()
+                'detail' => 'An error occurred while processing your request.'
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
