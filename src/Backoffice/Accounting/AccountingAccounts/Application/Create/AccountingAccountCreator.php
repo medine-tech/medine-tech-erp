@@ -18,7 +18,6 @@ class AccountingAccountCreator
 
     public function __invoke(AccountingAccountCreatorRequest $request): void
     {
-        try {
             $accountingAccount = AccountingAccount::create(
                 $request->id(),
                 $request->code(),
@@ -31,10 +30,5 @@ class AccountingAccountCreator
             );
 
             $this->repository->save($accountingAccount);
-        } catch (Exception $e) {
-            throw new \Exception(
-                sprintf('Error creating accounting account: %s', $e->getMessage())
-            );
-        }
     }
 }
