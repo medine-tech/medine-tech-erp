@@ -27,5 +27,6 @@ Route::group([
         TeamsPermission::class,
     ],
 ], function () {
+    require __DIR__ . '/backoffice/accounting/accounting-accounts/accounting-accounts.php';
     require __DIR__ . '/backoffice/accounting/accounting-center/accounting-centers.php';
 });

@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountRepository;
+use MedineTech\Backoffice\Accounting\AccountingAccounts\Infrastructure\Persistence\Eloquent\EloquentAccountingAccountRepository;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterRepository;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Persistence\Eloquent\EloquentAccountingCenterRepository;
 use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
@@ -48,8 +50,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CompanyRepository::class, EloquentCompanyRepository::class);
         $this->app->bind(CompanyUserRepository::class, EloquentCompanyUserRepository::class);
         $this->app->bind(FirstCompanyRepository::class, EloquentFirstCompanyRepository::class);
+        $this->app->bind(AccountingAccountRepository::class, EloquentAccountingAccountRepository::class);
         $this->app->bind(AccountingCenterRepository::class, EloquentAccountingCenterRepository::class);
-
     }
 
     /**
