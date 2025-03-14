@@ -7,6 +7,8 @@ namespace MedineTech\Backoffice\Security\Roles\Application\Create;
 use MedineTech\Backoffice\Companies\Domain\CompanyCreatedDomainEvent;
 use MedineTech\Backoffice\Security\Roles\Domain\Role;
 use MedineTech\Backoffice\Security\Roles\Domain\RoleRepository;
+use MedineTech\Backoffice\Security\Roles\Application\Create\RoleCreator;
+use MedineTech\Backoffice\Security\Roles\Application\Create\RoleCreatorRequest;
 use MedineTech\Shared\Domain\Bus\Event\DomainEventSubscriber;
 use MedineTech\Shared\Domain\Bus\Event\EventBus;
 
@@ -31,9 +33,7 @@ final class CreateAdminRoleOnCompanyCreated implements DomainEventSubscriber
 
     public function __invoke(CompanyCreatedDomainEvent $event): void
     {
-        $creator = new RoleCreator($this->roleRepository, $this->roleEvent);
-
-        ($creator)(new RoleCreatorRequest(
+        ($this->roleCreator)(new RoleCreatorRequest(
             "Super-Admin",
             "Rol de administrador con todos los permisos",
             2,
