@@ -1,15 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Backoffice\Accounting\AccountingAccounts\Application\Create;
 
-use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountStatus;
-use Tests\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountMother;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\AccountingAccountCreator;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\AccountingAccountCreatorRequest;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountCreatedDomainEvent;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountRepository;
+use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountStatus;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 
 final class AccountingAccountCreatorTest extends UnitTestCase
@@ -41,11 +42,7 @@ final class AccountingAccountCreatorTest extends UnitTestCase
             $accountingAccount->updaterId(),
             $accountingAccount->companyId()
         );
-
-        $eventBus->shouldReceive('publish')
-            ->once()
-            ->with($this->similarTo($domainEvent))
-            ->andReturnNull();
+        $this->shouldPublishDomainEvent($domainEvent);
 
         /* @var AccountingAccountRepository $accountingAccountRepository */
         $creator = new AccountingAccountCreator(
