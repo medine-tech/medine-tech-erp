@@ -1,0 +1,11 @@
+GET http://localhost/api/backoffice/{{tenant}}/security/roles/1
+accept: application/json
+Authorization: Bearer {{token}}
+
+###
+
+GET http://localhost/api/backoffice/{{tenant}}/security/roles
+accept: application/json
+Authorization: Bearer {{token}}
+
+###

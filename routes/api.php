@@ -30,3 +30,14 @@ Route::group([
     require __DIR__ . '/backoffice/accounting/accounting-accounts/accounting-accounts.php';
     require __DIR__ . '/backoffice/accounting/accounting-center/accounting-centers.php';
 });
+
+Route::group([
+    'prefix' => 'backoffice/{tenant}/security',
+    'middleware' => [
+        'auth:sanctum',
+        InitializeTenancyByPath::class,
+        TeamsPermission::class,
+    ],
+], function () {
+    require __DIR__ . '/backoffice/security/roles/roles.php';
+});
