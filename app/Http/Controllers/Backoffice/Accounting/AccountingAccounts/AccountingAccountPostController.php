@@ -13,6 +13,63 @@ use MedineTech\Backoffice\Accounting\AccountingAccounts\Infrastructure\Authoriza
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @OA\Post(
+ *     path="/api/backoffice/{tenant}/accounting/accounting-accounts",
+ *     tags={"Backoffice - Accounting - Accounting Accounts"},
+ *     summary="Create a new accounting account",
+ *     security={ {"bearerAuth": {} } },
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             type="object",
+ *             required={"id", "name", "code", "type"},
+ *             @OA\Property(property="id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426655440000"),
+ *             @OA\Property(property="name", type="string", example="Cash Account"),
+ *             @OA\Property(property="description", type="string", example="Cash account for the company", nullable=true),
+ *             @OA\Property(property="code", type="string", example="101"),
+ *             @OA\Property(property="type", type="integer", example=1, description="1 = asset, 2 = liability, 3 = equity, 4 = revenue, 5 = expense"),
+ *             @OA\Property(property="parent_id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426655440001", nullable=true),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Accounting account created successfully"
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Validation error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="title", type="string", example="Validation Error"),
+ *             @OA\Property(property="status", type="integer", example=400),
+ *             @OA\Property(property="detail", type="string", example="The given data was invalid."),
+ *             @OA\Property(property="errors", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="title", type="string", example="Unauthorized"),
+ *             @OA\Property(property="status", type="integer", example=403),
+ *             @OA\Property(property="detail", type="string", example="You do not have permission to view this resource.")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="title", type="string", example="Internal Server Error"),
+ *             @OA\Property(property="status", type="integer", example=500),
+ *             @OA\Property(property="detail", type="string", example="An unexpected error occurred while processing your request.")
+ *         )
+ *     )
+ * )
+ */
+
 final class AccountingAccountPostController
 {
     public function __construct(private readonly AccountingAccountCreator $creator)

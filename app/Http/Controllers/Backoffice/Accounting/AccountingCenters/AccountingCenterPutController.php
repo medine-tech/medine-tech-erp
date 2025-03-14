@@ -14,6 +14,80 @@ use MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Authorizati
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @OA\Put(
+ *     path="/api/backoffice/{tenant}/accounting/accounting-centers/{id}",
+ *     tags={"Backoffice - Accounting - Accounting Centers"},
+ *     summary="Update an existing accounting center",
+ *     security={ {"bearerAuth": {} } },
+ *     @OA\Parameter(
+ *         name="tenant",
+ *         in="path",
+ *         required=true,
+ *         description="The tenant ID",
+ *         @OA\Schema(type="string")
+ *     ),
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="The ID of the accounting center to update",
+ *         @OA\Schema(type="string", format="uuid")
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"name", "status"},
+ *             @OA\Property(property="name", type="string", example="Updated Center Name"),
+ *             @OA\Property(property="description", type="string", example="Updated accounting center description", nullable=true),
+ *             @OA\Property(property="status", type="string", example="INACTIVE", description="Center status"),
+ *             @OA\Property(property="parent_id", type="string", example="123e4567-e89b-12d3-a456-426655440000", nullable=true, description="Parent center ID")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Accounting center updated successfully"
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Validation error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Validation Error"),
+ *             @OA\Property(property="status", type="integer", example=400),
+ *             @OA\Property(property="detail", type="string", example="The given data was invalid."),
+ *             @OA\Property(property="errors", type="object")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Accounting center not found",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Not Found"),
+ *             @OA\Property(property="status", type="integer", example=404),
+ *             @OA\Property(property="detail", type="string", example="Accounting center not found with the provided ID.")
+ *         )
+ *      ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Unauthorized"),
+ *             @OA\Property(property="status", type="integer", example=403),
+ *             @OA\Property(property="detail", type="string", example="You do not have permission to update this resource.")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Error"),
+ *             @OA\Property(property="status", type="integer", example=500),
+ *             @OA\Property(property="detail", type="string", example="An unexpected error occurred while processing your request.")
+ *         )
+ *     )
+ * )
+ */
+
 final class AccountingCenterPutController
 {
     public function __construct(
