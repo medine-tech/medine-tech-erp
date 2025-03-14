@@ -15,7 +15,7 @@ use MedineTech\Backoffice\CompanyUsers\Domain\CompanyUserRepository;
 use MedineTech\Backoffice\CompanyUsers\Infrastructure\Persistence\Eloquent\EloquentCompanyUserRepository;
 use MedineTech\Backoffice\FirstCompanies\Domain\FirstCompanyRepository;
 use MedineTech\Backoffice\FirstCompanies\Infrastructure\Persistence\Eloquent\EloquentFirstCompanyRepository;
-use MedineTech\Backoffice\Roles\Application\Create\CreateAdminRoleOnCompanyCreated;
+use MedineTech\Backoffice\Security\Roles\Application\Create\CreateAdminRoleOnCompanyCreated;
 use MedineTech\Backoffice\Security\Roles\Domain\RoleRepository;
 use MedineTech\Backoffice\Security\Roles\Infrastructure\Persistence\EloquentRoleRepository;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
