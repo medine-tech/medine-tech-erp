@@ -23,4 +23,5 @@ return new class extends Migration
             $table->dropColumn(['code', 'description', 'status', 'creator_id', 'updater_id']);
         });
     }
+
 };
