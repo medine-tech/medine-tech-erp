@@ -47,6 +47,7 @@ final class AccountingAccountCreatorTest extends UnitTestCase
             ->with($this->similarTo($domainEvent))
             ->andReturnNull();
 
+        /* @var AccountingAccountRepository $accountingAccountRepository */
         $creator = new AccountingAccountCreator(
             $accountingAccountRepository,
             $eventBus
