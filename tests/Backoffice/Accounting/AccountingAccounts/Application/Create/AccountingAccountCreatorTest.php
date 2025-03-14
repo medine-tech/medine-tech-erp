@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Tests\Backoffice\Accounting\AccountingAccounts\Application\Create;
@@ -15,7 +14,7 @@ use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 
 final class AccountingAccountCreatorTest extends UnitTestCase
 {
-    #[test]
+    #[Test]
     public function it_should_create_an_accounting_account(): void
     {
         $accountingAccount = AccountingAccountMother::create(
@@ -29,6 +28,7 @@ final class AccountingAccountCreatorTest extends UnitTestCase
             ->andReturnNull();
 
         $eventBus = $this->eventBus();
+
         $domainEvent = new AccountingAccountCreatedDomainEvent(
             $accountingAccount->id(),
             $accountingAccount->code(),
@@ -41,7 +41,11 @@ final class AccountingAccountCreatorTest extends UnitTestCase
             $accountingAccount->updaterId(),
             $accountingAccount->companyId()
         );
-        $this->shouldPublishDomainEvent($domainEvent);
+
+        $eventBus->shouldReceive('publish')
+            ->once()
+            ->with($this->similarTo($domainEvent))
+            ->andReturnNull();
 
         /* @var AccountingAccountRepository $accountingAccountRepository */
         $creator = new AccountingAccountCreator(
