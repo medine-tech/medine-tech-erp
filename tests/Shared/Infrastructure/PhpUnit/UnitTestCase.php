@@ -25,6 +25,7 @@ abstract class UnitTestCase extends TestCase
     {
         $this->eventBus()
             ->shouldReceive('publish')
+            ->once()
             ->with($this->similarTo($domainEvent))
             ->andReturnNull();
     }
