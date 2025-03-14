@@ -114,7 +114,8 @@ final class CompanyPutController
                 'title' => 'Error',
                 'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
                 'detail' => 'An unexpected error occurred while processing your request.',
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+                'message' => $e->getMessage()
+                ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
