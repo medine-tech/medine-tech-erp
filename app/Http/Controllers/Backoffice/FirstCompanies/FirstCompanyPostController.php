@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\FirstCompanies\Application\Register\FirstCompanyRegister;
@@ -60,7 +61,8 @@ final class FirstCompanyPostController extends Controller
 {
     public function __construct(
         private readonly FirstCompanyRegister $firstCompanyRegister,
-    ) {
+    )
+    {
     }
 
     public function __invoke(Request $request): JsonResponse
@@ -74,13 +76,17 @@ final class FirstCompanyPostController extends Controller
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
 
-            ($this->firstCompanyRegister)(new FirstCompanyRegisterRequest(
+            $registerRequest = new FirstCompanyRegisterRequest(
                 $validated['companyId'],
                 $validated['companyName'],
                 $validated['name'],
                 $validated['email'],
-                Hash::make($validated['password']),
-            ));
+                Hash::make($validated['password'])
+            );
+
+            DB::transaction(function () use ($registerRequest) {
+                ($this->firstCompanyRegister)($registerRequest);
+            });
 
             return response()->json();
         } catch (ValidationException $e) {

@@ -5,69 +5,14 @@ namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenters;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\AccountingCenterCreator;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\AccountingCenterCreatorRequest;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Authorization\AccountingCenterPermissions;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
-/**
- * @OA\Post(
- *     path="/api/backoffice/{tenant}/accounting/accounting-centers",
- *     tags={"Backoffice - Accounting - Accounting Centers"},
- *     summary="Create a new accounting center",
- *     security={ {"bearerAuth": {} } },
- *     @OA\RequestBody(
- *         required=true,
- *         @OA\JsonContent(
- *             type="object",
- *             required={"id", "code", "name"},
- *             @OA\Property(property="id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426655440000"),
- *             @OA\Property(property="code", type="string", example="AC-001", maxLength=50),
- *             @OA\Property(property="name", type="string", example="Main Accounting Center", minLength=3, maxLength=40),
- *             @OA\Property(property="description", type="string", example="Main accounting center description", nullable=true),
- *             @OA\Property(property="parent_id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426655440001", nullable=true)
- *         )
- *     ),
- *     @OA\Response(
- *         response=201,
- *         description="Accounting center created successfully"
- *     ),
- *     @OA\Response(
- *         response=400,
- *         description="Validation error",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="title", type="string", example="Validation Error"),
- *             @OA\Property(property="status", type="integer", example=400),
- *             @OA\Property(property="detail", type="string", example="The given data was invalid."),
- *             @OA\Property(property="errors", type="object")
- *         )
- *     ),
- *     @OA\Response(
- *         response=403,
- *         description="Unauthorized",
- *         @OA\JsonContent(
- *             @OA\Property(property="title", type="string", example="Unauthorized"),
- *             @OA\Property(property="status", type="integer", example=403),
- *             @OA\Property(property="detail", type="string", example="You do not have permission to view this resource.")
- *         )
- *     ),
- *     @OA\Response(
- *         response=500,
- *         description="Internal server error",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(property="title", type="string", example="Internal Server Error"),
- *             @OA\Property(property="status", type="integer", example=500),
- *             @OA\Property(property="detail", type="string", example="An unexpected error occurred while processing your request.")
- *         )
- *     )
- * )
- */
 final class AccountingCenterPostController
 {
     public function __construct(private readonly AccountingCenterCreator $creator)
@@ -78,15 +23,8 @@ final class AccountingCenterPostController
     {
         try {
             $user = $request->user();
-//            Role::create(['name' => 'developer']);
-//            Permission::create(['name' => AccountingCenterPermissions::CREATE]);
 
-//            $role = Role::findByName('developer');
-//            $permission = Permission::findByName(AccountingCenterPermissions::CREATE->value);
-//            $role->syncPermissions([$permission]);
-//            $user->syncRoles([$role->name]);
-
-            if (!$request->user()->can(AccountingCenterPermissions::CREATE)) {
+            if (!$user->can(AccountingCenterPermissions::CREATE)) {
                 throw new UnauthorizedException(403);
             }
 
@@ -98,7 +36,7 @@ final class AccountingCenterPostController
                 'parent_id' => 'nullable|string|uuid',
             ]);
 
-            $userId = $request->user()->id;
+            $userId = $user->id;
 
             $creatorRequest = new AccountingCenterCreatorRequest(
                 $validatedData['id'],
@@ -110,7 +48,9 @@ final class AccountingCenterPostController
                 tenant('id')
             );
 
-            ($this->creator)($creatorRequest);
+            DB::transaction(function () use ($creatorRequest) {
+                ($this->creator)($creatorRequest);
+            });
 
             return new JsonResponse(null, JsonResponse::HTTP_CREATED);
         } catch (ValidationException $e) {

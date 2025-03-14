@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Backoffice\Users;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use MedineTech\Backoffice\Users\Application\Create\UserCreator;
 use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
@@ -70,7 +71,8 @@ final readonly class UserPostController
 {
     public function __construct(
         private UserCreator $creator
-    ) {
+    )
+    {
     }
 
     public function __invoke(Request $request): JsonResponse
@@ -86,14 +88,16 @@ final readonly class UserPostController
                 'password' => 'required|string|min:8|max:30'
             ]);
 
-            ($this->creator)(
-                new UserCreatorRequest(
-                    $validatedData['name'],
-                    $validatedData['email'],
-                    $validatedData['password'],
-                    tenant("id")
-                )
+            $creatorRequest = new UserCreatorRequest(
+                $validatedData['name'],
+                $validatedData['email'],
+                $validatedData['password'],
+                tenant("id")
             );
+
+            DB::transaction(function () use ($creatorRequest) {
+                ($this->creator)($creatorRequest);
+            });
 
             return new JsonResponse(null, JsonResponse::HTTP_CREATED);
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -105,9 +109,9 @@ final readonly class UserPostController
             ], JsonResponse::HTTP_BAD_REQUEST);
         } catch (UnauthorizedException) {
             return response()->json([
-                "title" => "Unauthorized",
-                "detail" => "You do not have permission to view this resource.",
-                "status" => 403,
+                'title' => 'Unauthorized',
+                'detail' => 'You do not have permission to view this resource.',
+                'status' => 403,
             ], 403);
         } catch (Exception $e) {
             Log::error('Server error: ' . $e->getMessage());
