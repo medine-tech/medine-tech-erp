@@ -5,14 +5,13 @@ namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenters;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\AccountingCenterCreator;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\AccountingCenterCreatorRequest;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Authorization\AccountingCenterPermissions;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 /**
  * @OA\Post(
@@ -68,6 +67,7 @@ use Spatie\Permission\Models\Role;
  *     )
  * )
  */
+
 final class AccountingCenterPostController
 {
     public function __construct(private readonly AccountingCenterCreator $creator)
@@ -78,15 +78,8 @@ final class AccountingCenterPostController
     {
         try {
             $user = $request->user();
-//            Role::create(['name' => 'developer']);
-//            Permission::create(['name' => AccountingCenterPermissions::CREATE]);
 
-//            $role = Role::findByName('developer');
-//            $permission = Permission::findByName(AccountingCenterPermissions::CREATE->value);
-//            $role->syncPermissions([$permission]);
-//            $user->syncRoles([$role->name]);
-
-            if (!$request->user()->can(AccountingCenterPermissions::CREATE)) {
+            if (!$user->can(AccountingCenterPermissions::CREATE)) {
                 throw new UnauthorizedException(403);
             }
 
@@ -98,7 +91,7 @@ final class AccountingCenterPostController
                 'parent_id' => 'nullable|string|uuid',
             ]);
 
-            $userId = $request->user()->id;
+            $userId = $user->id;
 
             $creatorRequest = new AccountingCenterCreatorRequest(
                 $validatedData['id'],
@@ -110,7 +103,9 @@ final class AccountingCenterPostController
                 tenant('id')
             );
 
-            ($this->creator)($creatorRequest);
+            DB::transaction(function () use ($creatorRequest) {
+                ($this->creator)($creatorRequest);
+            });
 
             return new JsonResponse(null, JsonResponse::HTTP_CREATED);
         } catch (ValidationException $e) {

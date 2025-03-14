@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Backoffice\Users;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use MedineTech\Backoffice\Users\Application\Update\UserUpdater;
 use MedineTech\Backoffice\Users\Application\Update\UserUpdaterRequest;
@@ -89,12 +90,14 @@ final readonly class UserPutController
                 'name' => 'required|string|min:3|max:30'
             ]);
 
-            ($this->updater)(
-                new UserUpdaterRequest(
-                    $id,
-                    $validatedData['name']
-                )
+            $updaterRequest = new UserUpdaterRequest(
+                $id,
+                $validatedData['name']
             );
+
+            DB::transaction(function () use ($updaterRequest) {
+                ($this->updater)($updaterRequest);
+            });
 
             return new JsonResponse(null, JsonResponse::HTTP_OK);
         } catch (\Illuminate\Validation\ValidationException $e) {

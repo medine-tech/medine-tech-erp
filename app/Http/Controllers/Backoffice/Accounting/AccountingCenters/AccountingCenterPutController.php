@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenters;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Update\AccountingCenterUpdater;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Update\AccountingCenterUpdaterRequest;
@@ -86,6 +87,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
+
 final class AccountingCenterPutController
 {
     public function __construct(
@@ -119,7 +121,9 @@ final class AccountingCenterPutController
                 $validatedData['parent_id'] ?? null
             );
 
-            ($this->updater)($updaterRequest);
+            DB::transaction(function () use ($updaterRequest) {
+                ($this->updater)($updaterRequest);
+            });
 
             return new JsonResponse(null, JsonResponse::HTTP_OK);
         } catch (ValidationException $e) {

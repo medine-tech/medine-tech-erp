@@ -1,11 +1,11 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Accounting\AccountingAccounts;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Update\AccountingAccountUpdater;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Update\AccountingAccountUpdaterRequest;
@@ -88,6 +88,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
+
 final class AccountingAccountPutController
 {
     public function __construct(
@@ -123,7 +124,9 @@ final class AccountingAccountPutController
                 $validatedData['parent_id'],
             );
 
-            ($this->updater)($updaterRequest);
+            DB::transaction(function () use ($updaterRequest) {
+                ($this->updater)($updaterRequest);
+            });
 
             return new JsonResponse(null, JsonResponse::HTTP_OK);
         } catch (ValidationException $e) {
