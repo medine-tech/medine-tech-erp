@@ -6,19 +6,15 @@ use App\Http\Controllers\Backoffice\Users\UserPutController;
 use App\Http\Controllers\Backoffice\Users\UsersGetController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/backoffice/users', UserPostController::class)
-    ->middleware('auth:sanctum')
+Route::post('/users', UserPostController::class)
     ->name('users.create');
 
-Route::put('/backoffice/users/{id}', UserPutController::class)
-    ->middleware('auth:sanctum')
+Route::put('/users/{id}', UserPutController::class)
     ->name('users.update');
 
-Route::get('/backoffice/users/{id}', UserGetController::class)
-    ->middleware('auth:sanctum')
+Route::get('/users/{id}', UserGetController::class)
     ->name('users.show');
 
-Route::get('/backoffice/users', UsersGetController::class)
-    ->middleware('auth:sanctum')
+Route::get('/users', UsersGetController::class)
     ->name('users.search');
 

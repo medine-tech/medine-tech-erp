@@ -1,36 +1,43 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Users\Infrastructure\Persistence\Eloquent;
 
 use App\Models\User as UserModel;
-use Illuminate\Database\QueryException;
+use Closure;
 use MedineTech\Backoffice\Users\Domain\User;
-use MedineTech\Backoffice\Users\Domain\UserAlreadyExists;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
+use RuntimeException;
+use function Lambdish\Phunctional\map;
 
 final class EloquentUserRepository implements UserRepository
 {
-    public function save(User $user): void
+    public function save(User $user): int
     {
-        try {
-            $model = UserModel::find($user->id());
-            $data = $this->toDatabase($user->toPrimitives());
+        $model = UserModel::where([
+            "email" => $user->email()
+        ])->first();
 
-            if ($model) {
-                $model->name = $user->name();
-                $model->save();
-            } else {
-                $model = new UserModel();
-                $model->id = $user->id();
-                $model->name = $user->name();
-                $model->email = $user->email();
-                $model->password = $user->password();
-                $model->save();
-            }
-        } catch (QueryException $e) {
-            $this->handleDatabaseExceptions($e, $user->email());
+        if ($model) {
+            $model->name = $user->name();
+            $model->save();
+
+            return $model->id;
         }
+
+        $model = UserModel::create([
+            'id' => $user->id(),
+            'name' => $user->name(),
+            'email' => $user->email(),
+            'password' => $user->password(),
+        ]);
+
+        if(null === $model) {
+            throw new RuntimeException("Failed to save user");
+        }
+
+        return $user->id();
     }
 
     public function find(int $id): ?User
@@ -65,37 +72,20 @@ final class EloquentUserRepository implements UserRepository
 
     public function search(array $filters): array
     {
-        $result = UserModel::where($filters)
-            ->paginate(20)
-            ->toArray();
+        $paginator = UserModel::fromFilters($filters)
+            ->paginate(20);
 
         return [
-            'items' => array_map($this->fromDatabase(), $result['data']),
-            'total' => $result['total'],
-            'per_page' => $result['per_page'],
-            'current_page' => $result['current_page'],
+            'items' => map($this->fromDatabase(), $paginator->items()),
+            'total' => $paginator->total(),
+            'perPage' => $paginator->perPage(),
+            'currentPage' => $paginator->currentPage(),
         ];
     }
 
-    private function handleDatabaseExceptions(QueryException $e, string $email): void
+    private function fromDatabase(): Closure
     {
-        if (isset($e->errorInfo[1]) && $e->errorInfo[1] === 1062) {
-            throw new UserAlreadyExists($email);
-        }
-        throw new \RuntimeException("Database error: " . $e->getMessage());
-    }
-
-    private function toDatabase(array $params): array
-    {
-        return array_combine(
-            array_map(static fn($key) => \Illuminate\Support\Str::snake($key), array_keys($params)),
-            array_values($params)
-        );
-    }
-
-    private function fromDatabase(): \Closure
-    {
-        return fn(array $user) => User::fromPrimitives([
+        return fn(UserModel $user) => User::fromPrimitives([
             'id' => $user['id'],
             'name' => $user['name'],
             'email' => $user['email'],

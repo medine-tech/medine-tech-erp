@@ -2,13 +2,13 @@
 
 namespace MedineTech\Backoffice\Companies\Infrastructure\Persistence\Eloquent;
 
-use Illuminate\Support\Str;
+use Closure;
 use MedineTech\Backoffice\Companies\Domain\Company;
 use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
+use function Lambdish\Phunctional\map;
 
 final class EloquentCompanyRepository implements CompanyRepository
 {
-
     public function save(Company $company): void
     {
         try {
@@ -30,53 +30,33 @@ final class EloquentCompanyRepository implements CompanyRepository
 
     public function find(string $id): ?Company
     {
-        $model = CompanyModel::query()
+        return CompanyModel::query()
             ->where('id', $id)
+            ->get()
+            ->map($this->fromDatabase())
             ->first();
-
-        if (!$model) {
-            return null;
-        }
-
-        $params = $this->fromDatabase($model->toArray());
-        return Company::fromPrimitives($params);
     }
 
     public function search(array $filters, int $perPage = 20): array
     {
-        $query = CompanyModel::query();
-
-        foreach ($filters as $field => $value) {
-            if (in_array($field, ['id', 'name'])) {
-                $query->where($field, $value);
-            }
-        }
-
-        $result = $query
-            ->paginate($perPage)
-            ->toArray();
+        $paginator = CompanyModel::fromFilters($filters)
+            ->paginate($perPage);
 
         return [
-            'items' => array_map([$this, 'fromDatabase'], $result['data']),
-            'total' => $result['total'],
-            'per_page' => $result['per_page'],
-            'current_page' => $result['current_page'],
+            'items' => map($this->fromDatabase(), $paginator->items()),
+            'total' => $paginator->total(),
+            'perPage' => $paginator->perPage(),
+            'currentPage' => $paginator->currentPage(),
         ];
     }
 
-    protected function fromDatabase(array $params): array
+    private function fromDatabase(): Closure
     {
-        return array_combine(
-            array_map(static fn($key) => Str::camel($key), array_keys($params)),
-            array_values($params)
-        );
-    }
-
-    protected function toDatabase(array $params): array
-    {
-        return array_combine(
-            array_map(static fn($key) => Str::snake($key), array_keys($params)),
-            array_values($params)
-        );
+        return function (CompanyModel $model) {
+            return Company::fromPrimitives([
+                "id" => $model['id'],
+                "name" => $model["name"] ?? "without name",
+            ]);
+        };
     }
 }

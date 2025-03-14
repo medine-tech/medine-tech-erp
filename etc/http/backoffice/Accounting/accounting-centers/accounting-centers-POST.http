@@ -1,0 +1,12 @@
+POST http://localhost/api/backoffice/{{tenant}}/accounting/accounting-centers
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "id": "{{$random.uuid}}",
+    "code": "{{$random.uuid}}",
+    "name": "{{$random.company.name}}",
+    "description": null,
+    "parent_id": null
+}

@@ -4,24 +4,31 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Companies\Domain;
 
-final class Company
+use MedineTech\Shared\Domain\Aggregate\AggregateRoot;
+
+final class Company extends AggregateRoot
 {
     public function __construct(
         private readonly string $id,
         private string $name
-    )
-    {
+    ) {
     }
 
     public static function create(
         string $id,
         string $name
-    ): self
-    {
-        return new self(
+    ): self {
+        $company = new self(
             $id,
             $name
         );
+
+        $company->record(new CompanyCreatedDomainEvent(
+            $company->id(),
+            $company->name()
+        ));
+
+        return $company;
     }
 
     public static function fromPrimitives(array $row): self

@@ -1,15 +1,16 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Companies;
 
 use Exception;
+use Illuminate\Http\Request;
 use MedineTech\Backoffice\Companies\Application\Find\CompanyFinder;
 use MedineTech\Backoffice\Companies\Application\Find\CompanyFinderRequest;
 use MedineTech\Backoffice\Companies\Domain\CompanyNotFound;
+use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompaniesPermissions;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @OA\Get(
@@ -17,12 +18,19 @@ use Symfony\Component\HttpFoundation\Request;
  *     tags={"Backoffice - Companies"},
  *     summary="Get a company by ID",
  *     description="Returns the details of a company based on the provided ID.",
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
  *         required=true,
  *         description="The ID of the company to retrieve",
- *         @OA\Schema(type="string", format="uuid", example="123e4567-e89b-12d3-a456-426655440000")
+ *         @OA\Schema(
+ *             type="string",
+ *             format="uuid",
+ *             example="123e4567-e89b-12d3-a456-426655440000"
+ *         )
  *     ),
  *     @OA\Response(
  *         response=200,
@@ -30,6 +38,15 @@ use Symfony\Component\HttpFoundation\Request;
  *         @OA\JsonContent(
  *             @OA\Property(property="id", type="string", example="123e4567-e89b-12d3-a456-426655440000"),
  *             @OA\Property(property="name", type="string", example="MedineTech")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Unauthorized"),
+ *             @OA\Property(property="status", type="integer", example=403),
+ *             @OA\Property(property="detail", type="string", example="You do not have permission to view this resource.")
  *         )
  *     ),
  *     @OA\Response(
@@ -43,7 +60,7 @@ use Symfony\Component\HttpFoundation\Request;
  *     ),
  *     @OA\Response(
  *         response=500,
- *         description="Internal server error",
+ *         description="Internal Server Error",
  *         @OA\JsonContent(
  *             @OA\Property(property="title", type="string", example="Internal Server Error"),
  *             @OA\Property(property="status", type="integer", example=500),
@@ -56,16 +73,19 @@ final class CompanyGetController
 {
     public function __construct(
         private readonly CompanyFinder $finder
-    )
-    {
+    ) {
     }
 
     public function __invoke(string $id, Request $request): JsonResponse
     {
         try {
-            $response = ($this->finder)(new CompanyFinderRequest(
-                (string)$id
-            ));
+            if (!$request->user()->can(CompaniesPermissions::VIEW)) {
+                throw new UnauthorizedException(403);
+            }
+
+            $response = ($this->finder)(
+                new CompanyFinderRequest((string)$id)
+            );
 
             return new JsonResponse([
                 'id' => $response->id(),
@@ -76,14 +96,20 @@ final class CompanyGetController
             return new JsonResponse([
                 'title' => 'Company not found',
                 'status' => JsonResponse::HTTP_NOT_FOUND,
-                'detail' => "The company with id <$id> does not exist.",
+                'detail' => "The company with id <{$id}> does not exist."
             ], JsonResponse::HTTP_NOT_FOUND);
 
+        } catch (UnauthorizedException) {
+            return response()->json([
+                "title" => "Unauthorized",
+                "detail" => "You do not have permission to view this resource.",
+                "status" => 403,
+            ], 403);
         } catch (Exception $e) {
             return new JsonResponse([
                 'title' => 'Internal Server Error',
                 'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An unexpected error occurred.',
+                'detail' => 'An unexpected error occurred.'
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

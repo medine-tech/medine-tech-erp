@@ -23,7 +23,12 @@ final class UsersSearcherTest extends UnitTestCase
         $userRepository->shouldReceive('search')
             ->once()
             ->with($filters)
-            ->andReturn([$user]);
+            ->andReturn([
+                "items" => [$user],
+                "total" => 1,
+                "perPage" => 10,
+                "currentPage" => 1,
+            ]);
 
         /** @var UserRepository $userRepository */
         $searcher = new UsersSearcher($userRepository);

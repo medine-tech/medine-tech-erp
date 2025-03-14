@@ -3,22 +3,23 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Users\Application\Create;
 
+use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreator;
+use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreatorRequest;
 use MedineTech\Backoffice\Users\Domain\User;
-use MedineTech\Backoffice\Users\Domain\UserAlreadyExists;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
-use MedineTech\Backoffice\Users\Domain\UserEmail;
+use MedineTech\Shared\Domain\Bus\Event\EventBus;
 
-final readonly class UserCreator
+class UserCreator
 {
     public function __construct(
-        private UserRepository $repository
+        private readonly UserRepository $repository,
+        private readonly CompanyUserCreator $companyUserCreator,
+        private readonly EventBus $eventBus,
     ) {
     }
 
-    public function __invoke(UserCreatorRequest $request): void
+    public function __invoke(UserCreatorRequest $request): int
     {
-        $this->ensureUserDoesNotExists($request);
-
         $id = $this->repository->nextId();
 
         $user = User::create(
@@ -28,13 +29,15 @@ final readonly class UserCreator
             $request->password()
         );
 
-        $this->repository->save($user);
-    }
+        $userId = $this->repository->save($user);
 
-    private function ensureUserDoesNotExists(UserCreatorRequest $request): void
-    {
-        if ($this->repository->findByEmail($request->email())) {
-            throw new UserAlreadyExists($request->email());
-        }
+        ($this->companyUserCreator)(new CompanyUserCreatorRequest(
+            $request->companyId(),
+            $userId,
+        ));
+
+        $this->eventBus->publish(...$user->pullDomainEvents());
+
+        return $userId;
     }
 }

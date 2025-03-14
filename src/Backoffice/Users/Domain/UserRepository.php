@@ -6,7 +6,7 @@ namespace MedineTech\Backoffice\Users\Domain;
 
 interface UserRepository
 {
-    public function save(User $user): void;
+    public function save(User $user): int;
 
     public function find(int $id): ?User;
 
