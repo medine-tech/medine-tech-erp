@@ -1,0 +1,21 @@
+POST http://localhost/api/backoffice/{{tenant}}/security/roles-permissions/1/permissions/2/attach
+accept: application/json
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "roleId": "1",
+    "permissionId": "19"
+}
+
+###
+
+POST http://localhost/api/backoffice/{{tenant}}/security/roles-permissions/1/permissions/2/detach
+accept: application/json
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "roleId": "1",
+    "permissionId": "19"
+}
