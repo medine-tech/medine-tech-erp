@@ -1,4 +1,4 @@
-POST http://localhost/api/backoffice/{{tenant}}/security/roles-permissions/1/permissions/2/attach
+POST http://localhost/api/backoffice/{{tenant}}/security/roles-permissions/permissions/attach
 accept: application/json
 content-type: application/json
 Authorization: Bearer {{token}}
@@ -10,7 +10,7 @@ Authorization: Bearer {{token}}
 
 ###
 
-POST http://localhost/api/backoffice/{{tenant}}/security/roles-permissions/1/permissions/2/detach
+POST http://localhost/api/backoffice/{{tenant}}/security/roles-permissions/permissions/detach
 accept: application/json
 content-type: application/json
 Authorization: Bearer {{token}}

@@ -18,8 +18,8 @@ use MedineTech\Backoffice\FirstCompanies\Infrastructure\Persistence\Eloquent\Elo
 use MedineTech\Backoffice\Roles\Application\Create\CreateAdminRoleOnCompanyCreated;
 use MedineTech\Backoffice\Security\Roles\Domain\RoleRepository;
 use MedineTech\Backoffice\Security\Roles\Infrastructure\Persistence\EloquentRoleRepository;
-use MedineTech\Backoffice\Security\UserRoles\Domain\UserRoleRepository;
-use MedineTech\Backoffice\Security\UserRoles\Infrastructure\Persintence\Eloquent\EloquentUserRoleRepository;
+use MedineTech\Backoffice\Security\RolesPermissions\Domain\UserRoleRepository;
+use MedineTech\Backoffice\Security\RolesPermissions\Infrastructure\Persistence\Eloquent\EloquentUserRoleRepository;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
 use MedineTech\Backoffice\Users\Infrastructure\Persistence\Eloquent\EloquentUserRepository;
 use MedineTech\Shared\Domain\Bus\Event\EventBus;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MedineTech\Backoffice\Security\UserRoles\Application\Detach;
+namespace MedineTech\Backoffice\Security\RolesPermissions\Application\Detach;
 
-use MedineTech\Backoffice\Security\UserRoles\Domain\UserRoleRepository;
+use MedineTech\Backoffice\Security\RolesPermissions\Domain\UserRoleRepository;
 
 final class DetachRoleOnUserCreated
 {
@@ -13,7 +13,7 @@ final class DetachRoleOnUserCreated
     ) {
     }
 
-    public function __invoke(string $roleId, string $permissionId): void
+    public function __invoke(int $roleId, string $permissionId): void
     {
         $this->repository->detachPermission($roleId, $permissionId);
     }

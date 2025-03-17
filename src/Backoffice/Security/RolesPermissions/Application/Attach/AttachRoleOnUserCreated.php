@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MedineTech\Backoffice\Security\UserRoles\Application\Attach;
+namespace MedineTech\Backoffice\Security\RolesPermissions\Application\Attach;
 
-use MedineTech\Backoffice\Security\UserRoles\Domain\UserRoleRepository;
+use MedineTech\Backoffice\Security\RolesPermissions\Domain\UserRoleRepository;
 
 final class AttachRoleOnUserCreated
 {
@@ -13,7 +13,7 @@ final class AttachRoleOnUserCreated
     ) {
     }
 
-    public function __invoke(string $roleId, string $permissionId): void
+    public function __invoke(int $roleId, string $permissionId): void
     {
         $this->repository->attachPermission($roleId, $permissionId);
     }
