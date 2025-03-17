@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backoffice\Companies;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Companies\Application\Update\CompanyUpdater;
 use MedineTech\Backoffice\Companies\Application\Update\CompanyUpdaterRequest;
@@ -64,11 +65,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
+
 final class CompanyPutController
 {
     public function __construct(
         private readonly CompanyUpdater $updater
-    ) {
+    )
+    {
     }
 
     public function __invoke(string $id, Request $request): JsonResponse
@@ -87,7 +90,9 @@ final class CompanyPutController
                 $validatedData['name']
             );
 
-            ($this->updater)($updaterRequest);
+            DB::transaction(function () use ($updaterRequest) {
+                ($this->updater)($updaterRequest);
+            });
 
             return new JsonResponse(null, JsonResponse::HTTP_OK);
         } catch (ValidationException $e) {
@@ -115,7 +120,7 @@ final class CompanyPutController
                 'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
                 'detail' => 'An unexpected error occurred while processing your request.',
                 'message' => $e->getMessage()
-                ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

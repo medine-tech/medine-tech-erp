@@ -1,11 +1,11 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Accounting\AccountingAccounts;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\AccountingAccountCreator;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\AccountingAccountCreatorRequest;
@@ -69,6 +69,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
+
 final class AccountingAccountPostController
 {
     public function __construct(private readonly AccountingAccountCreator $creator)
@@ -104,7 +105,9 @@ final class AccountingAccountPostController
                 tenant('id')
             );
 
-            ($this->creator)($creatorRequest);
+            DB::transaction(function () use ($creatorRequest) {
+                ($this->creator)($creatorRequest);
+            });
 
             return new JsonResponse(null, 201);
         } catch (ValidationException $e) {

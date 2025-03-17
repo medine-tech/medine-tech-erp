@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backoffice\Companies;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Companies\Application\Create\CompanyCreator;
 use MedineTech\Backoffice\Companies\Application\Create\CompanyCreatorRequest;
@@ -83,10 +84,12 @@ final class CompanyPostController
             $creatorRequest = new CompanyCreatorRequest(
                 $validatedData['id'],
                 $validatedData['name'],
-                $request->user()->id,
+                $request->user()->id
             );
 
-            ($this->creator)($creatorRequest);
+            DB::transaction(function () use ($creatorRequest) {
+                ($this->creator)($creatorRequest);
+            });
 
             return new JsonResponse(null, 201);
         } catch (ValidationException $e) {
