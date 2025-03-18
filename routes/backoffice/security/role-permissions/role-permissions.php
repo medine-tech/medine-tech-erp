@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/role-permissions', RolePermissionPostController::class)
-    ->name('role-permissions');
+    ->name('role-permissions.create');
 
 Route::delete('/role-permissions', RolePermissionDeleteController::class)
-    ->name('role-permissions');
+    ->name('role-permissions.delete');

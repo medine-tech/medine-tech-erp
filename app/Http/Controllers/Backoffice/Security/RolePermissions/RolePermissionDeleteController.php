@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Security\RolePermissions\Application\Delete\RolePermissionDeleterRequest;
 use MedineTech\Backoffice\Security\RolePermissions\Application\Delete\RolePermissionDeleter;
 use Illuminate\Http\Request;
+use MedineTech\Backoffice\Security\RolePermissions\Domain\RolePermissionNotFoundException;
 use MedineTech\Backoffice\Security\RolePermissions\Infrastructure\Authorization\RolePermissionPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,6 +50,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *             @OA\Property(property="title", type="string", example="Unauthorized"),
  *             @OA\Property(property="status", type="integer", example=403),
  *             @OA\Property(property="detail", type="string", example="You do not have permission to view this resource.")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Company not found",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Not Found"),
+ *             @OA\Property(property="status", type="integer", example=404),
+ *             @OA\Property(property="detail", type="string", example="Company not found with the provided ID.")
  *         )
  *     ),
  *     @OA\Response(
@@ -99,6 +109,12 @@ final class RolePermissionDeleteController
                 'detail' => 'The given data was invalid.',
                 'errors' => $e->errors()
             ], JsonResponse::HTTP_BAD_REQUEST);
+        } catch (RolePermissionNotFoundException $e) {
+            return new JsonResponse([
+                'title' => 'Not Found',
+                'status' => JsonResponse::HTTP_NOT_FOUND,
+                'detail' => 'Role permission not found.',
+            ], JsonResponse::HTTP_NOT_FOUND);
         } catch (UnauthorizedException) {
             return response()->json([
                 "title" => "Unauthorized",
