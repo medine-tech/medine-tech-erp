@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Backoffice\Security\RolePermissions\RolePermissionAttachPostController;
-use App\Http\Controllers\Backoffice\Security\RolePermissions\RolePermissionDetachDeleteController;
+use App\Http\Controllers\Backoffice\Security\RolePermissions\RolePermissionPostController;
+use App\Http\Controllers\Backoffice\Security\RolePermissions\RolePermissionDeleteController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::post('/role-permissions/attach', RolePermissionAttachPostController::class)
-    ->name('role-permissions.permissions.attach');
+Route::post('/role-permissions', RolePermissionPostController::class)
+    ->name('role-permissions');
 
-Route::DELETE('/role-permissions/detach', RolePermissionDetachDeleteController::class)
-    ->name('role-permissions.permissions.detach');
+Route::delete('/role-permissions', RolePermissionDeleteController::class)
+    ->name('role-permissions');

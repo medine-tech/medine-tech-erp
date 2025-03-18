@@ -16,7 +16,7 @@ final class RolePermissionDeleter
 
     public function __invoke(RolePermissionDeleterRequest $request): void
     {
-        $rolePermission = RolePermission::create(
+        $rolePermission = RolePermission::find(
             $request->roleId(),
             $request->permissionId()
         );

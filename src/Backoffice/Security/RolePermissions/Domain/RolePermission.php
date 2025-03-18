@@ -24,6 +24,16 @@ final class RolePermission extends AggregateRoot
         );
     }
 
+    public static function find(
+        int $roleId,
+        int $permissionId
+    ): self {
+        return new self(
+            $roleId,
+            $permissionId
+        );
+    }
+
     public function roleId(): int
     {
         return $this->roleId;

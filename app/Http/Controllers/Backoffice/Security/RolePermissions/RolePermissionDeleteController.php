@@ -5,17 +5,18 @@ namespace App\Http\Controllers\Backoffice\Security\RolePermissions;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use MedineTech\Backoffice\Security\RolePermissions\Application\Delete\RolePermissionDeleterRequest;
+use MedineTech\Backoffice\Security\RolePermissions\Application\Delete\RolePermissionDeleter;
 use Illuminate\Http\Request;
-use MedineTech\Backoffice\Security\RolePermissions\Application\Create\RolePermissionCreator;
-use MedineTech\Backoffice\Security\RolePermissions\Application\Create\RolePermissionCreatorRequest;
+use MedineTech\Backoffice\Security\RolePermissions\Infrastructure\Authorization\RolePermissionPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * @OA\Post(
- *     path="/api/backoffice/{tenant}/security/role-permissions/attach",
+ * @OA\Delete(
+ *     path="/api/backoffice/{tenant}/security/role-permissions",
  *     tags={"Backoffice - Security - Role Permissions"},
- *     summary="Attach a permission to a role",
+ *     summary="Detach a permission from a role",
  *     security={ {"bearerAuth": {} } },
  *     @OA\RequestBody(
  *         required=true,
@@ -28,7 +29,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="Permission attached to role successfully"
+ *         description="Permission detached from role successfully"
  *     ),
  *     @OA\Response(
  *         response=400,
@@ -62,29 +63,32 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
-final class RolePermissionAttachPostController
+final class RolePermissionDeleteController
 {
     public function __construct(
-        private readonly RolePermissionCreator $creator
-    )
-    {
+        private RolePermissionDeleter $deleter
+    ) {
     }
 
     public function __invoke(Request $request): JsonResponse
     {
+        if (!$request->user()->can(RolePermissionPermissions::DELETE)) {
+            throw new UnauthorizedException(JsonResponse::HTTP_FORBIDDEN);
+        }
+
         try {
-            $validatedData = $request->validate([
+            $validated = $request->validate([
                 'roleId' => 'required|int',
                 'permissionId' => 'required|int',
             ]);
 
-            $creatorRequest = new RolePermissionCreatorRequest(
-                $validatedData['roleId'],
-                $validatedData['permissionId']
+            $deleterRequest = new RolePermissionDeleterRequest(
+                $validated['roleId'],
+                $validated['permissionId']
             );
 
-            DB::transaction(function () use ($creatorRequest) {
-                ($this->creator)($creatorRequest);
+            DB::transaction(function () use ($deleterRequest) {
+                ($this->deleter)($deleterRequest);
             });
 
             return new JsonResponse(null, JsonResponse::HTTP_OK);
