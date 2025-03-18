@@ -24,16 +24,6 @@ final class RolePermission extends AggregateRoot
         );
     }
 
-    public static function delete(
-        int $roleId,
-        int $permissionId
-    ): self {
-        return new self(
-            $roleId,
-            $permissionId
-        );
-    }
-
     public function roleId(): int
     {
         return $this->roleId;

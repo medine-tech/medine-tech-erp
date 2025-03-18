@@ -13,6 +13,14 @@ final class EloquentRolePermissionRepository implements RolePermissionRepository
     public function save(RolePermission $rolePermission): void
     {
         try {
+            $exists = RolePermissionModel::where('role_id', $rolePermission->roleId())
+                ->where('permission_id', $rolePermission->permissionId())
+                ->exists();
+
+            if ($exists) {
+                return;
+            }
+
             $rolePermissionModel = new RolePermissionModel();
             $rolePermissionModel->permission_id = $rolePermission->permissionId();
             $rolePermissionModel->role_id = $rolePermission->roleId();
