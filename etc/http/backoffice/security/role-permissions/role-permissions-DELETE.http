@@ -1,4 +1,4 @@
-POST http://localhost/api/backoffice/{{tenant}}/security/role-permissions/attach
+DELETE http://localhost/api/backoffice/{{tenant}}/security/role-permissions/detach
 accept: application/json
 content-type: application/json
 Authorization: Bearer {{token}}
@@ -7,5 +7,3 @@ Authorization: Bearer {{token}}
     "roleId": "1",
     "permissionId": "19"
 }
-
-###

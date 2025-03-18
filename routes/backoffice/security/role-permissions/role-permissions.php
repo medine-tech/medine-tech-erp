@@ -8,5 +8,5 @@ use Illuminate\Support\Facades\Route;
 Route::post('/role-permissions/attach', RolePermissionAttachPostController::class)
     ->name('role-permissions.permissions.attach');
 
-Route::post('/role-permissions/detach', RolePermissionDetachDeleteController::class)
+Route::DELETE('/role-permissions/detach', RolePermissionDetachDeleteController::class)
     ->name('role-permissions.permissions.detach');
