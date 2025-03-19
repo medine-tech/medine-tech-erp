@@ -20,6 +20,11 @@ final class RolePermissionDeleterTest extends UnitTestCase
 
         $rolePermissionRepository = $this->mock(RolePermissionRepository::class);
 
+        $rolePermissionRepository->shouldReceive('find')
+            ->once()
+            ->with($rolePermission->roleId(), $rolePermission->permissionId())
+            ->andReturn($rolePermission);
+
         $rolePermissionRepository->shouldReceive('delete')
             ->once()
             ->with($this->similarTo($rolePermission))

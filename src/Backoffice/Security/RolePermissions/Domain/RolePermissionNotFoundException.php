@@ -8,7 +8,7 @@ use DomainException;
 
 final class RolePermissionNotFoundException extends DomainException
 {
-    public function __construct(string $roleId, string $permissionId)
+    public function __construct(int $roleId, int $permissionId)
     {
         parent::__construct("The role with id <$roleId> does not have the permission with id <$permissionId>.");
     }

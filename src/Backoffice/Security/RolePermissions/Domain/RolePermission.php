@@ -24,13 +24,11 @@ final class RolePermission extends AggregateRoot
         );
     }
 
-    public static function find(
-        int $roleId,
-        int $permissionId
-    ): self {
+    public static function fromPrimitives(array $primitives): self
+    {
         return new self(
-            $roleId,
-            $permissionId
+            (int)$primitives['roleId'],
+            (int)$primitives['permissionId']
         );
     }
 
