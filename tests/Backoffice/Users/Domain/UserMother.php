@@ -6,7 +6,6 @@ namespace Tests\Backoffice\Users\Domain;
 
 use Faker\Factory;
 use MedineTech\Backoffice\Users\Domain\User;
-use MedineTech\Backoffice\Users\Domain\UserEmail;
 
 final class UserMother
 {
@@ -14,15 +13,17 @@ final class UserMother
         ?int $id = null,
         ?string $name = null,
         ?string $email = null,
-        ?string $password = null
+        ?string $password = null,
+        ?string $defaultCompanyId = null
     ): User {
         $faker = Factory::create();
 
-        return new User(
-            $id ?? $faker->randomNumber(),
-            $name ?? $faker->name(),
-            $email ?? $faker->email(),
-            $password ?? $faker->password()
-        );
+        return User::fromPrimitives([
+            "id" => $id ?? $faker->randomNumber(),
+            "name" => $name ?? $faker->name(),
+            "email" => $email ?? $faker->email(),
+            "password" => $password ?? $faker->password(),
+            "defaultCompanyId" => $defaultCompanyId ?? $faker->uuid()
+        ]);
     }
 }

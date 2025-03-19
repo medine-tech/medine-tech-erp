@@ -21,7 +21,7 @@ final class UserCreatorTest extends UnitTestCase
     {
         $userId = 1;
         $companyId = "company-id";
-        $user = UserMother::create(id: $userId);
+        $user = UserMother::create(id: $userId, defaultCompanyId: $companyId);
 
         $userRepository = $this->mock(UserRepository::class);
 
