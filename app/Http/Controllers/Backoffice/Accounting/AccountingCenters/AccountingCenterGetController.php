@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenters;
@@ -9,13 +10,12 @@ use Illuminate\Http\Request;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Find\AccountingCenterFinder;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Find\AccountingCenterFinderRequest;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterNotFound;
-use MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Authorization\AccountingCenterPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 /**
  * @OA\Get(
  *     path="/api/backoffice/{tenant}/accounting/accounting-centers/{id}",
- *     tags={"Backoffice - Accounting Centers"},
+ *     tags={"Backoffice - Accounting - Accounting Centers"},
  *     summary="Retrieve an accounting center by ID",
  *     @OA\Parameter(
  *         name="id",
