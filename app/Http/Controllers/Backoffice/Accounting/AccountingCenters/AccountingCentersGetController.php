@@ -1,22 +1,22 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenters;
 
+use App\Http\Controllers\Controller;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Search\AccountingCentersSearcher;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Search\AccountingCentersSearcherRequest;
-use MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Authorization\AccountingCenterPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use App\Http\Controllers\Controller;
 
 /**
  * @OA\Get(
  *     path="/api/backoffice/{tenant}/accounting/accounting-centers",
  *     summary="Search accounting centers based on filters",
- *     tags={"Backoffice - Accounting -Accounting Centers"},
+ *     tags={"Backoffice - Accounting - Accounting Centers"},
  *     security={
  *         {"bearerAuth": {}}
  *     },
@@ -86,8 +86,7 @@ final class AccountingCentersGetController extends Controller
 {
     public function __construct(
         private readonly AccountingCentersSearcher $searcher
-    )
-    {
+    ) {
     }
 
     public function __invoke(Request $request): JsonResponse

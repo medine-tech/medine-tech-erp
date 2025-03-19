@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenters;
@@ -10,7 +11,6 @@ use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Update\AccountingCenterUpdater;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Update\AccountingCenterUpdaterRequest;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterNotFound;
-use MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Authorization\AccountingCenterPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -87,13 +87,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
-
 final class AccountingCenterPutController
 {
     public function __construct(
         private AccountingCenterUpdater $updater,
-    )
-    {
+    ) {
     }
 
     public function __invoke(string $id, Request $request): JsonResponse

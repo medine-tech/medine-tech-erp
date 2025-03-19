@@ -21,7 +21,7 @@ final class UserCreatorTest extends UnitTestCase
     {
         $userId = 1;
         $companyId = "company-id";
-        $user = UserMother::create(id: $userId);
+        $user = UserMother::create(id: $userId, defaultCompanyId: $companyId);
 
         $userRepository = $this->mock(UserRepository::class);
 
@@ -57,7 +57,7 @@ final class UserCreatorTest extends UnitTestCase
             (string)$userId,
             $user->name(),
             $user->email(),
-            $user->password(),
+            $user->defaultCompanyId(),
         );
         $this->shouldPublishDomainEvent($event);
 

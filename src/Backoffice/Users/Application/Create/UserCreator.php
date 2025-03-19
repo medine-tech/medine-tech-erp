@@ -21,12 +21,14 @@ class UserCreator
     public function __invoke(UserCreatorRequest $request): int
     {
         $id = $this->repository->nextId();
+        $defaultCompanyId = $request->companyId();
 
         $user = User::create(
             $id,
             $request->name(),
             $request->email(),
-            $request->password()
+            $request->password(),
+            $defaultCompanyId
         );
 
         $userId = $this->repository->save($user);

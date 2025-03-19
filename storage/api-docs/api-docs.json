@@ -54,6 +54,10 @@
                                         "token": {
                                             "type": "string",
                                             "example": "your_token_here"
+                                        },
+                                        "default_company_id": {
+                                            "type": "string",
+                                            "example": "123e4567-e89b-12d3-a456-426614174000"
                                         }
                                     },
                                     "type": "object"
@@ -748,7 +752,7 @@
         "/api/backoffice/{tenant}/accounting/accounting-centers/{id}": {
             "get": {
                 "tags": [
-                    "Backoffice - Accounting Centers"
+                    "Backoffice - Accounting - Accounting Centers"
                 ],
                 "summary": "Retrieve an accounting center by ID",
                 "operationId": "7e59caac36647f09a9cfb1fe04be0619",
@@ -1069,7 +1073,7 @@
         "/api/backoffice/{tenant}/accounting/accounting-centers": {
             "get": {
                 "tags": [
-                    "Backoffice - Accounting -Accounting Centers"
+                    "Backoffice - Accounting - Accounting Centers"
                 ],
                 "summary": "Search accounting centers based on filters",
                 "operationId": "4d23008111f292059007264f77558a10",
@@ -1977,242 +1981,6 @@
                         }
                     }
                 }
-            }
-        },
-        "/api/backoffice/{tenant}/security/role-permissions/attach": {
-            "post": {
-                "tags": [
-                    "Backoffice - Security - Role Permissions"
-                ],
-                "summary": "Attach a permission to a role",
-                "operationId": "d9a105a701006030a04ac6f0679fc6f7",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "roleId",
-                                    "permissionId"
-                                ],
-                                "properties": {
-                                    "roleId": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "permissionId": {
-                                        "type": "integer",
-                                        "example": 2
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Permission attached to role successfully"
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "title": {
-                                            "type": "string",
-                                            "example": "Validation Error"
-                                        },
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 400
-                                        },
-                                        "detail": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
-                                        },
-                                        "errors": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "title": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        },
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 403
-                                        },
-                                        "detail": {
-                                            "type": "string",
-                                            "example": "You do not have permission to view this resource."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "title": {
-                                            "type": "string",
-                                            "example": "Internal Server Error"
-                                        },
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 500
-                                        },
-                                        "detail": {
-                                            "type": "string",
-                                            "example": "An unexpected error occurred while processing your request."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/backoffice/{tenant}/security/role-permissions/detach": {
-            "delete": {
-                "tags": [
-                    "Backoffice - Security - Role Permissions"
-                ],
-                "summary": "Detach a permission from a role",
-                "operationId": "4a41a089b26b0e1f745bab5c24749ba2",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "roleId",
-                                    "permissionId"
-                                ],
-                                "properties": {
-                                    "roleId": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "permissionId": {
-                                        "type": "integer",
-                                        "example": 2
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Permission detached from role successfully"
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "title": {
-                                            "type": "string",
-                                            "example": "Validation Error"
-                                        },
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 400
-                                        },
-                                        "detail": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
-                                        },
-                                        "errors": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "title": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        },
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 403
-                                        },
-                                        "detail": {
-                                            "type": "string",
-                                            "example": "You do not have permission to view this resource."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "title": {
-                                            "type": "string",
-                                            "example": "Internal Server Error"
-                                        },
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 500
-                                        },
-                                        "detail": {
-                                            "type": "string",
-                                            "example": "An unexpected error occurred while processing your request."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
             }
         },
         "/api/backoffice/{tenant}/security/roles/{id}": {
@@ -3343,16 +3111,8 @@
             "description": "Backoffice - Accounting - Accounting Accounts"
         },
         {
-            "name": "Backoffice - Accounting Centers",
-            "description": "Backoffice - Accounting Centers"
-        },
-        {
             "name": "Backoffice - Accounting - Accounting Centers",
             "description": "Backoffice - Accounting - Accounting Centers"
-        },
-        {
-            "name": "Backoffice - Accounting -Accounting Centers",
-            "description": "Backoffice - Accounting -Accounting Centers"
         },
         {
             "name": "Backoffice - Companies",
@@ -3361,10 +3121,6 @@
         {
             "name": "Backoffice - First Companies",
             "description": "Backoffice - First Companies"
-        },
-        {
-            "name": "Backoffice - Security - Role Permissions",
-            "description": "Backoffice - Security - Role Permissions"
         },
         {
             "name": "Backoffice - Security - Roles",

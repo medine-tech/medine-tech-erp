@@ -28,7 +28,8 @@ class AuthenticatedSessionController extends Controller
      *         description="Successful authentication",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="token", type="string", example="your_token_here")
+     *             @OA\Property(property="token", type="string", example="your_token_here"),
+     *             @OA\Property(property="default_company_id", type="string", example="123e4567-e89b-12d3-a456-426614174000")
      *         )
      *     ),
      *     @OA\Response(
@@ -42,9 +43,14 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $user = User::where('email', $request->email)->first();
-        $token = $user->createToken('api-token')->plainTextToken;
 
-        return response()->json(['token' => $token]);
+        $token = $user->createToken('api-token')->plainTextToken;
+        $defaultCompanyId = (string)$user->default_company_id;
+
+        return response()->json([
+            'token' => $token,
+            'default_company_id' => $defaultCompanyId,
+        ]);
     }
 
     /**
