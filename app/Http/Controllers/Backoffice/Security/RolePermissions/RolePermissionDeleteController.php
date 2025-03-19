@@ -113,7 +113,7 @@ final class RolePermissionDeleteController
             return new JsonResponse([
                 'title' => 'Not Found',
                 'status' => JsonResponse::HTTP_NOT_FOUND,
-                'detail' => 'Role permission not found.',
+                'detail' => 'Role permission not found.'
             ], JsonResponse::HTTP_NOT_FOUND);
         } catch (UnauthorizedException) {
             return response()->json([
