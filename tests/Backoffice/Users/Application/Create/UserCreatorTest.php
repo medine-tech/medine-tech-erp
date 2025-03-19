@@ -57,7 +57,7 @@ final class UserCreatorTest extends UnitTestCase
             (string)$userId,
             $user->name(),
             $user->email(),
-            $user->password(),
+            $user->defaultCompanyId(),
         );
         $this->shouldPublishDomainEvent($event);
 
