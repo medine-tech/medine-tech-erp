@@ -752,7 +752,7 @@
         "/api/backoffice/{tenant}/accounting/accounting-centers/{id}": {
             "get": {
                 "tags": [
-                    "Backoffice - Accounting Centers"
+                    "Backoffice - Accounting - Accounting Centers"
                 ],
                 "summary": "Retrieve an accounting center by ID",
                 "operationId": "7e59caac36647f09a9cfb1fe04be0619",
@@ -1073,7 +1073,7 @@
         "/api/backoffice/{tenant}/accounting/accounting-centers": {
             "get": {
                 "tags": [
-                    "Backoffice - Accounting -Accounting Centers"
+                    "Backoffice - Accounting - Accounting Centers"
                 ],
                 "summary": "Search accounting centers based on filters",
                 "operationId": "4d23008111f292059007264f77558a10",
@@ -3111,16 +3111,8 @@
             "description": "Backoffice - Accounting - Accounting Accounts"
         },
         {
-            "name": "Backoffice - Accounting Centers",
-            "description": "Backoffice - Accounting Centers"
-        },
-        {
             "name": "Backoffice - Accounting - Accounting Centers",
             "description": "Backoffice - Accounting - Accounting Centers"
-        },
-        {
-            "name": "Backoffice - Accounting -Accounting Centers",
-            "description": "Backoffice - Accounting -Accounting Centers"
         },
         {
             "name": "Backoffice - Companies",
