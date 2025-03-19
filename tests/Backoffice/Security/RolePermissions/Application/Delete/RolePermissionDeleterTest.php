@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Security\RolePermissions\Application\Delete;
+namespace Tests\Backoffice\Security\RolePermissions\Application\Delete;
 
 use MedineTech\Backoffice\Security\RolePermissions\Application\Delete\RolePermissionDeleter;
 use MedineTech\Backoffice\Security\RolePermissions\Application\Delete\RolePermissionDeleterRequest;
