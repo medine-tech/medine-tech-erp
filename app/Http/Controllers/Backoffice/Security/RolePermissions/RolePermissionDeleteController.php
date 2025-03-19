@@ -54,11 +54,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     ),
  *     @OA\Response(
  *         response=404,
- *         description="Company not found",
+ *         description="Role permission not found",
  *         @OA\JsonContent(
  *             @OA\Property(property="title", type="string", example="Not Found"),
  *             @OA\Property(property="status", type="integer", example=404),
- *             @OA\Property(property="detail", type="string", example="Company not found with the provided ID.")
+ *             @OA\Property(property="detail", type="string", example="Role permission not found.")
  *         )
  *     ),
  *     @OA\Response(
