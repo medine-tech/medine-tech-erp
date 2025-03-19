@@ -24,7 +24,6 @@ final class UserFinder
             $user->id(),
             $user->name(),
             $user->email(),
-            $user->defaultCompanyId()
         );
     }
 }
