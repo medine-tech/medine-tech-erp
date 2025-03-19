@@ -1,11 +1,11 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Security\Roles;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Security\Roles\Application\Update\RoleUpdater;
 use MedineTech\Backoffice\Security\Roles\Application\Update\RoleUpdaterRequest;
@@ -95,6 +95,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
+
 final class RolePutController
 {
     public function __construct(
@@ -127,7 +128,9 @@ final class RolePutController
                 tenant('id')
             );
 
-            ($this->updater)($updaterRequest);
+            DB::transaction(function () use ($updaterRequest) {
+                ($this->updater)($updaterRequest);
+            });
 
             return new JsonResponse(null, JsonResponse::HTTP_OK);
         } catch (ValidationException $e) {

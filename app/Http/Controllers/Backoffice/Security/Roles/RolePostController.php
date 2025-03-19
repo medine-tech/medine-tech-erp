@@ -1,11 +1,11 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Security\Roles;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Security\Roles\Application\Create\RoleCreator;
 use MedineTech\Backoffice\Security\Roles\Application\Create\RoleCreatorRequest;
@@ -99,7 +99,9 @@ final class RolePostController
                 tenant('id')
             );
 
-            ($this->creator)($creatorRequest);
+            DB::transaction(function () use ($creatorRequest) {
+                ($this->creator)($creatorRequest);
+            });
 
             return new JsonResponse(null, 201);
         } catch (ValidationException $exception) {
@@ -122,6 +124,5 @@ final class RolePostController
                 'detail' => 'An unexpected error occurred while processing your request.'
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
-
     }
 }
