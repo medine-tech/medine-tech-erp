@@ -25,6 +25,10 @@ final class RolePermissionCreatedDomainEvent extends DomainEvent
         string $occurredOn
     ): DomainEvent
     {
+        if (!isset($body['role_id']) || !isset($body['permission_id'])) {
+            throw new InvalidArgumentException('Role ID and Permission ID are required');
+        }
+        
         return new self(
             $aggregateId,
             (int)$body['role_id'],
