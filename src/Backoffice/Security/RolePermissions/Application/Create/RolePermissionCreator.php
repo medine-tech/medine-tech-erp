@@ -6,11 +6,13 @@ namespace MedineTech\Backoffice\Security\RolePermissions\Application\Create;
 
 use MedineTech\Backoffice\Security\RolePermissions\Domain\RolePermission;
 use MedineTech\Backoffice\Security\RolePermissions\Domain\RolePermissionRepository;
+use MedineTech\Shared\Domain\Bus\Event\EventBus;
 
 final class RolePermissionCreator
 {
     public function __construct(
-        private readonly RolePermissionRepository $repository
+        private readonly RolePermissionRepository $repository,
+        private readonly EventBus $eventBus
     ) {
     }
 
@@ -22,5 +24,6 @@ final class RolePermissionCreator
         );
 
         $this->repository->save($rolePermission);
+        $this->eventBus->publish(...$rolePermission->pullDomainEvents());
     }
 }

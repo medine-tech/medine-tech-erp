@@ -4,6 +4,6 @@ content-type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "roleId": 1,
-    "permissionId": 19
+    "role_id": 1,
+    "permission_id": 19
 }

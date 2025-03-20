@@ -23,9 +23,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *         required=true,
  *         @OA\JsonContent(
  *             type="object",
- *             required={"roleId", "permissionId"},
- *             @OA\Property(property="roleId", type="integer", example=1),
- *             @OA\Property(property="permissionId", type="integer", example=2)
+ *             required={"role_id", "permission_id"},
+ *             @OA\Property(property="role_id", type="integer", example=1),
+ *             @OA\Property(property="permission_id", type="integer", example=2)
  *         )
  *     ),
  *     @OA\Response(
@@ -88,13 +88,13 @@ final class RolePermissionDeleteController
 
         try {
             $validated = $request->validate([
-                'roleId' => 'required|int',
-                'permissionId' => 'required|int',
+                'role_id' => 'required|int',
+                'permission_id' => 'required|int',
             ]);
 
             $deleterRequest = new RolePermissionDeleterRequest(
-                $validated['roleId'],
-                $validated['permissionId']
+                $validated['role_id'],
+                $validated['permission_id']
             );
 
             DB::transaction(function () use ($deleterRequest) {

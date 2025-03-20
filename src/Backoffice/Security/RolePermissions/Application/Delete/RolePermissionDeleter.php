@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Security\RolePermissions\Application\Delete;
 
-use MedineTech\Backoffice\Security\RolePermissions\Domain\RolePermission;
 use MedineTech\Backoffice\Security\RolePermissions\Domain\RolePermissionNotFoundException;
 use MedineTech\Backoffice\Security\RolePermissions\Domain\RolePermissionRepository;
 
@@ -15,7 +14,7 @@ final class RolePermissionDeleter
     ) {
     }
 
-    public function __invoke(RolePermissionDeleterRequest $request): RolePermissionDeleterResponse
+    public function __invoke(RolePermissionDeleterRequest $request): void
     {
 
         $rolePermission = $this->repository->find($request->roleId(), $request->permissionId());
@@ -25,10 +24,5 @@ final class RolePermissionDeleter
         }
 
         $this->repository->delete($rolePermission);
-
-        return new RolePermissionDeleterResponse(
-            $rolePermission->roleId(),
-            $rolePermission->permissionId()
-        );
     }
 }

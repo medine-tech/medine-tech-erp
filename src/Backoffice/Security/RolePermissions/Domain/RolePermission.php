@@ -10,18 +10,28 @@ final class RolePermission extends AggregateRoot
 {
     public function __construct(
         private readonly int $roleId,
-        private int $permissionId
+        private readonly int $permissionId
     ) {
     }
 
     public static function create(
         int $roleId,
         int $permissionId
-    ): self {
-        return new self(
+    ): self
+    {
+
+        $rolePermission = new self(
             $roleId,
             $permissionId
         );
+
+        $rolePermission->record(new RolePermissionCreatedDomainEvent(
+            (string)$rolePermission->roleId(),
+            $rolePermission->roleId(),
+            $rolePermission->permissionId()
+        ));
+
+        return $rolePermission;
     }
 
     public static function fromPrimitives(array $primitives): self

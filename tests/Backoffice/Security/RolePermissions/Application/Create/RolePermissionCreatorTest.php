@@ -6,6 +6,7 @@ namespace Tests\Backoffice\Security\RolePermissions\Application\Create;
 
 use MedineTech\Backoffice\Security\RolePermissions\Application\Create\RolePermissionCreator;
 use MedineTech\Backoffice\Security\RolePermissions\Application\Create\RolePermissionCreatorRequest;
+use MedineTech\Backoffice\Security\RolePermissions\Domain\RolePermissionCreatedDomainEvent;
 use MedineTech\Backoffice\Security\RolePermissions\Domain\RolePermissionRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Security\RolePermissions\Domain\RolePermissionMother;
@@ -25,9 +26,20 @@ final class RolePermissionCreatorTest extends UnitTestCase
             ->with($this->similarTo($rolePermission))
             ->andReturnNull();
 
+        $eventBus = $this->eventBus();
+
+        $domainEvent = new RolePermissionCreatedDomainEvent(
+            (string)$rolePermission->roleId(),
+            $rolePermission->roleId(),
+            $rolePermission->permissionId()
+        );
+
+        $this->shouldPublishDomainEvent($domainEvent);
+
         /** @var RolePermissionRepository $rolePermissionRepository */
         $creator = new RolePermissionCreator(
-            $rolePermissionRepository
+            $rolePermissionRepository,
+            $eventBus
         );
 
         ($creator)(new RolePermissionCreatorRequest(

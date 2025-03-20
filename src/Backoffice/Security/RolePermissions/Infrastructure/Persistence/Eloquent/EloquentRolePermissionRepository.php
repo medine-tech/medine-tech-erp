@@ -12,11 +12,15 @@ final class EloquentRolePermissionRepository implements RolePermissionRepository
     public function save(RolePermission $rolePermission): void
     {
         try {
-            $rolePermissionModel = new RolePermissionModel();
-            $rolePermissionModel->permission_id = $rolePermission->permissionId();
-            $rolePermissionModel->role_id = $rolePermission->roleId();
+            $data = [
+                'permission_id' => $rolePermission->permissionId(),
+                'role_id' => $rolePermission->roleId()
+            ];
 
-            $rolePermissionModel->save();
+            RolePermissionModel::updateOrCreate(
+                ['role_id' => $rolePermission->roleId(), 'permission_id' => $rolePermission->permissionId()],
+                $data
+            );
 
         } catch (\Exception $e) {
             throw new \RuntimeException("Failed to save role permission: " . $e->getMessage(), 0, $e);
