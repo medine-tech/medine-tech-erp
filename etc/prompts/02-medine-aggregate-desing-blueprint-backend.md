@@ -1,21 +1,8 @@
 You are an expert programmer and a DDD expert. You'll be given a MedineTech's Aggregate Design Blueprint and have to transform it to HTTP controllers and request files.
 
-# MedineTech's Aggregate Design Blueprint structure:
-
-```markdown
-Name: The name of the aggregate.
-Description: A brief description of the aggregate.
-Context: The context where the aggregate belongs.
-Properties: A list of properties that the aggregate has. Optionally, you can specify the type of each property.
-Enforced Invariants: A list of invariants that the aggregate enforces.
-Corrective Policies: A list of policies that the aggregate uses to correct the state of the aggregate when an invariant is violated.
-Domain Events: A list of events that the aggregate emits.
-Ways to access: A list of ways to access the aggregate.
-```
-
 ## Instructions to transform the Aggregate Design Blueprint to HTTP controllers:
 
-You have to create:
+They take into account what you do in the file etc/prompts/01-medine-aggregate-desing-blueprint-backend.md directory. You have to create:
 
 - A controllers module for the aggregate:
   - The module name should be the name of the aggregate in plural.
@@ -76,6 +63,7 @@ Inside the controllers module, you'll have to create:
     - Headers including authorization token placeholder
     - Request body with example data in JSON format
     - Comments explaining the purpose of the request
+  - In the `app/Providers/AppServiceProvider.php` file add the `register()` method, the repository and the repository implementation you created from the module
   - Follow the format of the existing `.$FILES_HTTP` files in the project.
 
 ## Protocol to execute the transformation:
@@ -105,25 +93,3 @@ Inside the controllers module, you'll have to create:
 - $FILES_HTTP = http
 - $FOLDERS_LOWERCASE = lowercase
 - $FOLDERS_KEBABCASE = kebab-case
-
-
-## User MedineTech Aggregate Design Blueprint:
-
-```markdown
-Name: Naive Bank Account
-Description: An aggregate modeling in a very naive way a personal bank account. The account once it's opened will aggregate all transactions until it's closed (possibly years later).
-Context: Banking
-Properties:
-Id: UUID
-Balance
-Currency
-Status
-Transactions
-Enforced Invariants:
-Overdraft of max £500
-No credits or debits if account is frozen
-Corrective Policies:
-Bounce transaction to fraudulent account
-Domain Events: Opened, Closed, Frozen, Unfrozen, Credited
-Ways to access: search by id, search by balance.
-```

@@ -1,18 +1,5 @@
 You are an expert programmer and a DDD expert. You'll be given a MedineTech's Aggregate Design Blueprint and have to transform it to code.
 
-# MedineTech's Aggregate Design Blueprint structure:
-
-```markdown
-Name: The name of the aggregate.
-Description: A brief description of the aggregate.
-Context: The context where the aggregate belongs.
-Properties: A list of properties that the aggregate has. Optionally, you can specify the type of each property.
-Enforced Invariants: A list of invariants that the aggregate enforces.
-Corrective Policies: A list of policies that the aggregate uses to correct the state of the aggregate when an invariant is violated.
-Domain Events: A list of events that the aggregate emits.
-Ways to access: A list of ways to access the aggregate.
-```
-
 ## Instructions to transform the Aggregate Design Blueprint to code:
 
 You have to create:
@@ -61,6 +48,10 @@ You have to create:
 1. Search for the examples of the files that you have to create in the project
    - Execute tree to see the current file structure. Then use cat to see the content of similar files.
 
+2. Verify all files
+   - Check all files to see if they meet their respective functionality, such as repository implementation, use cases, domain, etc.
+   - Review all project files and maintain the same structure.
+
 2. Create the test folders structure
    - If the module folder doesn't fit inside any of the existing contexts, create a new one.
 
@@ -76,23 +67,3 @@ You have to create:
 ### User variables:
    - $FOLDERS_CASE = PascalCase
    - $FILES_FORMAT = php
-
-## User MedineTech Aggregate Design Blueprint:
-```markdown
-Name: Naive Bank Account
-Description: An aggregate modeling in a very naive way a personal bank account. The account once it's opened will aggregate all transactions until it's closed (possibly years later).
-Context: Banking
-Properties:
-Id: UUID
-Balance
-Currency
-Status
-Transactions
-Enforced Invariants:
-Overdraft of max £500
-No credits or debits if account is frozen
-Corrective Policies:
-Bounce transaction to fraudulent account
-Domain Events: Opened, Closed, Frozen, Unfrozen, Credited
-Ways to access: search by id, search by balance.
-```
