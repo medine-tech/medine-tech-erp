@@ -61,7 +61,7 @@ You have to create:
    - Also, we'll create all the object mothers.
    - Then all the domain objects (if needed).
    - Then the use case.
-   - Do it until the created test passes make test.
+   - Do this until the test created passes the test with the `make test` command.
    - Repeat this per every use case.
 
 ### User variables:

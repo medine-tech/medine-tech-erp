@@ -63,7 +63,8 @@ Inside the controllers module, you'll have to create:
     - Headers including authorization token placeholder
     - Request body with example data in JSON format
     - Comments explaining the purpose of the request
-  - In the `app/Providers/AppServiceProvider.php` file add the `register()` method, the repository and the repository implementation you created from the module
+  - In the `app/Providers/AppServiceProvider.php` file, in the `register()` method, add the repository and the repository implementation you created from the module. Follow the same format as the other modules.
+    - Import the repositories with the "use" command.
   - Follow the format of the existing `.$FILES_HTTP` files in the project.
 
 ## Protocol to execute the transformation:
