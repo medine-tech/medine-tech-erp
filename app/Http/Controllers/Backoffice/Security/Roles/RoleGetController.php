@@ -126,7 +126,7 @@ final class RoleGetController extends ApiController
     protected function exceptionDetail(Exception $error): string
     {
         if ($error instanceof RoleNotFound) {
-            return 'The role account does not exist.';
+            return 'Role not found.';
         }
 
         if ($error instanceof UnauthorizedException) {
@@ -134,5 +134,6 @@ final class RoleGetController extends ApiController
         }
 
         return parent::exceptionDetail($error);
+    }
     }
 }
