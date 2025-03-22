@@ -18,3 +18,7 @@ We LOVE DDD in Backend!!!
 1.3. Controllers
 - Our controllers are located in the `app/Http/Controllers` directory.
 - Our controllers directory is a mirror of the `src` directory.
+
+1.4. Frontend
+- Our frontend is located in the `apps/**/**` directory.
+- We use a monorepo structure for our frontend. Example `apps/backoffice` , `apps/shop`, etc...
