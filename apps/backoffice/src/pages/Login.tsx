@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,13 +15,15 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/lib/context/AuthContext";
 import { type LoginFormValues, loginSchema } from "@/lib/validations/auth";
 
 import medineLogoSrc from "../assets/medine-logo.svg";
 
 export function Login() {
-  const [loading, setLoading] = useState(false);
+  const { login, isAuthenticated, companyId, loading, error, clearError } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const {
     register,
@@ -36,24 +38,23 @@ export function Login() {
     },
   });
 
-  const onSubmit = async (data: LoginFormValues) => {
-    setLoading(true);
-
-    // Simulación de login - reemplazar con llamada real a API
-    try {
-      // Aquí implementarías la lógica de autenticación real
-      console.log("Iniciando sesión con:", data);
-
-      // Simular delay de autenticación
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Simular éxito
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Error de autenticación:", error);
-    } finally {
-      setLoading(false);
+  // Redirigir si ya está autenticado
+  useEffect(() => {
+    if (isAuthenticated && companyId) {
+      const from = location.state?.from?.pathname || `/${companyId}/dashboard`;
+      navigate(from);
     }
+  }, [isAuthenticated, companyId, navigate, location]);
+
+  // Limpiar errores al desmontar el componente
+  useEffect(() => {
+    return () => {
+      clearError();
+    };
+  }, [clearError]);
+
+  const onSubmit = async (data: LoginFormValues) => {
+    await login(data.email, data.password, data.rememberMe);
   };
 
   return (
@@ -78,6 +79,22 @@ export function Login() {
                 Ingresa tus credenciales para acceder al sistema
               </CardDescription>
             </CardHeader>
+            {/* Mostrar errores de API */}
+            {error && (
+              <div className="mx-6 mt-2 bg-red-500/20 border border-red-500 text-red-200 px-4 py-3 rounded-md">
+                <p className="font-semibold">{error.title}</p>
+                <p className="text-sm">{error.detail}</p>
+                {error.errors && (
+                  <ul className="list-disc list-inside text-sm mt-2">
+                    {Object.entries(error.errors).map(([field, messages]) => (
+                      <li key={field}>
+                        {field}: {messages.join(", ")}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
             <form onSubmit={handleSubmit(onSubmit)}>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
