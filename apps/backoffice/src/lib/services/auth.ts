@@ -1,4 +1,12 @@
+import { API_BASE_URL } from "../constants";
+
 // Tipos para la API de autenticación
+export interface UserInfo {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -11,20 +19,12 @@ export interface LoginResponse {
   user?: UserInfo;
 }
 
-export interface UserInfo {
-  id: string;
-  name: string;
-  email: string;
-}
-
 export interface ApiError {
   title: string;
   status: number;
   detail: string;
   errors?: Record<string, string[]>;
 }
-
-import { API_BASE_URL } from "../constants";
 
 // Servicio de autenticación
 export const authService = {
@@ -58,24 +58,20 @@ export const authService = {
         throw error;
       }
       // Error de red u otro error inesperado
-      throw {
-        title: "Error de conexión",
-        status: 0,
-        detail: "No se pudo conectar con el servidor. Verifica tu conexión a internet.",
-      } as ApiError;
+      throw new Error("No se pudo conectar con el servidor. Verifica tu conexión a internet.");
     }
   },
 
   // Cerrar sesión
   async logout(): Promise<void> {
     const token = this.getToken();
-    
+
     if (token) {
       try {
         await fetch(`${API_BASE_URL}/logout`, {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
@@ -83,7 +79,7 @@ export const authService = {
         console.error("Error al cerrar sesión:", error);
       }
     }
-    
+
     localStorage.removeItem("auth_token");
     localStorage.removeItem("default_company_id");
     sessionStorage.removeItem("auth_token");
@@ -91,12 +87,17 @@ export const authService = {
   },
 
   // Guardar información de autenticación
-  saveAuthInfo(token: string, companyId: string, rememberMe: boolean = false, userInfo?: UserInfo): void {
+  saveAuthInfo(
+    token: string,
+    companyId: string,
+    rememberMe: boolean = false,
+    userInfo?: UserInfo,
+  ): void {
     const storage = rememberMe ? localStorage : sessionStorage;
     storage.setItem("auth_token", token);
     // No guardamos company_id localmente, se manejará a través de la URL
     storage.setItem("default_company_id", companyId); // Guardamos solo como referencia inicial
-    
+
     // Guardar información del usuario si está disponible
     if (userInfo) {
       storage.setItem("user_info", JSON.stringify(userInfo));
@@ -105,12 +106,14 @@ export const authService = {
 
   // Obtener token
   getToken(): string | null {
-    return localStorage.getItem("auth_token") || sessionStorage.getItem("auth_token");
+    return localStorage.getItem("auth_token") ?? sessionStorage.getItem("auth_token");
   },
 
   // Obtener ID de compañía por defecto (solo para redirección inicial)
   getDefaultCompanyId(): string | null {
-    return localStorage.getItem("default_company_id") || sessionStorage.getItem("default_company_id");
+    return (
+      localStorage.getItem("default_company_id") ?? sessionStorage.getItem("default_company_id")
+    );
   },
 
   // Verificar si el usuario está autenticado
@@ -120,21 +123,24 @@ export const authService = {
 
   // Obtener información del usuario actual
   getUserInfo(): UserInfo | null {
-    const userInfoStr = localStorage.getItem("user_info") || sessionStorage.getItem("user_info");
+    const userInfoStr = localStorage.getItem("user_info") ?? sessionStorage.getItem("user_info");
     if (userInfoStr) {
       try {
         return JSON.parse(userInfoStr) as UserInfo;
       } catch (e) {
         console.error("Error al parsear la información del usuario:", e);
+
         return null;
       }
     }
+
     return null;
   },
 
   // Obtener el nombre del usuario actual
   getUserName(): string {
     const userInfo = this.getUserInfo();
-    return userInfo?.name || "Usuario";
+
+    return userInfo?.name ?? "Usuario";
   },
 };

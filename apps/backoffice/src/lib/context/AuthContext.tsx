@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { authService, ApiError, UserInfo } from "../services/auth";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+
+import { ApiError, authService, UserInfo } from "../services/auth";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -18,6 +19,7 @@ export function useAuth() {
   if (context === undefined) {
     throw new Error("useAuth debe ser usado dentro de un AuthProvider");
   }
+
   return context;
 }
 
@@ -32,12 +34,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const checkAuthStatus = () => {
       const isAuth = authService.isAuthenticated();
       setIsAuthenticated(isAuth);
-      
+
       if (isAuth) {
         const userData = authService.getUserInfo();
         setUserInfo(userData);
       }
-      
+
       setLoading(false);
     };
 
@@ -45,23 +47,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Función para iniciar sesión
-  const login = async (email: string, password: string, rememberMe: boolean = false): Promise<string> => {
+  const login = async (
+    email: string,
+    password: string,
+    rememberMe: boolean = false,
+  ): Promise<string> => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await authService.login({ email, password, rememberMe });
-      
+
       // Guardar información del usuario si está disponible en la respuesta
       if (response.user) {
         setUserInfo(response.user);
-        authService.saveAuthInfo(response.token, response.default_company_id, rememberMe, response.user);
+        authService.saveAuthInfo(
+          response.token,
+          response.default_company_id,
+          rememberMe,
+          response.user,
+        );
       } else {
         // Si no viene en la respuesta, usamos valores por defecto o los dejamos en blanco
         authService.saveAuthInfo(response.token, response.default_company_id, rememberMe);
       }
-      
+
       setIsAuthenticated(true);
+
       return response.default_company_id;
     } catch (err) {
       setError(err as ApiError);
@@ -73,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Función para cerrar sesión
   const logout = () => {
-    authService.logout();
+    void authService.logout();
     setIsAuthenticated(false);
     setUserInfo(null);
   };

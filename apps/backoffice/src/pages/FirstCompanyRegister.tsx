@@ -17,9 +17,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { companyService } from "@/lib/services/company";
-import { firstCompanySchema, type FirstCompanyFormValues } from "@/lib/validations/auth";
+import { type FirstCompanyFormValues, firstCompanySchema } from "@/lib/validations/auth";
 
 import medineLogoSrc from "../assets/medine-logo.svg";
+import { ApiError } from "../lib/services/auth";
 
 export function FirstCompanyRegister() {
   const [loading, setLoading] = useState(false);
@@ -46,21 +47,22 @@ export function FirstCompanyRegister() {
 
     try {
       await companyService.registerFirstCompany(data);
-      
+
       toast.success("Compañía registrada exitosamente", {
         description: "Tu cuenta ha sido creada. Por favor inicia sesión.",
       });
-      
+
       // Redirigir al login después de un breve retraso para que el usuario vea el mensaje
       setTimeout(() => {
-        navigate("/login");
+        void navigate("/login");
       }, 2000);
-    } catch (error: any) {
-      console.error("Error al registrar compañía:", error);
-      
-      if (error.errors) {
+    } catch (error) {
+      const apiError = error as ApiError;
+      console.error("Error al registrar compañía:", apiError);
+
+      if (apiError.errors) {
         // Mostrar errores de validación específicos
-        Object.entries(error.errors).forEach(([field, messages]) => {
+        Object.entries(apiError.errors).forEach(([field, messages]) => {
           if (Array.isArray(messages) && messages.length > 0) {
             toast.error(`Error en ${field}`, {
               description: messages[0],
@@ -69,8 +71,8 @@ export function FirstCompanyRegister() {
         });
       } else {
         // Mostrar error general
-        toast.error(error.title || "Error al registrar", {
-          description: error.detail || "Ha ocurrido un error al crear la compañía",
+        toast.error(apiError.title || "Error al registrar", {
+          description: apiError.detail || "Ha ocurrido un error al crear la compañía",
         });
       }
     } finally {
@@ -103,12 +105,8 @@ export function FirstCompanyRegister() {
             <form onSubmit={handleSubmit(onSubmit)}>
               <CardContent className="space-y-4">
                 {/* Campo oculto para el companyId */}
-                <input
-                  type="hidden"
-                  id="companyId"
-                  {...register("companyId")}
-                />
-                
+                <input type="hidden" id="companyId" {...register("companyId")} />
+
                 {/* Datos de la compañía */}
                 <div className="space-y-1">
                   <h3 className="text-sm font-medium text-slate-300">Datos de la compañía</h3>
@@ -200,12 +198,16 @@ export function FirstCompanyRegister() {
                     id="password_confirmation"
                     type="password"
                     className={`bg-slate-800/50 border-slate-700 text-white ${
-                      errors.password_confirmation ? "border-red-500 focus-visible:ring-red-500" : ""
+                      errors.password_confirmation
+                        ? "border-red-500 focus-visible:ring-red-500"
+                        : ""
                     }`}
                     {...register("password_confirmation")}
                   />
                   {errors.password_confirmation && (
-                    <p className="text-red-500 text-sm mt-1">{errors.password_confirmation.message}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.password_confirmation.message}
+                    </p>
                   )}
                 </div>
               </CardContent>

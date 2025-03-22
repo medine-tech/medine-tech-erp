@@ -12,10 +12,8 @@ export function Toaster({ ...props }: ToasterProps) {
             "group toast group-[.toaster]:bg-white group-[.toaster]:text-slate-950 group-[.toaster]:border-slate-200 group-[.toaster]:shadow-lg",
           title: "group-[.toast]:text-slate-950 text-sm font-semibold",
           description: "group-[.toast]:text-slate-500 text-sm",
-          actionButton:
-            "group-[.toast]:bg-slate-900 group-[.toast]:text-slate-50",
-          cancelButton:
-            "group-[.toast]:bg-slate-100 group-[.toast]:text-slate-500",
+          actionButton: "group-[.toast]:bg-slate-900 group-[.toast]:text-slate-50",
+          cancelButton: "group-[.toast]:bg-slate-100 group-[.toast]:text-slate-500",
           error:
             "group-[.toaster]:bg-red-100 group-[.toaster]:text-red-900 group-[.toaster]:border-red-200",
           success:

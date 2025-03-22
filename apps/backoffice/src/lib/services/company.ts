@@ -1,5 +1,6 @@
 import { API_BASE_URL } from "../constants";
 import { FirstCompanyFormValues } from "../validations/auth";
+
 import { ApiError } from "./auth";
 
 // Servicio para gestión de compañías
@@ -31,5 +32,5 @@ export const companyService = {
       }
       throw new Error("Error de conexión al intentar registrar la compañía");
     }
-  }
+  },
 };

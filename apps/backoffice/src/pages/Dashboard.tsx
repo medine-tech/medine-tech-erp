@@ -1,4 +1,5 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { Button } from "../components/ui/button";
 import {
   DropdownMenu,
@@ -8,8 +9,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
-import { authService } from "../lib/services/auth";
 import { useAuth } from "../lib/context/AuthContext";
+import { authService } from "../lib/services/auth";
 
 export function Dashboard() {
   const { companyId } = useParams<{ companyId: string }>();
@@ -20,14 +21,14 @@ export function Dashboard() {
     try {
       await authService.logout();
       logout(); // Actualiza el estado en el contexto
-      navigate("/login");
+      void navigate("/login");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
   };
-  
+
   // Obtener el nombre del usuario del contexto o del servicio como respaldo
-  const userName = userInfo?.name || authService.getUserName();
+  const userName = userInfo?.name ?? authService.getUserName();
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -35,11 +36,11 @@ export function Dashboard() {
       <header className="bg-white shadow-sm border-b border-slate-200">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-xl font-medium text-slate-800">Medine Tech</h1>
-          
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="flex items-center gap-2 text-slate-700 hover:text-slate-900 pl-3 pr-2"
               >
                 {/* Icono de usuario */}
@@ -58,10 +59,10 @@ export function Dashboard() {
                   <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
-                
+
                 {/* Nombre del usuario */}
                 <span className="text-sm font-medium">{userName}</span>
-                
+
                 {/* Icono de flecha */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -79,15 +80,15 @@ export function Dashboard() {
                 </svg>
               </Button>
             </DropdownMenuTrigger>
-            
+
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel className="text-slate-500 font-normal text-xs">Mi cuenta</DropdownMenuLabel>
-              
+              <DropdownMenuLabel className="text-slate-500 font-normal text-xs">
+                Mi cuenta
+              </DropdownMenuLabel>
+
               <DropdownMenuSeparator />
-              
-              <DropdownMenuItem
-                className="text-slate-700 cursor-pointer"
-              >
+
+              <DropdownMenuItem className="text-slate-700 cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -105,10 +106,8 @@ export function Dashboard() {
                 </svg>
                 <span>Mi perfil</span>
               </DropdownMenuItem>
-              
-              <DropdownMenuItem
-                className="text-slate-700 cursor-pointer"
-              >
+
+              <DropdownMenuItem className="text-slate-700 cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -126,10 +125,10 @@ export function Dashboard() {
                 </svg>
                 <span>Configuración</span>
               </DropdownMenuItem>
-              
+
               <DropdownMenuSeparator />
-              
-              <DropdownMenuItem 
+
+              <DropdownMenuItem
                 className="text-red-600 cursor-pointer focus:text-red-700"
                 onClick={handleLogout}
               >

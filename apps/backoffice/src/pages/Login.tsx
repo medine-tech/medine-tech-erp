@@ -3,6 +3,11 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
+import { useAuth } from "@/lib/context/AuthContext";
+import { authService } from "@/lib/services/auth";
+import { type LoginFormValues, loginSchema } from "@/lib/validations/auth";
+
+import medineLogoSrc from "../assets/medine-logo.svg";
 import { Button } from "../components/ui/button";
 import {
   Card,
@@ -15,16 +20,10 @@ import {
 import { Checkbox } from "../components/ui/checkbox";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { useAuth } from "@/lib/context/AuthContext";
-import { authService } from "@/lib/services/auth";
-import { type LoginFormValues, loginSchema } from "@/lib/validations/auth";
-
-import medineLogoSrc from "../assets/medine-logo.svg";
 
 export function Login() {
   const { login, isAuthenticated, loading, error, clearError } = useAuth();
   const navigate = useNavigate();
-
 
   const {
     register,
@@ -45,7 +44,7 @@ export function Login() {
       // Obtener el company_id de sessionStorage/localStorage para redirigir
       const defaultCompanyId = authService.getDefaultCompanyId();
       if (defaultCompanyId) {
-        navigate(`/${defaultCompanyId}/dashboard`);
+        void navigate(`/${defaultCompanyId}/dashboard`);
       }
       // Si no hay company_id disponible, el usuario tendrá que iniciar sesión de nuevo
     }
@@ -62,8 +61,8 @@ export function Login() {
     try {
       const companyId = await login(data.email, data.password, data.rememberMe);
       // Redirigir al dashboard con el company_id en la URL
-      navigate(`/${companyId}/dashboard`);
-    } catch (err) {
+      void navigate(`/${companyId}/dashboard`);
+    } catch (_err) {
       // El error ya se maneja en el context
     }
   };

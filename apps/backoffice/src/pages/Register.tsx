@@ -15,7 +15,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { registerSchema, type RegisterFormValues } from "@/lib/validations/auth";
+import { type RegisterFormValues, registerSchema } from "@/lib/validations/auth";
 
 import medineLogoSrc from "../assets/medine-logo.svg";
 
@@ -38,19 +38,20 @@ export function Register() {
     },
   });
 
-  const onSubmit = async (data: RegisterFormValues) => {
+  const onSubmit = async (_data: RegisterFormValues) => {
     setLoading(true);
 
     // Simulación de registro - reemplazar con llamada real a API
     try {
       // Aquí implementarías la lógica de registro real
-      console.log("Registrando usuario:", data);
 
       // Simular delay de registro
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1500);
+      });
 
       // Simular éxito
-      navigate("/login");
+      void navigate("/login");
     } catch (error) {
       console.error("Error de registro:", error);
     } finally {
