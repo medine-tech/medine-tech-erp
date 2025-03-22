@@ -2,6 +2,8 @@ We LOVE DDD in Backend!!!
 
 0. General
 - Avoid to use comments in the code if possible. Only use when you need to add examples.
+- The human readable text must be in Spanish.
+- The code must be in English.
 
 1. Project Structure
 
