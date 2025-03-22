@@ -4,12 +4,22 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Companies\Domain;
 
-use DomainException;
+use MedineTech\Shared\Domain\DomainException;
 
 final class CompanyNotFound extends DomainException
 {
-    public function __construct(string $id)
+    public function __construct(public readonly string $id)
     {
-        parent::__construct("The company with id <$id> does not exist.");
+        parent::__construct();
+    }
+
+    public function errorCode(): string
+    {
+        return 'company_not_found';
+    }
+
+    public function errorMessage(): string
+    {
+        return "Company with ID $this->id does not exist";
     }
 }

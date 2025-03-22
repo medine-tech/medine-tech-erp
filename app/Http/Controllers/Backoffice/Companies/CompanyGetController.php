@@ -3,14 +3,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Companies;
 
-use Exception;
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use MedineTech\Backoffice\Companies\Application\Find\CompanyFinder;
 use MedineTech\Backoffice\Companies\Application\Find\CompanyFinderRequest;
 use MedineTech\Backoffice\Companies\Domain\CompanyNotFound;
 use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompaniesPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Get(
@@ -69,7 +70,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
-final class CompanyGetController
+final class CompanyGetController extends ApiController
 {
     public function __construct(
         private readonly CompanyFinder $finder
@@ -78,7 +79,7 @@ final class CompanyGetController
 
     public function __invoke(string $id, Request $request): JsonResponse
     {
-        try {
+        return $this->execute(function () use ($id, $request) {
             if (!$request->user()->can(CompaniesPermissions::VIEW)) {
                 throw new UnauthorizedException(403);
             }
@@ -90,27 +91,15 @@ final class CompanyGetController
             return new JsonResponse([
                 'id' => $response->id(),
                 'name' => $response->name()
-            ], JsonResponse::HTTP_OK);
+            ], Response::HTTP_OK);
+        });
+    }
 
-        } catch (CompanyNotFound $e) {
-            return new JsonResponse([
-                'title' => 'Company not found',
-                'status' => JsonResponse::HTTP_NOT_FOUND,
-                'detail' => "The company with id <{$id}> does not exist."
-            ], JsonResponse::HTTP_NOT_FOUND);
-
-        } catch (UnauthorizedException) {
-            return response()->json([
-                "title" => "Unauthorized",
-                "detail" => "You do not have permission to view this resource.",
-                "status" => 403,
-            ], 403);
-        } catch (Exception $e) {
-            return new JsonResponse([
-                'title' => 'Internal Server Error',
-                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An unexpected error occurred.'
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
+    protected function exceptions(): array
+    {
+        return [
+            CompanyNotFound::class => Response::HTTP_NOT_FOUND,
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN,
+        ];
     }
 }

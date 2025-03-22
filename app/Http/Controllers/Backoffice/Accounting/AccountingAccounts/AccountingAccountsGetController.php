@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Accounting\AccountingAccounts;
 
-use Exception;
+use App\Http\Controllers\ApiController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Search\AccountingAccountsSearcher;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Search\AccountingAccountsSearcherRequest;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Infrastructure\Authorization\AccountingAccountsPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Get(
@@ -83,17 +84,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
-final class AccountingAccountsGetController
+final class AccountingAccountsGetController extends ApiController
 {
     public function __construct(
         private readonly AccountingAccountsSearcher $searcher
-    )
-    {
+    ) {
     }
 
     public function __invoke(Request $request): JsonResponse
     {
-        try {
+        return $this->execute(function () use ($request) {
             if (!$request->user()->can(AccountingAccountsPermissions::VIEW)) {
                 throw new UnauthorizedException(403);
             }
@@ -104,40 +104,43 @@ final class AccountingAccountsGetController
             $searcherRequest = new AccountingAccountsSearcherRequest($filters);
             $searcherResponse = ($this->searcher)($searcherRequest);
 
-            $users = array_map(function ($user) {
+            $accounts = array_map(function ($account) {
                 return [
-                    "id" => $user->id(),
-                    "code" => $user->code(),
-                    "name" => $user->name(),
-                    "description" => $user->description(),
-                    "type" => $user->type(),
-                    "status" => $user->status(),
-                    "parent_id" => $user->parentId(),
-                    "creator_id" => $user->creatorId(),
-                    "updater_id" => $user->updaterId(),
-                    "company_id" => $user->companyId()
+                    "id" => $account->id(),
+                    "code" => $account->code(),
+                    "name" => $account->name(),
+                    "description" => $account->description(),
+                    "type" => $account->type(),
+                    "status" => $account->status(),
+                    "parent_id" => $account->parentId(),
+                    "creator_id" => $account->creatorId(),
+                    "updater_id" => $account->updaterId(),
+                    "company_id" => $account->companyId()
                 ];
             }, $searcherResponse->items());
 
-            return response()->json([
-                "items" => $users,
+            return new JsonResponse([
+                "items" => $accounts,
                 "total" => $searcherResponse->total(),
                 "per_page" => $searcherResponse->perPage(),
                 "current_page" => $searcherResponse->currentPage()
-            ]);
-        } catch (UnauthorizedException) {
-            return response()->json([
-                "title" => "Unauthorized",
-                "status" => JsonResponse::HTTP_FORBIDDEN,
-                "detail" => "You do not have permission to view this resource.",
-            ], JsonResponse::HTTP_FORBIDDEN);
-        } catch (Exception $e) {
-            $detail = config('app.env') !== 'production' ? $e->getMessage() : "An unexpected error occurred";
-            return response()->json([
-                "title" => "Internal Server Error",
-                "status" => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                "detail" => $detail,
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            ], Response::HTTP_OK);
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN,
+        ];
+    }
+
+    protected function exceptionDetail(\Exception $error): string
+    {
+        if ($error instanceof UnauthorizedException) {
+            return 'You do not have permission to view this resource.';
         }
+
+        return parent::exceptionDetail($error);
     }
 }

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenters;
 
-use Exception;
+use App\Http\Controllers\ApiController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -12,7 +13,7 @@ use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Update\Account
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Update\AccountingCenterUpdaterRequest;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterNotFound;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Put(
@@ -87,19 +88,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
-final class AccountingCenterPutController
+final class AccountingCenterPutController extends ApiController
 {
     public function __construct(
-        private AccountingCenterUpdater $updater,
+        private readonly AccountingCenterUpdater $updater,
     ) {
     }
 
     public function __invoke(string $id, Request $request): JsonResponse
     {
-        try {
-//            if (!$request->user()->can(AccountingCenterPermissions::UPDATE)) {
-//                throw new UnauthorizedException(403);
-//            }
+        return $this->execute(function () use ($id, $request) {
+            // Permissions check is commented out in original code
+            // if (!$request->user()->can(AccountingCenterPermissions::UPDATE)) {
+            //     throw new UnauthorizedException(403);
+            // }
 
             $validatedData = $request->validate([
                 'name' => 'required|string',
@@ -123,31 +125,33 @@ final class AccountingCenterPutController
                 ($this->updater)($updaterRequest);
             });
 
-            return new JsonResponse(null, JsonResponse::HTTP_OK);
-        } catch (ValidationException $e) {
-            return new JsonResponse([
-                'title' => 'Validation Error',
-                'status' => JsonResponse::HTTP_BAD_REQUEST,
-                'errors' => $e->errors(),
-            ], JsonResponse::HTTP_BAD_REQUEST);
-        } catch (AccountingCenterNotFound $e) {
-            return new JsonResponse([
-                'title' => 'Not Found',
-                'status' => JsonResponse::HTTP_NOT_FOUND,
-                'detail' => 'Accounting center not found with the provided ID.',
-            ], JsonResponse::HTTP_NOT_FOUND);
-        } catch (UnauthorizedException $e) {
-            return new JsonResponse([
-                'title' => 'Unauthorized',
-                'status' => JsonResponse::HTTP_FORBIDDEN,
-                'detail' => 'You do not have permission to update this resource.',
-            ], JsonResponse::HTTP_FORBIDDEN);
-        } catch (Exception $e) {
-            return new JsonResponse([
-                'title' => 'Error',
-                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An unexpected error occurred while processing your request.',
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(null, Response::HTTP_OK);
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            ValidationException::class => Response::HTTP_BAD_REQUEST,
+            AccountingCenterNotFound::class => Response::HTTP_NOT_FOUND,
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN,
+        ];
+    }
+
+    protected function exceptionDetail(\Exception $error): string
+    {
+        if ($error instanceof ValidationException) {
+            return 'The given data was invalid.';
         }
+
+        if ($error instanceof AccountingCenterNotFound) {
+            return 'Accounting center not found with the provided ID.';
+        }
+
+        if ($error instanceof UnauthorizedException) {
+            return 'You do not have permission to update this resource.';
+        }
+
+        return parent::exceptionDetail($error);
     }
 }
