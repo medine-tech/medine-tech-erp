@@ -1,4 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import { Login } from "./pages/Login";
 import { LandingPage } from "./LandingPage";
 
 function App() {
@@ -6,9 +8,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        {/* Aquí puedes agregar más rutas según sea necesario */}
-        {/* <Route path="/login" element={<Login />} /> */}
+        <Route path="/login" element={<Login />} />
         {/* <Route path="/register" element={<Register />} /> */}
+        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
       </Routes>
     </Router>
   );
