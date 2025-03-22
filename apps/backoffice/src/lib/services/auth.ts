@@ -62,16 +62,17 @@ export const authService = {
   // Cerrar sesión
   logout(): void {
     localStorage.removeItem("auth_token");
-    localStorage.removeItem("company_id");
+    localStorage.removeItem("default_company_id");
     sessionStorage.removeItem("auth_token");
-    sessionStorage.removeItem("company_id");
+    sessionStorage.removeItem("default_company_id");
   },
 
   // Guardar información de autenticación
   saveAuthInfo(token: string, companyId: string, rememberMe: boolean = false): void {
     const storage = rememberMe ? localStorage : sessionStorage;
     storage.setItem("auth_token", token);
-    storage.setItem("company_id", companyId);
+    // No guardamos company_id localmente, se manejará a través de la URL
+    storage.setItem("default_company_id", companyId); // Guardamos solo como referencia inicial
   },
 
   // Obtener token
@@ -79,9 +80,9 @@ export const authService = {
     return localStorage.getItem("auth_token") || sessionStorage.getItem("auth_token");
   },
 
-  // Obtener ID de compañía
-  getCompanyId(): string | null {
-    return localStorage.getItem("company_id") || sessionStorage.getItem("company_id");
+  // Obtener ID de compañía por defecto (solo para redirección inicial)
+  getDefaultCompanyId(): string | null {
+    return localStorage.getItem("default_company_id") || sessionStorage.getItem("default_company_id");
   },
 
   // Verificar si el usuario está autenticado

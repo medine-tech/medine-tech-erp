@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,19 +11,20 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "../components/ui/card";
+import { Checkbox } from "../components/ui/checkbox";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import { useAuth } from "@/lib/context/AuthContext";
+import { authService } from "@/lib/services/auth";
 import { type LoginFormValues, loginSchema } from "@/lib/validations/auth";
 
 import medineLogoSrc from "../assets/medine-logo.svg";
 
 export function Login() {
-  const { login, isAuthenticated, companyId, loading, error, clearError } = useAuth();
+  const { login, isAuthenticated, loading, error, clearError } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
+
 
   const {
     register,
@@ -40,11 +41,15 @@ export function Login() {
 
   // Redirigir si ya está autenticado
   useEffect(() => {
-    if (isAuthenticated && companyId) {
-      const from = location.state?.from?.pathname || `/${companyId}/dashboard`;
-      navigate(from);
+    if (isAuthenticated) {
+      // Obtener el company_id de sessionStorage/localStorage para redirigir
+      const defaultCompanyId = authService.getDefaultCompanyId();
+      if (defaultCompanyId) {
+        navigate(`/${defaultCompanyId}/dashboard`);
+      }
+      // Si no hay company_id disponible, el usuario tendrá que iniciar sesión de nuevo
     }
-  }, [isAuthenticated, companyId, navigate, location]);
+  }, [isAuthenticated, navigate]);
 
   // Limpiar errores al desmontar el componente
   useEffect(() => {
@@ -54,7 +59,13 @@ export function Login() {
   }, [clearError]);
 
   const onSubmit = async (data: LoginFormValues) => {
-    await login(data.email, data.password, data.rememberMe);
+    try {
+      const companyId = await login(data.email, data.password, data.rememberMe);
+      // Redirigir al dashboard con el company_id en la URL
+      navigate(`/${companyId}/dashboard`);
+    } catch (err) {
+      // El error ya se maneja en el context
+    }
   };
 
   return (

@@ -3,10 +3,9 @@ import { authService, ApiError } from "../services/auth";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  companyId: string | null;
   loading: boolean;
   error: ApiError | null;
-  login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<string>; // Devuelve el company_id para redirección
   logout: () => void;
   clearError: () => void;
 }
@@ -23,7 +22,6 @@ export function useAuth() {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [companyId, setCompanyId] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<ApiError | null>(null);
 
@@ -31,10 +29,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const checkAuthStatus = () => {
       const isAuth = authService.isAuthenticated();
-      const company = authService.getCompanyId();
-      
       setIsAuthenticated(isAuth);
-      setCompanyId(company);
       setLoading(false);
     };
 
@@ -42,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Función para iniciar sesión
-  const login = async (email: string, password: string, rememberMe: boolean = false) => {
+  const login = async (email: string, password: string, rememberMe: boolean = false): Promise<string> => {
     setLoading(true);
     setError(null);
     
@@ -51,9 +46,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       authService.saveAuthInfo(response.token, response.default_company_id, rememberMe);
       
       setIsAuthenticated(true);
-      setCompanyId(response.default_company_id);
+      return response.default_company_id;
     } catch (err) {
       setError(err as ApiError);
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -63,7 +59,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     authService.logout();
     setIsAuthenticated(false);
-    setCompanyId(null);
   };
 
   // Función para limpiar errores
@@ -75,7 +70,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        companyId,
         loading,
         error,
         login,

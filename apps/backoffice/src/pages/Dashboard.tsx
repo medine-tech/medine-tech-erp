@@ -1,18 +1,7 @@
-import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "@/lib/context/AuthContext";
+import { useParams } from "react-router-dom";
 
 export function Dashboard() {
-  const { companyId: contextCompanyId } = useAuth();
   const { companyId } = useParams<{ companyId: string }>();
-  const navigate = useNavigate();
-
-  // Verificar que el companyId de la URL coincide con el del contexto
-  useEffect(() => {
-    if (contextCompanyId && contextCompanyId !== companyId) {
-      navigate(`/${contextCompanyId}/dashboard`);
-    }
-  }, [companyId, contextCompanyId, navigate]);
 
   return (
     <div className="min-h-screen bg-slate-100">
