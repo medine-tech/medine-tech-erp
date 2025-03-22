@@ -8,6 +8,13 @@ export interface LoginRequest {
 export interface LoginResponse {
   token: string;
   default_company_id: string;
+  user?: UserInfo;
+}
+
+export interface UserInfo {
+  id: string;
+  name: string;
+  email: string;
 }
 
 export interface ApiError {
@@ -84,11 +91,16 @@ export const authService = {
   },
 
   // Guardar información de autenticación
-  saveAuthInfo(token: string, companyId: string, rememberMe: boolean = false): void {
+  saveAuthInfo(token: string, companyId: string, rememberMe: boolean = false, userInfo?: UserInfo): void {
     const storage = rememberMe ? localStorage : sessionStorage;
     storage.setItem("auth_token", token);
     // No guardamos company_id localmente, se manejará a través de la URL
     storage.setItem("default_company_id", companyId); // Guardamos solo como referencia inicial
+    
+    // Guardar información del usuario si está disponible
+    if (userInfo) {
+      storage.setItem("user_info", JSON.stringify(userInfo));
+    }
   },
 
   // Obtener token
@@ -104,5 +116,25 @@ export const authService = {
   // Verificar si el usuario está autenticado
   isAuthenticated(): boolean {
     return !!this.getToken();
+  },
+
+  // Obtener información del usuario actual
+  getUserInfo(): UserInfo | null {
+    const userInfoStr = localStorage.getItem("user_info") || sessionStorage.getItem("user_info");
+    if (userInfoStr) {
+      try {
+        return JSON.parse(userInfoStr) as UserInfo;
+      } catch (e) {
+        console.error("Error al parsear la información del usuario:", e);
+        return null;
+      }
+    }
+    return null;
+  },
+
+  // Obtener el nombre del usuario actual
+  getUserName(): string {
+    const userInfo = this.getUserInfo();
+    return userInfo?.name || "Usuario";
   },
 };

@@ -1,10 +1,11 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { authService, ApiError } from "../services/auth";
+import { authService, ApiError, UserInfo } from "../services/auth";
 
 interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
   error: ApiError | null;
+  userInfo: UserInfo | null;
   login: (email: string, password: string, rememberMe?: boolean) => Promise<string>; // Devuelve el company_id para redirección
   logout: () => void;
   clearError: () => void;
@@ -24,12 +25,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<ApiError | null>(null);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   // Verificar si el usuario está autenticado al cargar la aplicación
   useEffect(() => {
     const checkAuthStatus = () => {
       const isAuth = authService.isAuthenticated();
       setIsAuthenticated(isAuth);
+      
+      if (isAuth) {
+        const userData = authService.getUserInfo();
+        setUserInfo(userData);
+      }
+      
       setLoading(false);
     };
 
@@ -43,7 +51,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     try {
       const response = await authService.login({ email, password, rememberMe });
-      authService.saveAuthInfo(response.token, response.default_company_id, rememberMe);
+      
+      // Guardar información del usuario si está disponible en la respuesta
+      if (response.user) {
+        setUserInfo(response.user);
+        authService.saveAuthInfo(response.token, response.default_company_id, rememberMe, response.user);
+      } else {
+        // Si no viene en la respuesta, usamos valores por defecto o los dejamos en blanco
+        authService.saveAuthInfo(response.token, response.default_company_id, rememberMe);
+      }
       
       setIsAuthenticated(true);
       return response.default_company_id;
@@ -59,6 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     authService.logout();
     setIsAuthenticated(false);
+    setUserInfo(null);
   };
 
   // Función para limpiar errores
@@ -72,6 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated,
         loading,
         error,
+        userInfo,
         login,
         logout,
         clearError,
