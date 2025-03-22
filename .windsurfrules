@@ -24,3 +24,7 @@ We LOVE DDD in Backend!!!
 1.4. Frontend
 - Our frontend is located in the `apps/**/**` directory.
 - We use a monorepo structure for our frontend. Example `apps/backoffice` , `apps/shop`, etc...
+- We use tailwindcss 4 for our frontend.
+- We use shadcn-ui for our frontend.
+- All our form must be validated using zod and react hook form.
+- Our api backend docs is located in `storage/api-docs/api-docs.json`
