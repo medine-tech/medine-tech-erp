@@ -21,8 +21,8 @@ const viteReactRules = {
 
   // Import/Export rules
   "import/first": "error",
-  "import/no-duplicates": "error",
-  // Disable conflicting import sorting rules
+  // Disable conflicting or problematic rules
+  "import/no-duplicates": "off", // Desactivado para evitar conflictos con TypeScript
   "import/order": "off",
 };
 
@@ -40,15 +40,30 @@ export default [
         ...globals.browser,
         React: "readonly",
       },
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
     },
     settings: {
       react: {
         version: "detect",
       },
+      // Configuración para resolver imports correctamente
+      "import/resolver": {
+        node: {
+          extensions: [".js", ".jsx", ".ts", ".tsx"],
+        },
+        typescript: {}, // Añadimos el resolver de typescript
+      },
     },
     rules: {
       // Disable problematic rules
       "import/no-unresolved": "off",
+      "import/no-duplicates": "off", // Desactivamos esta regla que causa problemas con TypeScript
       "prettier/prettier": ["error", { printWidth: 100, useTabs: false, tabWidth: 2 }],
 
       // Add Vite React template rules
