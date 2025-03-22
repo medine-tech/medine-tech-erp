@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Backoffice\Companies;
 
-use Exception;
+use App\Http\Controllers\ApiController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -10,7 +11,7 @@ use MedineTech\Backoffice\Companies\Application\Create\CompanyCreator;
 use MedineTech\Backoffice\Companies\Application\Create\CompanyCreatorRequest;
 use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompaniesPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Post(
@@ -63,7 +64,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
-final class CompanyPostController
+final class CompanyPostController extends ApiController
 {
     public function __construct(private readonly CompanyCreator $creator)
     {
@@ -71,7 +72,7 @@ final class CompanyPostController
 
     public function __invoke(Request $request): JsonResponse
     {
-        try {
+        return $this->execute(function () use ($request) {
             if (!$request->user()->can(CompaniesPermissions::CREATE)) {
                 throw new UnauthorizedException(403);
             }
@@ -91,26 +92,24 @@ final class CompanyPostController
                 ($this->creator)($creatorRequest);
             });
 
-            return new JsonResponse(null, 201);
-        } catch (ValidationException $e) {
-            return new JsonResponse([
-                'title' => 'Validation Error',
-                'status' => JsonResponse::HTTP_BAD_REQUEST,
-                'detail' => 'The given data was invalid.',
-                'errors' => $e->errors(),
-            ], JsonResponse::HTTP_BAD_REQUEST);
-        } catch (UnauthorizedException) {
-            return response()->json([
-                "title" => "Unauthorized",
-                "detail" => "You do not have permission to view this resource.",
-                "status" => 403,
-            ], 403);
-        } catch (Exception $e) {
-            return new JsonResponse([
-                'title' => 'Internal Server Error',
-                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An unexpected error occurred while processing your request.',
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(null, Response::HTTP_CREATED);
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            ValidationException::class => Response::HTTP_BAD_REQUEST,
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN,
+        ];
+    }
+
+    protected function exceptionDetail(\Exception $error): string
+    {
+        if ($error instanceof ValidationException) {
+            return 'The given data was invalid.';
         }
+
+        return parent::exceptionDetail($error);
     }
 }

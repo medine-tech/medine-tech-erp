@@ -4,12 +4,22 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Users\Domain;
 
-use DomainException;
+use MedineTech\Shared\Domain\DomainException;
 
 final class UserDoesNotExists extends DomainException
 {
-    public function __construct(string $email)
+    public function __construct(public readonly string $email)
     {
-        parent::__construct(sprintf('User with email <%s> does not exists', $email));
+        parent::__construct();
+    }
+
+    public function errorCode(): string
+    {
+        return 'user_does_not_exists';
+    }
+
+    public function errorMessage(): string
+    {
+        return "User with email $this->email does not exists";
     }
 }

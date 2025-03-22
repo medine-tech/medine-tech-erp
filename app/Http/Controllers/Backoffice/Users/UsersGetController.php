@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Users;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use MedineTech\Backoffice\Users\Application\Search\UsersSearcher;
 use MedineTech\Backoffice\Users\Application\Search\UsersSearcherRequest;
 use MedineTech\Backoffice\Users\Infrastructure\Authorization\UsersPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Get(
@@ -68,16 +69,16 @@ use Spatie\Permission\Exceptions\UnauthorizedException;
  *     )
  * )
  */
-final class UsersGetController extends Controller
+final class UsersGetController extends ApiController
 {
     public function __construct(
-        private UsersSearcher $searcher
+        private readonly UsersSearcher $searcher
     ) {
     }
 
     public function __invoke(Request $request): JsonResponse
     {
-        try {
+        return $this->execute(function () use ($request) {
             if (!$request->user()->can(UsersPermissions::VIEW)) {
                 throw new UnauthorizedException(403);
             }
@@ -102,19 +103,13 @@ final class UsersGetController extends Controller
                 'per_page' => $searchResponse->perPage(),
                 'current_page' => $searchResponse->currentPage(),
             ]);
-        } catch (UnauthorizedException) {
-            return response()->json([
-                "title" => "Unauthorized",
-                "detail" => "You do not have permission to view this resource.",
-                "status" => 403,
-            ], 403);
-        } catch (\Exception $e) {
-            return response()->json([
-                "title" => "Internal Server Error",
-                "detail" => "An unexpected error occurred",
-                "error" => $e->getMessage(),
-                "status" => 500,
-            ], 500);
-        }
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN,
+        ];
     }
 }

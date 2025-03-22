@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Backoffice\Security\RolePermissions;
 
+use App\Http\Controllers\ApiController;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
-use MedineTech\Backoffice\Security\RolePermissions\Application\Delete\RolePermissionDeleterRequest;
 use MedineTech\Backoffice\Security\RolePermissions\Application\Delete\RolePermissionDeleter;
-use Illuminate\Http\Request;
+use MedineTech\Backoffice\Security\RolePermissions\Application\Delete\RolePermissionDeleterRequest;
 use MedineTech\Backoffice\Security\RolePermissions\Domain\RolePermissionNotFoundException;
 use MedineTech\Backoffice\Security\RolePermissions\Infrastructure\Authorization\RolePermissionPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Delete(
@@ -73,20 +75,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
-final class RolePermissionDeleteController
+final class RolePermissionDeleteController extends ApiController
 {
     public function __construct(
-        private RolePermissionDeleter $deleter
+        private readonly RolePermissionDeleter $deleter
     ) {
     }
 
     public function __invoke(Request $request): JsonResponse
     {
         if (!$request->user()->can(RolePermissionPermissions::DELETE)) {
-            throw new UnauthorizedException(JsonResponse::HTTP_FORBIDDEN);
+            throw new UnauthorizedException(403);
         }
 
-        try {
+        return $this->execute(function () use ($request) {
             $validated = $request->validate([
                 'role_id' => 'required|int',
                 'permission_id' => 'required|int',
@@ -101,32 +103,33 @@ final class RolePermissionDeleteController
                 ($this->deleter)($deleterRequest);
             });
 
-            return new JsonResponse(null, JsonResponse::HTTP_OK);
-        } catch (ValidationException $e) {
-            return new JsonResponse([
-                'title' => 'Validation Error',
-                'status' => JsonResponse::HTTP_BAD_REQUEST,
-                'detail' => 'The given data was invalid.',
-                'errors' => $e->errors()
-            ], JsonResponse::HTTP_BAD_REQUEST);
-        } catch (RolePermissionNotFoundException $e) {
-            return new JsonResponse([
-                'title' => 'Not Found',
-                'status' => JsonResponse::HTTP_NOT_FOUND,
-                'detail' => 'Role permission not found.'
-            ], JsonResponse::HTTP_NOT_FOUND);
-        } catch (UnauthorizedException) {
-            return response()->json([
-                "title" => "Unauthorized",
-                "status" => JsonResponse::HTTP_FORBIDDEN,
-                "detail" => 'You do not have permission to view this resource.'
-            ], JsonResponse::HTTP_FORBIDDEN);
-        } catch (Exception $e) {
-            return new JsonResponse([
-                'title' => 'Internal Server Error',
-                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An unexpected error occurred while processing your request.'
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(null, Response::HTTP_OK);
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            ValidationException::class => Response::HTTP_BAD_REQUEST,
+            RolePermissionNotFoundException::class => Response::HTTP_NOT_FOUND,
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN
+        ];
+    }
+
+    protected function exceptionDetail(Exception $error): string
+    {
+        if ($error instanceof ValidationException) {
+            return 'The given data was invalid.';
         }
+
+        if ($error instanceof RolePermissionNotFoundException) {
+            return 'Role permission not found.';
+        }
+
+        if ($error instanceof UnauthorizedException) {
+            return 'You do not have permission to view this resource.';
+        }
+
+        return parent::exceptionDetail($error);
     }
 }
