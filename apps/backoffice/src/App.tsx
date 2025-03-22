@@ -1,14 +1,7 @@
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 function App() {
 	const [count, setCount] = useState(0);
@@ -24,9 +17,7 @@ function App() {
 				<Card>
 					<CardHeader>
 						<CardTitle>Welcome to Backoffice</CardTitle>
-						<CardDescription>
-							A modern admin dashboard built with the latest technologies
-						</CardDescription>
+						<CardDescription>A modern admin dashboard built with the latest technologies</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<div className="space-y-4">
@@ -40,8 +31,7 @@ function App() {
 								</Button>
 							</div>
 							<p className="text-sm text-center text-muted-foreground">
-								Edit <code className="bg-muted p-1 rounded-sm">src/App.tsx</code> to
-								customize this page
+								Edit <code className="bg-muted p-1 rounded-sm">src/App.tsx</code> to customize this page
 							</p>
 						</div>
 					</CardContent>
