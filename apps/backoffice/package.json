@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -20,14 +21,19 @@
     "tw-animate-css": "^1.2.4"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.26.10",
+    "@babel/preset-react": "^7.26.3",
     "@eslint/js": "^9.21.0",
     "@tailwindcss/postcss": "^4.0.15",
     "@types/node": "^22.13.11",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@typescript-eslint/parser": "^8.27.0",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.21.0",
+    "eslint-config-codely": "^4.5.0",
+    "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
