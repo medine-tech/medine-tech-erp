@@ -40,4 +40,5 @@ Route::group([
     ],
 ], function () {
     require __DIR__ . '/backoffice/security/roles/roles.php';
+    require __DIR__ . '/backoffice/security/role-permissions/role-permissions.php';
 });
