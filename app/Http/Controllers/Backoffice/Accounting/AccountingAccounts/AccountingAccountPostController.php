@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Accounting\AccountingAccounts;
 
-use Exception;
+use App\Http\Controllers\ApiController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -11,7 +12,7 @@ use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\Accou
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\AccountingAccountCreatorRequest;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Infrastructure\Authorization\AccountingAccountsPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Post(
@@ -70,7 +71,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * )
  */
 
-final class AccountingAccountPostController
+final class AccountingAccountPostController extends ApiController
 {
     public function __construct(private readonly AccountingAccountCreator $creator)
     {
@@ -78,7 +79,7 @@ final class AccountingAccountPostController
 
     public function __invoke(Request $request): JsonResponse
     {
-        try {
+        return $this->execute(function () use ($request) {
             if (!$request->user()->can(AccountingAccountsPermissions::CREATE)) {
                 throw new UnauthorizedException(403);
             }
@@ -109,26 +110,28 @@ final class AccountingAccountPostController
                 ($this->creator)($creatorRequest);
             });
 
-            return new JsonResponse(null, 201);
-        } catch (ValidationException $e) {
-            return new JsonResponse([
-                'title' => 'Validation Error',
-                'status' => JsonResponse::HTTP_BAD_REQUEST,
-                'detail' => 'The given data was invalid.',
-                'errors' => $e->errors(),
-            ], JsonResponse::HTTP_BAD_REQUEST);
-        } catch (UnauthorizedException) {
-            return response()->json([
-                "title" => "Unauthorized",
-                "status" => JsonResponse::HTTP_FORBIDDEN,
-                "detail" => "You do not have permission to view this resource.",
-            ], JsonResponse::HTTP_FORBIDDEN);
-        } catch (Exception $e) {
-            return new JsonResponse([
-                'title' => 'Internal Server Error',
-                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An unexpected error occurred while processing your request.'
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(null, Response::HTTP_CREATED);
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            ValidationException::class => Response::HTTP_BAD_REQUEST,
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN,
+        ];
+    }
+
+    protected function exceptionDetail(\Exception $error): string
+    {
+        if ($error instanceof ValidationException) {
+            return 'The given data was invalid.';
         }
+
+        if ($error instanceof UnauthorizedException) {
+            return 'You do not have permission to view this resource.';
+        }
+
+        return parent::exceptionDetail($error);
     }
 }

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Accounting\AccountingAccounts;
 
-use Exception;
+use App\Http\Controllers\ApiController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Find\AccountingAccountFinder;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Find\AccountingAccountFinderRequest;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountNotFound;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Infrastructure\Authorization\AccountingAccountsPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Get(
@@ -85,7 +86,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
-final class AccountingAccountGetController
+final class AccountingAccountGetController extends ApiController
 {
     public function __construct(
         private AccountingAccountFinder $finder,
@@ -95,7 +96,7 @@ final class AccountingAccountGetController
 
     public function __invoke(string $id, Request $request): JsonResponse
     {
-        try {
+        return $this->execute(function () use ($id, $request) {
             if (!$request->user()->can(AccountingAccountsPermissions::VIEW)) {
                 throw new UnauthorizedException(403);
             }
@@ -115,26 +116,28 @@ final class AccountingAccountGetController
                 'creator_id' => $response->creatorId(),
                 'updater_id' => $response->updaterId(),
                 'company_id' => $response->companyId()
-            ], JsonResponse::HTTP_OK);
+            ], Response::HTTP_OK);
+        });
+    }
 
-        } catch (AccountingAccountNotFound $e) {
-            return new JsonResponse([
-                'title' => 'Accounting account not found',
-                'status' => JsonResponse::HTTP_NOT_FOUND,
-                'detail' => "The accounting account with id <$id> does not exist."
-            ], JsonResponse::HTTP_NOT_FOUND);
-        } catch (UnauthorizedException $e) {
-            return new JsonResponse([
-                'title' => 'Unauthorized',
-                'status' => JsonResponse::HTTP_FORBIDDEN,
-                'detail' => 'You are not authorized to view this accounting account.'
-            ], JsonResponse::HTTP_FORBIDDEN);
-        } catch (Exception $e) {
-            return new JsonResponse([
-                'title' => 'Internal Server Error',
-                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An error occurred while processing your request.'
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+    protected function exceptions(): array
+    {
+        return [
+            AccountingAccountNotFound::class => Response::HTTP_NOT_FOUND,
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN,
+        ];
+    }
+
+    protected function exceptionDetail(\Exception $error): string
+    {
+        if ($error instanceof AccountingAccountNotFound) {
+            return "The accounting account with id <{$error->id()}> does not exist.";
         }
+
+        if ($error instanceof UnauthorizedException) {
+            return 'You are not authorized to view this accounting account.';
+        }
+
+        return parent::exceptionDetail($error);
     }
 }
