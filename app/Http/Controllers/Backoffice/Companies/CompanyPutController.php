@@ -66,13 +66,11 @@ use Symfony\Component\HttpFoundation\Response;
  *     )
  * )
  */
-
 final class CompanyPutController extends ApiController
 {
     public function __construct(
         private readonly CompanyUpdater $updater
-    )
-    {
+    ) {
     }
 
     public function __invoke(string $id, Request $request): JsonResponse

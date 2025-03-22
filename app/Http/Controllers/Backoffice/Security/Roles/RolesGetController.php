@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Security\Roles;
 
+use App\Http\Controllers\ApiController;
 use Exception;
 use Illuminate\Http\Request;
 use MedineTech\Backoffice\Security\Roles\Application\Search\RolesSearcher;
@@ -11,6 +12,7 @@ use MedineTech\Backoffice\Security\Roles\Application\Search\RolesSearcherRequest
 use MedineTech\Backoffice\Security\Roles\Infrastructure\Authorization\RolesPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Get(
@@ -81,21 +83,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
-final class RolesGetController
+final class RolesGetController extends ApiController
 {
     public function __construct(
         private readonly RolesSearcher $searcher
-    )
-    {
+    ) {
     }
 
     public function __invoke(Request $request): \Illuminate\Http\JsonResponse
     {
-        try {
-            if (!$request->user()->can(RolesPermissions::UPDATE)) {
-                throw new UnauthorizedException(JsonResponse::HTTP_FORBIDDEN);
-            }
+        if (!$request->user()->can(RolesPermissions::UPDATE)) {
+            throw new UnauthorizedException(403);
+        }
 
+        return $this->execute(function () use ($request) {
             $filters = (array)$request->query();
             $filters["company_id"] = $request->user()->id;
 
@@ -115,25 +116,28 @@ final class RolesGetController
                 ];
             }, $searcherResponse->items());
 
-            return response()->json([
+            return new JsonResponse([
                 "items" => $roles,
                 "total" => $searcherResponse->total(),
                 "per_page" => $searcherResponse->perPage(),
                 "current_page" => $searcherResponse->currentPage()
-            ]);
-        } catch (UnauthorizedException) {
-            return response()->json([
-                "title" => "Unauthorized",
-                "status" => JsonResponse::HTTP_FORBIDDEN,
-                "detail" => "You do not have permission to view this resource.",
-            ], JsonResponse::HTTP_FORBIDDEN);
-        } catch (Exception $e) {
-            $detail = config('app.env') !== 'production' ? $e->getMessage() : "An unexpected error occurred";
-            return response()->json([
-                "title" => "Internal Server Error",
-                "status" => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                "detail" => $detail,
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            ], Response::HTTP_OK);
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN
+        ];
+    }
+
+    protected function exceptionDetail(Exception $error): string
+    {
+        if ($error instanceof UnauthorizedException) {
+            return 'You do not have permission to view this resource.';
         }
+
+        return parent::exceptionDetail($error);
     }
 }

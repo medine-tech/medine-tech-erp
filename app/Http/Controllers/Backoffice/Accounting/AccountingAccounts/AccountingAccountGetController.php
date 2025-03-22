@@ -131,7 +131,7 @@ final class AccountingAccountGetController extends ApiController
     protected function exceptionDetail(\Exception $error): string
     {
         if ($error instanceof AccountingAccountNotFound) {
-            return "The accounting account with id <{$error->id()}> does not exist.";
+            return "The accounting account does not exist.";
         }
 
         if ($error instanceof UnauthorizedException) {
