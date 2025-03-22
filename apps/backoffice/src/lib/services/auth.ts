@@ -60,7 +60,23 @@ export const authService = {
   },
 
   // Cerrar sesión
-  logout(): void {
+  async logout(): Promise<void> {
+    const token = this.getToken();
+    
+    if (token) {
+      try {
+        await fetch(`${API_BASE_URL}/logout`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+      } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+      }
+    }
+    
     localStorage.removeItem("auth_token");
     localStorage.removeItem("default_company_id");
     sessionStorage.removeItem("auth_token");
