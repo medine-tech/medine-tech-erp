@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Users;
 
-use Exception;
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use MedineTech\Backoffice\Users\Application\Find\UserFinder;
@@ -11,6 +11,7 @@ use MedineTech\Backoffice\Users\Application\Find\UserFinderRequest;
 use MedineTech\Backoffice\Users\Domain\UserNotFound;
 use MedineTech\Backoffice\Users\Infrastructure\Authorization\UsersPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Get(
@@ -68,16 +69,16 @@ use Spatie\Permission\Exceptions\UnauthorizedException;
  *     }
  * )
  */
-final class UserGetController
+final class UserGetController extends ApiController
 {
     public function __construct(
-        private UserFinder $finder
+        private readonly UserFinder $finder
     ) {
     }
 
     public function __invoke(int $id, Request $request): JsonResponse
     {
-        try {
+        return $this->execute(function () use ($id, $request) {
             if (!$request->user()->can(UsersPermissions::VIEW)) {
                 throw new UnauthorizedException(403);
             }
@@ -89,24 +90,16 @@ final class UserGetController
                 'name' => $response->name(),
                 'email' => $response->email()
             ], JsonResponse::HTTP_OK);
-        } catch (UserNotFound $e) {
-            return new JsonResponse([
-                'title' => 'User Not Found',
-                'status' => JsonResponse::HTTP_NOT_FOUND,
-                'detail' => "User with ID {$id} does not exist"
-            ], JsonResponse::HTTP_NOT_FOUND);
-        } catch (UnauthorizedException) {
-            return response()->json([
-                "title" => "Unauthorized",
-                "detail" => "You do not have permission to view this resource.",
-                "status" => 403,
-            ], 403);
-        } catch (Exception $e) {
-            return new JsonResponse([
-                'title' => 'Internal Server Error',
-                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An Unexpected Error Occurred'
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        });
+    }
+
+    /**
+     * Define exception mappings specific to this controller
+     */
+    protected function exceptions(): array
+    {
+        return [
+            UserNotFound::class => Response::HTTP_NOT_FOUND,
+        ];
     }
 }
