@@ -135,5 +135,5 @@ final class RoleGetController extends ApiController
 
         return parent::exceptionDetail($error);
     }
-    }
+
 }
