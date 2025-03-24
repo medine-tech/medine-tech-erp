@@ -18,7 +18,7 @@ use function Lambdish\Phunctional\map;
 /**
  * @OA\Get(
  *     path="/api/auth/companies",
- *     tags={"Auth"},
+ *     tags={"Auth - Companies"},
  *     security={{"sanctum":{}}},
  *     summary="Retrieve a list of companies",
  *     description="Returns a paginated list of companies for authorized users. Accepts optional query parameters for filtering.",
@@ -87,9 +87,9 @@ final class AuthCompaniesGetController extends ApiController
         return $this->execute(function () use ($request) {
             $user = $request->user();
 
-            if (!$user->can(AuthCompaniesPermissions::VIEW)) {
-                throw new UnauthorizedException(403);
-            }
+//            if (!$user->can(AuthCompaniesPermissions::VIEW)) {
+//                throw new UnauthorizedException(403);
+//            }
 
             $filters = (array)$request->query();
             $filters["userId"] = $user->id;

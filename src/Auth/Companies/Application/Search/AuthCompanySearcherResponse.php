@@ -12,6 +12,14 @@ final readonly class AuthCompanySearcherResponse
     ) {
     }
 
+    public static function fromPrimitives(array $row): self
+    {
+        return new self(
+            (string)$row['id'],
+            (string)$row['name']
+        );
+    }
+
     public function id(): string
     {
         return $this->id;

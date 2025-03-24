@@ -2,8 +2,11 @@
 
 namespace MedineTech\Auth\Companies\Infrastructure\Persistence\Eloquent;
 
+use Closure;
+use MedineTech\Auth\Companies\Domain\AuthCompany;
 use MedineTech\Auth\Companies\Domain\AuthCompanyRepository;
 use MedineTech\Backoffice\Companies\Infrastructure\Persistence\Eloquent\CompanyModel;
+use function Lambdish\Phunctional\map;
 
 final class EloquentAuthCompanyRepository implements AuthCompanyRepository
 {
@@ -18,5 +21,15 @@ final class EloquentAuthCompanyRepository implements AuthCompanyRepository
             'perPage' => $paginator->perPage(),
             'currentPage' => $paginator->currentPage(),
         ];
+    }
+
+    private function fromDatabase(): Closure
+    {
+        return function (CompanyModel $model) {
+            return new AuthCompany(
+                $model->id,
+                $model->data['name'] ?? "without name"
+            );
+        };
     }
 }
