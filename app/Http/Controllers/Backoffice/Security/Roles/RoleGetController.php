@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Security\Roles;
 
+use App\Http\Controllers\ApiController;
 use Exception;
 use Illuminate\Http\Request;
 use MedineTech\Backoffice\Security\Roles\Application\Find\RoleFinder;
@@ -12,6 +13,7 @@ use MedineTech\Backoffice\Security\Roles\Domain\RoleNotFound;
 use MedineTech\Backoffice\Security\Roles\Infrastructure\Authorization\RolesPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Get(
@@ -82,21 +84,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
-final class RoleGetController
+final class RoleGetController extends ApiController
 {
     public function __construct(
-        private RoleFinder $finder
-    )
-    {
+        private readonly RoleFinder $finder
+    ) {
     }
 
     public function __invoke(int $id, Request $request): JsonResponse
     {
-        try {
-            if (!$request->user()->can(RolesPermissions::UPDATE)) {
-                throw new UnauthorizedException(JsonResponse::HTTP_FORBIDDEN);
-            }
+        if (!$request->user()->can(RolesPermissions::UPDATE)) {
+            throw new UnauthorizedException(Response::HTTP_FORBIDDEN);
+        }
 
+        return $this->execute(function () use ($id) {
             $response = ($this->finder)(
                 new RoleFinderRequest($id)
             );
@@ -110,25 +111,29 @@ final class RoleGetController
                 'creatorId' => $response->creatorId(),
                 'updaterId' => $response->updaterId(),
                 'companyId' => $response->companyId(),
-            ], JsonResponse::HTTP_OK);
-        }catch (RoleNotFound $e) {
-            return new JsonResponse([
-                'title' => 'Role not found',
-                'status' => JsonResponse::HTTP_NOT_FOUND,
-                'detail' => "The role account with id <$id> does not exist."
-            ], JsonResponse::HTTP_NOT_FOUND);
-        } catch (UnauthorizedException $e) {
-            return new JsonResponse([
-                'title' => 'Unauthorized',
-                'status' => JsonResponse::HTTP_FORBIDDEN,
-                'detail' => 'You are not authorized to view this role.'
-            ], JsonResponse::HTTP_FORBIDDEN);
-        } catch (Exception $e) {
-            return new JsonResponse([
-                'title' => 'Internal Server Error',
-                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An error occurred while processing your request.'
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            ], Response::HTTP_OK);
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            RoleNotFound::class => Response::HTTP_NOT_FOUND,
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN
+        ];
+    }
+
+    protected function exceptionDetail(Exception $error): string
+    {
+        if ($error instanceof RoleNotFound) {
+            return 'Role not found.';
         }
+
+        if ($error instanceof UnauthorizedException) {
+            return 'You are not authorized to view this role.';
+        }
+
+        return parent::exceptionDetail($error);
+    }
     }
 }
