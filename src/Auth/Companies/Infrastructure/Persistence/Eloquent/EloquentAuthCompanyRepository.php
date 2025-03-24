@@ -28,7 +28,7 @@ final class EloquentAuthCompanyRepository implements AuthCompanyRepository
         return function (CompanyModel $model) {
             return new AuthCompany(
                 $model->id,
-                $model->data['name'] ?? "without name"
+                $model->name ?? "without name"
             );
         };
     }

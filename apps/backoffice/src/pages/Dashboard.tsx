@@ -1,6 +1,7 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Button } from "../components/ui/button";
+import { CompanySelector } from "../components/CompanySelector";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,12 +11,13 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { useAuth } from "../lib/context/AuthContext";
+import { useCompany } from "../lib/context/CompanyContext";
 import { authService } from "../lib/services/auth";
 
 export function Dashboard() {
-  const { companyId } = useParams<{ companyId: string }>();
   const navigate = useNavigate();
   const { userInfo, logout } = useAuth();
+  const { currentCompany } = useCompany();
 
   const handleLogout = async () => {
     try {
@@ -31,11 +33,42 @@ export function Dashboard() {
   const userName = userInfo?.name ?? authService.getUserName();
 
   return (
-    <div className="min-h-screen bg-slate-100">
-      {/* Header con dropdown de usuario */}
-      <header className="bg-white shadow-sm border-b border-slate-200">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+    <div className="min-h-screen bg-slate-100 flex">
+      {/* Menú lateral */}
+      <aside className="w-64 bg-white shadow-md border-r border-slate-200 min-h-screen">
+        <div className="p-4 border-b border-slate-200">
           <h1 className="text-xl font-medium text-slate-800">Medine Tech</h1>
+        </div>
+        <div className="p-4">
+          <CompanySelector />
+        </div>
+        <nav className="mt-4">
+          <ul className="space-y-1">
+            <li>
+              <a href="#" className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect width="18" height="18" x="3" y="3" rx="2" />
+                  <path d="M9 9h.01" />
+                  <path d="M15 9h.01" />
+                  <path d="M9 15h.01" />
+                  <path d="M15 15h.01" />
+                </svg>
+                Dashboard
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <div className="flex-1 flex flex-col">
+        {/* Header con dropdown de usuario */}
+        <header className="bg-white shadow-sm border-b border-slate-200">
+          <div className="px-4 py-4 flex justify-end items-center">
+            <div className="mr-4 text-sm text-slate-600">
+              {currentCompany && (
+                <span>Empresa actual: <strong>{currentCompany.name}</strong></span>
+              )}
+            </div>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -156,15 +189,22 @@ export function Dashboard() {
       </header>
 
       {/* Contenido principal */}
-      <div className="container mx-auto py-8 px-4">
+      <div className="flex-1 p-8 bg-slate-50 overflow-auto">
         <h2 className="text-2xl font-bold mb-6">Panel de control</h2>
         <div className="bg-white shadow-md rounded-lg p-6">
           <p className="text-gray-700 mb-4">
             Bienvenido al panel de control de Medine. Esta es una página de ejemplo.
           </p>
-          <p className="text-sm text-gray-600">ID de Compañía: {companyId}</p>
+          {currentCompany && (
+            <div className="mt-4 p-4 bg-slate-50 rounded-md">
+              <h3 className="text-lg font-medium mb-2">Información de la empresa</h3>
+              <p className="text-sm text-gray-600">ID: {currentCompany.id}</p>
+              <p className="text-sm text-gray-600">Nombre: {currentCompany.name}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
+  </div>
   );
 }
