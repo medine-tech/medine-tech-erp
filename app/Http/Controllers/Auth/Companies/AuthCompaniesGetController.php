@@ -7,6 +7,10 @@ namespace App\Http\Controllers\Auth\Companies;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use MedineTech\Auth\Companies\Application\Search\AuthCompaniesSearcher;
+use MedineTech\Auth\Companies\Application\Search\AuthCompaniesSearcherRequest;
+use MedineTech\Auth\Companies\Application\Search\AuthCompanySearcherResponse;
+use MedineTech\Auth\Companies\Infrastructure\Authorization\AuthCompaniesPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\Response;
 use function Lambdish\Phunctional\map;
@@ -74,7 +78,7 @@ use function Lambdish\Phunctional\map;
 final class AuthCompaniesGetController extends ApiController
 {
     public function __construct(
-        private readonly AuthCompaniesSeacher $seacher
+        private readonly AuthCompaniesSearcher $searcher
     ) {
     }
 
@@ -89,10 +93,10 @@ final class AuthCompaniesGetController extends ApiController
 
             $filters = (array)$request->query();
             $filters["userId"] = $user->id;
-            $response = ($this->seacher)(new AuthCompaniesSearcherRequest($filters));
+            $response = ($this->searcher)(new AuthCompaniesSearcherRequest($filters));
 
             return new JsonResponse([
-                'items' => map(function (AuthCompaniesSearcherResponse $response) {
+                'items' => map(function (AuthCompanySearcherResponse $response) {
                     return [
                         'id' => $response->id(),
                         'name' => $response->name(),
