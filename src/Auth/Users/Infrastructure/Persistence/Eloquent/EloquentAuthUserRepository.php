@@ -10,6 +10,18 @@ use function Lambdish\Phunctional\map;
 
 final class EloquentAuthUserRepository implements AuthUserRepository
 {
+    public function find(string $id): ?AuthUser
+    {
+        $model = User::find($id);
+
+        if (!$model) {
+            return null;
+        }
+
+        $fromDatabase = $this->fromDatabase();
+        return $fromDatabase($model);
+    }
+
     public function search(array $filters): array
     {
         $paginator = User::fromFilters($filters)

@@ -1,5 +1,9 @@
-GET http://localhost/api/auth/users
+GET http://localhost/api/auth/users/2
 accept: application/json
 Authorization: Bearer {{token}}
 
 ###
+
+GET http://localhost/api/auth/users
+accept: application/json
+Authorization: Bearer {{token}}
