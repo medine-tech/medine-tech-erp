@@ -4,18 +4,17 @@ import { Company, companiesService } from '../services/companies';
 
 interface CompanyContextType {
   companies: Company[];
-  currentCompany: Company | null;
   loading: boolean;
   error: string | null;
   switchCompany: (companyId: string) => Promise<void>;
   refreshCompanies: () => Promise<void>;
+  getCompanyById: (companyId: string) => Promise<Company | null>;
 }
 
 const CompanyContext = createContext<CompanyContextType | undefined>(undefined);
 
 export function CompanyProvider({ children }: { children: ReactNode }) {
   const [companies, setCompanies] = useState<Company[]>([]);
-  const [currentCompany, setCurrentCompany] = useState<Company | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -28,21 +27,6 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
       // Obtener empresas del servicio
       const userCompanies = await companiesService.getUserCompanies();
       setCompanies(userCompanies);
-
-      // Obtener la empresa actual o usar la primera por defecto
-      const storedCompanyId = localStorage.getItem('currentCompanyId');
-      let current: Company | null = null;
-
-      if (storedCompanyId) {
-        current = userCompanies.find(c => c.id === storedCompanyId) || null;
-      }
-
-      if (!current && userCompanies.length > 0) {
-        current = userCompanies[0];
-        localStorage.setItem('currentCompanyId', current.id);
-      }
-
-      setCurrentCompany(current);
     } catch (err) {
       setError('Error al cargar las empresas');
     } finally {
@@ -66,15 +50,12 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
 
   const switchCompany = async (companyId: string) => {
     try {
-      const success = await companiesService.switchCompany(companyId);
-      if (success) {
-        const newCurrentCompany = companies.find(c => c.id === companyId) || null;
-        setCurrentCompany(newCurrentCompany);
-
-        if (newCurrentCompany) {
-          navigate(`/${newCurrentCompany.id}/dashboard`);
-
-        }
+      // Verificar si el usuario tiene acceso a esta empresa
+      const company = await getCompanyById(companyId);
+      if (company) {
+        navigate(`/${companyId}/dashboard`);
+      } else {
+        setError('No tienes acceso a esta empresa');
       }
     } catch (err) {
       setError('Error al cambiar de empresa');
@@ -85,15 +66,19 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
     await loadCompanies();
   };
 
+  const getCompanyById = async (companyId: string): Promise<Company | null> => {
+    return companiesService.getCompanyById(companyId);
+  };
+
   return (
     <CompanyContext.Provider
       value={{
         companies,
-        currentCompany,
         loading,
         error,
         switchCompany,
-        refreshCompanies
+        refreshCompanies,
+        getCompanyById
       }}
     >
       {children}

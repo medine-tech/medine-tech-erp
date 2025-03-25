@@ -8,10 +8,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 export function CompanySelector() {
-  const { companies, currentCompany, loading, error, switchCompany, refreshCompanies } = useCompany();
+  const { companies, loading, error, switchCompany, refreshCompanies } = useCompany();
+  const { companyId } = useParams<{ companyId: string }>();
+  const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
+  
+  // Actualizar la empresa seleccionada cuando cambia el ID en la URL
+  useEffect(() => {
+    if (companyId) {
+      setSelectedCompany(companyId);
+    }
+  }, [companyId]);
 
   // Intentar cargar las empresas nuevamente si hay un error
   useEffect(() => {
@@ -75,7 +85,7 @@ export function CompanySelector() {
         Empresa actual
       </label>
       <Select
-        value={currentCompany?.id || ''}
+        value={selectedCompany || ''}
         onValueChange={handleCompanyChange}
       >
         <SelectTrigger className="w-full">

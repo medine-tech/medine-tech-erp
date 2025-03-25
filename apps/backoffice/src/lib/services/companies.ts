@@ -52,17 +52,11 @@ export const companiesService = {
   },
 
   /**
-   * Obtiene la empresa actual seleccionada
+   * Obtiene una empresa por su ID
    */
-  async getCurrentCompany(): Promise<Company | null> {
-    const storedCompanyId = localStorage.getItem('currentCompanyId');
+  async getCompanyById(companyId: string): Promise<Company | null> {
     const companies = await this.getUserCompanies();
-
-    if (storedCompanyId && companies.length > 0) {
-      const storedCompany = companies.find(c => c.id === storedCompanyId);
-      if (storedCompany) return storedCompany;
-    }
-    return companies.length > 0 ? companies[0] : null;
+    return companies.find(c => c.id === companyId) || null;
   },
 
   /**
@@ -73,12 +67,12 @@ export const companiesService = {
    */
   async switchCompany(companyId: string): Promise<boolean> {
     try {
-      // Guardar la empresa seleccionada en localStorage
-      localStorage.setItem('currentCompanyId', companyId);
+      // Cambiar la ruta actual con la nueva empresa seleccionada
+      const url = new URL(window.location.href);
+      url.pathname = `/${companyId}${url.pathname}`;
+      window.history.pushState({}, '', url.toString());
       console.log(`Empresa cambiada localmente a: ${companyId}`);
 
-      // No es necesario recargar la página completa
-      // La navegación se manejará en el contexto de la empresa
       return true;
     } catch (error) {
       console.error('Error al cambiar de empresa:', error);

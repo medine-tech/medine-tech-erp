@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import { Button } from "../components/ui/button";
 import { CompanySelector } from "../components/CompanySelector";
@@ -11,13 +12,41 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { useAuth } from "../lib/context/AuthContext";
-import { useCompany } from "../lib/context/CompanyContext";
 import { authService } from "../lib/services/auth";
+import { useCompany } from "../lib/context/CompanyContext";
+import { Company } from "../lib/services/companies";
 
 export function Dashboard() {
+  const { companyId } = useParams<{ companyId: string }>();
   const navigate = useNavigate();
   const { userInfo, logout } = useAuth();
-  const { currentCompany } = useCompany();
+  const { getCompanyById } = useCompany();
+  const [company, setCompany] = useState<Company | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadCompany = async () => {
+      if (companyId) {
+        try {
+          setLoading(true);
+          const companyData = await getCompanyById(companyId);
+          setCompany(companyData);
+          if (!companyData) {
+            setError('No tienes acceso a esta empresa');
+          } else {
+            setError(null);
+          }
+        } catch (err) {
+          setError('Error al cargar la información de la empresa');
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    void loadCompany();
+  }, [companyId, getCompanyById]);
 
   const handleLogout = async () => {
     try {
@@ -65,8 +94,8 @@ export function Dashboard() {
         <header className="bg-white shadow-sm border-b border-slate-200">
           <div className="px-4 py-4 flex justify-end items-center">
             <div className="mr-4 text-sm text-slate-600">
-              {currentCompany && (
-                <span>Empresa actual: <strong>{currentCompany.name}</strong></span>
+              {company && (
+                <span>Empresa actual: <strong>{company.name}</strong></span>
               )}
             </div>
 
@@ -195,13 +224,21 @@ export function Dashboard() {
           <p className="text-gray-700 mb-4">
             Bienvenido al panel de control de Medine. Esta es una página de ejemplo.
           </p>
-          {currentCompany && (
+          {loading ? (
+            <div className="mt-4 p-4 bg-slate-50 rounded-md">
+              <p className="text-sm text-gray-600">Cargando información de la empresa...</p>
+            </div>
+          ) : error ? (
+            <div className="mt-4 p-4 bg-red-50 rounded-md">
+              <p className="text-sm text-red-600">{error}</p>
+            </div>
+          ) : company ? (
             <div className="mt-4 p-4 bg-slate-50 rounded-md">
               <h3 className="text-lg font-medium mb-2">Información de la empresa</h3>
-              <p className="text-sm text-gray-600">ID: {currentCompany.id}</p>
-              <p className="text-sm text-gray-600">Nombre: {currentCompany.name}</p>
+              <p className="text-sm text-gray-600">ID: {company.id}</p>
+              <p className="text-sm text-gray-600">Nombre: {company.name}</p>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
