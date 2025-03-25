@@ -68,17 +68,26 @@ export const companiesService = {
    * completa, se debería comunicar con el backend para cambiar la empresa actual.
    */
   async switchCompany(companyId: string): Promise<boolean> {
-    try {
-      // Cambiar la ruta actual con la nueva empresa seleccionada
-      const url = new URL(window.location.href);
-      url.pathname = `/${companyId}${url.pathname}`;
-      window.history.pushState({}, '', url.toString());
-      console.log(`Empresa cambiada localmente a: ${companyId}`);
+      try {
+          // Cambiar la ruta actual con la nueva empresa seleccionada
+          const url = new URL(window.location.href);
+          // Check if the path already contains a company ID pattern
+          const pathParts = url.pathname.split('/').filter(Boolean);
+          if (pathParts.length > 0) {
+              // Replace the first part if it looks like a company ID
+              pathParts[0] = companyId;
+              url.pathname = '/' + pathParts.join('/');
+          } else {
+              // No path or empty path, just add company ID
+              url.pathname = `/${companyId}/dashboard`;
+          }
 
-      return true;
-    } catch (error) {
-      console.error('Error al cambiar de empresa:', error);
-      return false;
-    }
+          window.history.pushState({}, '', url.toString());
+          console.log(`Empresa cambiada localmente a: ${companyId}`);
+          return true;
+      } catch (error) {
+          console.error('Error al cambiar de empresa:', error);
+          return false;
+      }
   }
 };
