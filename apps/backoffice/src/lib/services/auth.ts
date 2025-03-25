@@ -75,7 +75,7 @@ export const authService = {
             "Content-Type": "application/json",
           },
         });
-      } catch (error) {
+      } catch (_error) {
         // Ignorar errores de cierre de sesión
       }
     }
@@ -85,7 +85,6 @@ export const authService = {
     localStorage.removeItem("default_company_id");
     sessionStorage.removeItem("auth_token");
     sessionStorage.removeItem("default_company_id");
-    
   },
 
   // Guardar información de autenticación
@@ -96,10 +95,10 @@ export const authService = {
     userInfo?: UserInfo,
   ): void {
     const storage = rememberMe ? localStorage : sessionStorage;
-    
+
     // Guardar el token con ambos nombres para compatibilidad
     storage.setItem("auth_token", token);
-    
+
     // Guardar ID de empresa por defecto
     storage.setItem("default_company_id", companyId);
 
@@ -107,7 +106,6 @@ export const authService = {
     if (userInfo) {
       storage.setItem("user_info", JSON.stringify(userInfo));
     }
-    
   },
 
   // Obtener token
@@ -115,8 +113,8 @@ export const authService = {
     // Intentar obtener el token con cualquiera de los dos nombres
     const authToken = localStorage.getItem("auth_token") ?? sessionStorage.getItem("auth_token");
     const legacyToken = localStorage.getItem("token") ?? sessionStorage.getItem("token");
-    
-    return authToken || legacyToken;
+
+    return authToken ?? legacyToken;
   },
 
   // Obtener ID de compañía por defecto (solo para redirección inicial)
@@ -137,7 +135,7 @@ export const authService = {
     if (userInfoStr) {
       try {
         return JSON.parse(userInfoStr) as UserInfo;
-      } catch (e) {
+      } catch (_e) {
         return null;
       }
     }

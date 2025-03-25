@@ -73,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       setIsAuthenticated(true);
-      
+
       // No es necesario recargar la página completa
       // El ID de la empresa se devuelve y se maneja en el componente Login
 

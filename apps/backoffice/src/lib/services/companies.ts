@@ -1,11 +1,13 @@
-import { API_BASE_URL } from '../constants';
+import { API_BASE_URL } from "../constants";
 
 // Función auxiliar para obtener el token de autenticación
 const getAuthToken = (): string | null => {
-  return localStorage.getItem('auth_token') ||
-         sessionStorage.getItem('auth_token') ||
-         localStorage.getItem('token') ||
-         sessionStorage.getItem('token');
+  return (
+    localStorage.getItem("auth_token") ??
+    sessionStorage.getItem("auth_token") ??
+    localStorage.getItem("token") ??
+    sessionStorage.getItem("token")
+  );
 };
 
 export interface Company {
@@ -28,28 +30,26 @@ export const companiesService = {
     try {
       const token = getAuthToken();
       if (!token) {
-          console.warn('No authentication token found');
-          return [];
+        return [];
       }
 
-        const response = await fetch(`${API_BASE_URL}/auth/companies`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }
-        });
+      const response = await fetch(`${API_BASE_URL}/auth/companies`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
 
-        if (!response.ok) {
-            console.error(`Failed to fetch companies: ${response.status} ${response.statusText}`);
-            return [];
-        }
-        const data = await response.json() as CompaniesResponse;
-        return data.items || [];
-    } catch (error: unknown) {
-        console.error('Error fetching companies:', error instanceof Error ? error.message : String(error));
+      if (!response.ok) {
         return [];
+      }
+      const data = (await response.json()) as CompaniesResponse;
+
+      return data.items ?? [];
+    } catch (_error: unknown) {
+      return [];
     }
   },
 
@@ -58,7 +58,8 @@ export const companiesService = {
    */
   async getCompanyById(companyId: string): Promise<Company | null> {
     const companies = await this.getUserCompanies();
-    return companies.find(c => c.id === companyId) || null;
+
+    return companies.find((c) => c.id === companyId) ?? null;
   },
 
   /**
@@ -68,26 +69,24 @@ export const companiesService = {
    * completa, se debería comunicar con el backend para cambiar la empresa actual.
    */
   async switchCompany(companyId: string): Promise<boolean> {
-      try {
-          // Cambiar la ruta actual con la nueva empresa seleccionada
-          const url = new URL(window.location.href);
-          // Check if the path already contains a company ID pattern
-          const pathParts = url.pathname.split('/').filter(Boolean);
-          if (pathParts.length > 0) {
-              // Replace the first part if it looks like a company ID
-              pathParts[0] = companyId;
-              url.pathname = '/' + pathParts.join('/');
-          } else {
-              // No path or empty path, just add company ID
-              url.pathname = `/${companyId}/dashboard`;
-          }
-
-          window.history.pushState({}, '', url.toString());
-          console.log(`Empresa cambiada localmente a: ${companyId}`);
-          return true;
-      } catch (error) {
-          console.error('Error al cambiar de empresa:', error);
-          return false;
+    try {
+      // Cambiar la ruta actual con la nueva empresa seleccionada
+      const url = new URL(window.location.href);
+      // Check if the path already contains a company ID pattern
+      const pathParts = url.pathname.split("/").filter(Boolean);
+      if (pathParts.length > 0) {
+        // Replace the first part if it looks like a company ID
+        pathParts[0] = companyId;
+        url.pathname = `/${pathParts.join("/")}`;
+      } else {
+        // No path or empty path, just add company ID
+        url.pathname = `/${companyId}/dashboard`;
       }
-  }
+
+      window.history.pushState({}, "", url.toString());
+      return true;
+    } catch (_error) {
+      return false;
+    }
+  },
 };
