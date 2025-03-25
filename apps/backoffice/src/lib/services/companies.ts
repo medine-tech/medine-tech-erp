@@ -26,10 +26,10 @@ export const companiesService = {
     try {
       const token = getAuthToken();
       if (!token) {
-        return [];
+          console.warn('No authentication token found');
+          return [];
       }
 
-      try {
         const response = await fetch(`${API_BASE_URL}/auth/companies`, {
           method: 'GET',
           headers: {
@@ -40,16 +40,14 @@ export const companiesService = {
         });
 
         if (!response.ok) {
-          return [];
+            console.error(`Failed to fetch companies: ${response.status} ${response.statusText}`);
+            return [];
         }
-
         const data = await response.json() as CompaniesResponse;
         return data.items || [];
-      } catch (apiError) {
+    } catch (error: unknown) {
+        console.error('Error fetching companies:', error instanceof Error ? error.message : String(error));
         return [];
-      }
-    } catch (error: any) {
-      return [];
     }
   },
 

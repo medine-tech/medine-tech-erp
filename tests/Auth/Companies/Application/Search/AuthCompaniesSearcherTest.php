@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\Auth\Companies\Domain\AuthCompanyMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 
-final class AuthCompaniesSeacherTest extends UnitTestCase
+final class AuthCompaniesSearcherTest extends UnitTestCase
 {
     #[Test]
     public function it_should_search_auth_companies(): void

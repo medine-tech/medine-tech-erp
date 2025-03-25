@@ -24,24 +24,24 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Obtener empresas del servicio
       const userCompanies = await companiesService.getUserCompanies();
       setCompanies(userCompanies);
-      
+
       // Obtener la empresa actual o usar la primera por defecto
       const storedCompanyId = localStorage.getItem('currentCompanyId');
       let current: Company | null = null;
-      
+
       if (storedCompanyId) {
         current = userCompanies.find(c => c.id === storedCompanyId) || null;
       }
-      
+
       if (!current && userCompanies.length > 0) {
         current = userCompanies[0];
         localStorage.setItem('currentCompanyId', current.id);
       }
-      
+
       setCurrentCompany(current);
     } catch (err) {
       setError('Error al cargar las empresas');
@@ -52,11 +52,11 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Verificar si el usuario está autenticado antes de cargar las empresas
-    const isAuthenticated = localStorage.getItem('auth_token') || 
-                 sessionStorage.getItem('auth_token') || 
-                 localStorage.getItem('token') || 
+    const isAuthenticated = localStorage.getItem('auth_token') ||
+                 sessionStorage.getItem('auth_token') ||
+                 localStorage.getItem('token') ||
                  sessionStorage.getItem('token');
-    
+
     if (isAuthenticated) {
       void loadCompanies();
     } else {
@@ -70,14 +70,10 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
       if (success) {
         const newCurrentCompany = companies.find(c => c.id === companyId) || null;
         setCurrentCompany(newCurrentCompany);
-        
-        // Navegar al dashboard con la nueva empresa sin recargar la página
+
         if (newCurrentCompany) {
-          // Guardar el ID de la empresa actual para mantenerlo después de recargas manuales
-          localStorage.setItem('currentCompanyId', newCurrentCompany.id);
-          
-          // Navegar al dashboard con la nueva empresa
           navigate(`/${newCurrentCompany.id}/dashboard`);
+
         }
       }
     } catch (err) {
