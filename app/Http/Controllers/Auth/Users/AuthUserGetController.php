@@ -11,6 +11,54 @@ use MedineTech\Auth\Users\Application\Find\AuthUserFinder;
 use MedineTech\Auth\Users\Application\Find\AuthUserFinderRequest;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @OA\Get(
+ *     path="/api/auth/users/{id}",
+ *     summary="Get specific user information",
+ *     tags={"Auth - Users"},
+ *     security={
+ *         {"bearerAuth": {}}
+ *     },
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID of the user to retrieve",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="string",
+ *             format="uuid"
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successfully retrieved user information",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="id", type="string", example="f7c5bdb2-1f8e-4f19-9c6d-f8c4a4d54a9a"),
+ *             @OA\Property(property="name", type="string", example="John Doe")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="User not found",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="title", type="string", example="Resource not found"),
+ *             @OA\Property(property="status", type="integer", example=404),
+ *             @OA\Property(property="detail", type="string", example="The requested user does not exist.")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal Server Error",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="title", type="string", example="Internal Server Error"),
+ *             @OA\Property(property="detail", type="string", example="An unexpected error occurred"),
+ *             @OA\Property(property="status", type="integer", example=500)
+ *         )
+ *     )
+ * )
+ */
 final class AuthUserGetController extends ApiController
 {
     public function __construct(
