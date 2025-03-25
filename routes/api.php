@@ -12,7 +12,7 @@ Route::group([
     'middleware' => ['auth:sanctum'],
 ], function () {
     require __DIR__ . '/auth/companies/auth-companies.php';
-    require __DIR__ . '/auth/users/auth-users.php';
+    require __DIR__ . '/auth/users/auth-user.php';
 });
 
 Route::group([

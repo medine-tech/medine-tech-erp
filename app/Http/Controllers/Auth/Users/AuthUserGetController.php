@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Auth\Users;
+namespace App\Http\Controllers\Auth\User;
 
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
@@ -13,16 +13,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Get(
- *     path="/api/auth/users/{id}",
- *     summary="Get specific user information",
- *     tags={"Auth - Users"},
+ *     path="/api/auth/users",
+ *     summary="Get specific users information",
+ *     tags={"Auth - User"},
  *     security={
  *         {"bearerAuth": {}}
  *     },
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
- *         description="ID of the user to retrieve",
+ *         description="ID of the users to retrieve",
  *         required=true,
  *         @OA\Schema(
  *             type="string",
@@ -31,7 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="Successfully retrieved user information",
+ *         description="Successfully retrieved users information",
  *         @OA\JsonContent(
  *             type="object",
  *             @OA\Property(property="id", type="string", example="f7c5bdb2-1f8e-4f19-9c6d-f8c4a4d54a9a"),
@@ -44,7 +44,7 @@ use Symfony\Component\HttpFoundation\Response;
  *         @OA\JsonContent(
  *             @OA\Property(property="title", type="string", example="Resource not found"),
  *             @OA\Property(property="status", type="integer", example=404),
- *             @OA\Property(property="detail", type="string", example="The requested user does not exist.")
+ *             @OA\Property(property="detail", type="string", example="The requested users does not exist.")
  *         )
  *     ),
  *     @OA\Response(
