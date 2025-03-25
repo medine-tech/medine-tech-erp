@@ -2,7 +2,7 @@ import { API_BASE_URL } from '../constants';
 
 // Función auxiliar para obtener el token de autenticación
 const getAuthToken = (): string | null => {
-  return localStorage.getItem('auth_token') || 
+  return localStorage.getItem('auth_token') ||
          sessionStorage.getItem('auth_token')
 };
 
@@ -28,7 +28,7 @@ export const companiesService = {
       if (!token) {
         return [];
       }
-      
+
       try {
         const response = await fetch(`${API_BASE_URL}/auth/companies`, {
           method: 'GET',
@@ -38,11 +38,11 @@ export const companiesService = {
             'Accept': 'application/json'
           }
         });
-        
+
         if (!response.ok) {
           return [];
         }
-        
+
         const data = await response.json() as CompaniesResponse;
         return data.items || [];
       } catch (apiError) {
@@ -57,15 +57,19 @@ export const companiesService = {
    * Obtiene la empresa actual seleccionada
    */
   async getCurrentCompany(): Promise<Company | null> {
+    const storedCompanyId = localStorage.getItem('currentCompanyId');
     const companies = await this.getUserCompanies();
-    // Si hay empresas, devuelve la primera por defecto
-    // En una implementación real, se podría guardar la empresa seleccionada en localStorage
+
+    if (storedCompanyId && companies.length > 0) {
+      const storedCompany = companies.find(c => c.id === storedCompanyId);
+      if (storedCompany) return storedCompany;
+    }
     return companies.length > 0 ? companies[0] : null;
   },
 
   /**
    * Cambia la empresa actual
-   * 
+   *
    * Nota: Esta función solo actualiza el estado local. En una implementación
    * completa, se debería comunicar con el backend para cambiar la empresa actual.
    */
@@ -74,7 +78,7 @@ export const companiesService = {
       // Guardar la empresa seleccionada en localStorage
       localStorage.setItem('currentCompanyId', companyId);
       console.log(`Empresa cambiada localmente a: ${companyId}`);
-      
+
       // No es necesario recargar la página completa
       // La navegación se manejará en el contexto de la empresa
       return true;
