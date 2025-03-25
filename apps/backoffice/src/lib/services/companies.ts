@@ -1,13 +1,9 @@
 import { API_BASE_URL } from "../constants";
+import { authService } from "./auth.ts";
 
 // Función auxiliar para obtener el token de autenticación
-const getAuthToken = (): string | null => {
-  return (
-    localStorage.getItem("auth_token") ??
-    sessionStorage.getItem("auth_token") ??
-    localStorage.getItem("token") ??
-    sessionStorage.getItem("token")
-  );
+export const getAuthToken = (): string | null => {
+    return authService.getToken();
 };
 
 export interface Company {
@@ -47,7 +43,7 @@ export const companiesService = {
       }
       const data = (await response.json()) as CompaniesResponse;
 
-      return data.items ?? [];
+      return data.items || [];
     } catch (_error: unknown) {
       return [];
     }
@@ -84,6 +80,7 @@ export const companiesService = {
       }
 
       window.history.pushState({}, "", url.toString());
+
       return true;
     } catch (_error) {
       return false;

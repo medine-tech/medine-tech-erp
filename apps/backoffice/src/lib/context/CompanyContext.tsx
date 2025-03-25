@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { companiesService, Company } from "../services/companies";
+import { Company, companiesService, getAuthToken } from '../services/companies';
 
 interface CompanyContextType {
   companies: Company[];
@@ -37,11 +37,7 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Verificar si el usuario está autenticado antes de cargar las empresas
-    const isAuthenticated =
-      localStorage.getItem("auth_token") ??
-      sessionStorage.getItem("auth_token") ??
-      localStorage.getItem("token") ??
-      sessionStorage.getItem("token");
+      const isAuthenticated = getAuthToken();
 
     if (isAuthenticated) {
       void loadCompanies();
@@ -59,7 +55,7 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
       // Verificar si el usuario tiene acceso a esta empresa
       const company = await getCompanyById(companyId);
       if (company) {
-        navigate(`/${companyId}/dashboard`);
+        await navigate(`/${companyId}/dashboard`);
       } else {
         setError("No tienes acceso a esta empresa");
       }
