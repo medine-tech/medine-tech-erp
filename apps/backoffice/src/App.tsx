@@ -12,26 +12,26 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-          <Routes>
-              {/* Rutas públicas */}
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<FirstCompanyRegister />} />
+        <Routes>
+          {/* Rutas públicas */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<FirstCompanyRegister />} />
 
-              {/* Rutas protegidas */}
-              <Route
-                  path="/:companyId/dashboard"
-                  element={
-                      <ProtectedRoute>
-                          <Dashboard />
-                      </ProtectedRoute>
-                  }
-              />
+          {/* Rutas protegidas */}
+          <Route
+            path="/:companyId/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
-              {/* Ruta de fallback */}
-              <Route path="*" element={<LandingPage />} />
-          </Routes>
-          <Toaster position="top-right" richColors closeButton />
+          {/* Ruta de fallback */}
+          <Route path="*" element={<LandingPage />} />
+        </Routes>
+        <Toaster position="top-right" richColors closeButton />
       </Router>
     </AuthProvider>
   );
