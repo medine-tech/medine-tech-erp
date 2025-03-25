@@ -75,8 +75,8 @@ export const authService = {
             "Content-Type": "application/json",
           },
         });
-      } catch (_error) {
-        // Ignorar errores de cierre de sesión
+      } catch (error) {
+          console.error("Error al cerrar sesión:", error);
       }
     }
 
@@ -99,6 +99,9 @@ export const authService = {
     // Guardar el token con ambos nombres para compatibilidad
     storage.setItem("auth_token", token);
 
+    // No guardamos company_id localmente, se manejará a través de la URL
+    storage.setItem("default_company_id", companyId); // Guardamos solo como referencia inicial
+
     // Guardar ID de empresa por defecto
     storage.setItem("default_company_id", companyId);
 
@@ -110,11 +113,7 @@ export const authService = {
 
   // Obtener token
   getToken(): string | null {
-    // Intentar obtener el token con cualquiera de los dos nombres
-    const authToken = localStorage.getItem("auth_token") ?? sessionStorage.getItem("auth_token");
-    const legacyToken = localStorage.getItem("token") ?? sessionStorage.getItem("token");
-
-    return authToken ?? legacyToken;
+      return localStorage.getItem("auth_token") ?? sessionStorage.getItem("auth_token");
   },
 
   // Obtener ID de compañía por defecto (solo para redirección inicial)
@@ -135,7 +134,9 @@ export const authService = {
     if (userInfoStr) {
       try {
         return JSON.parse(userInfoStr) as UserInfo;
-      } catch (_e) {
+      } catch (e) {
+          console.error("Error al parsear la información del usuario:", e);
+
         return null;
       }
     }
