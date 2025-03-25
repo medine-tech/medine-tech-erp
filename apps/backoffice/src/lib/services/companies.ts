@@ -3,7 +3,9 @@ import { API_BASE_URL } from '../constants';
 // Función auxiliar para obtener el token de autenticación
 const getAuthToken = (): string | null => {
   return localStorage.getItem('auth_token') ||
-         sessionStorage.getItem('auth_token')
+         sessionStorage.getItem('auth_token') ||
+         localStorage.getItem('token') ||
+         sessionStorage.getItem('token');
 };
 
 export interface Company {
