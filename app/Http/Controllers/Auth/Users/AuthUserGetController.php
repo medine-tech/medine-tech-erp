@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Get(
- *     path="/api/auth/users",
+ *     path="/api/auth/user",
  *     summary="Get specific users information",
  *     tags={"Auth - User"},
  *     security={
