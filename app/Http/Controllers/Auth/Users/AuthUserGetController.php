@@ -25,7 +25,9 @@ use Symfony\Component\HttpFoundation\Response;
  *         @OA\JsonContent(
  *             type="object",
  *             @OA\Property(property="id", type="string", example="f7c5bdb2-1f8e-4f19-9c6d-f8c4a4d54a9a"),
- *             @OA\Property(property="name", type="string", example="John Doe")
+ *             @OA\Property(property="name", type="string", example="John Doe"),
+ *             @OA\Property(property="email", type="string", example="john.doe@example.com"),
+ *             @OA\Property(property="defaultCompanyId", type="string", example="comp-123")
  *         )
  *     ),
  *     @OA\Response(
