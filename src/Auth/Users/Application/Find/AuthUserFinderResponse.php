@@ -7,12 +7,14 @@ namespace MedineTech\Auth\Users\Application\Find;
 final readonly class AuthUserFinderResponse
 {
     public function __construct(
-        private readonly string $id,
-        private readonly string $name
+        private int $id,
+        private string $name,
+        private string $email,
+        private string $defaultCompanyId
     ) {
     }
 
-    public function id(): string
+    public function id(): int
     {
         return $this->id;
     }
@@ -20,5 +22,15 @@ final readonly class AuthUserFinderResponse
     public function name(): string
     {
         return $this->name;
+    }
+
+    public function email(): string
+    {
+        return $this->email;
+    }
+
+    public function defaultCompanyId(): string
+    {
+        return $this->defaultCompanyId;
     }
 }

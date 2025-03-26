@@ -10,8 +10,6 @@ use Illuminate\Http\Request;
 use MedineTech\Auth\Companies\Application\Search\AuthCompaniesSearcher;
 use MedineTech\Auth\Companies\Application\Search\AuthCompaniesSearcherRequest;
 use MedineTech\Auth\Companies\Application\Search\AuthCompanySearcherResponse;
-use MedineTech\Auth\Companies\Infrastructure\Authorization\AuthCompaniesPermissions;
-use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\Response;
 use function Lambdish\Phunctional\map;
 
@@ -86,10 +84,6 @@ final class AuthCompaniesGetController extends ApiController
     {
         return $this->execute(function () use ($request) {
             $user = $request->user();
-
-//            if (!$user->can(AuthCompaniesPermissions::VIEW)) {
-//                throw new UnauthorizedException(403);
-//            }
 
             $filters = (array)$request->query();
             $filters["userId"] = $user->id;

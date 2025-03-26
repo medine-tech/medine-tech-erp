@@ -22,30 +22,12 @@ abstract class AuthUserUnitTestCase extends UnitTestCase
         return $this->repository = $this->mock(AuthUserRepository::class);
     }
 
-    protected function shouldSave(AuthUser $company): void
-    {
-        $this->repository()
-            ->shouldReceive('save')
-            ->once()
-            ->with($this->similarTo($company))
-            ->andReturnNull();
-    }
-
-    protected function shouldFind(string $id, ?AuthUser $company): void
+    protected function shouldFind(int $id, ?AuthUser $company): void
     {
         $this->repository()
             ->shouldReceive('find')
             ->once()
             ->with($this->similarTo($id))
             ->andReturn($company);
-    }
-
-    protected function shouldNotFind(string $id): void
-    {
-        $this->repository()
-            ->shouldReceive('find')
-            ->once()
-            ->with($this->similarTo($id))
-            ->andReturnNull();
     }
 }

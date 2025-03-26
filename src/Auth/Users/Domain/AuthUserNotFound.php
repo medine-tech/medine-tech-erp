@@ -8,7 +8,7 @@ use MedineTech\Shared\Domain\DomainException;
 
 final class AuthUserNotFound extends DomainException
 {
-    public function __construct(public readonly string $id)
+    public function __construct(public readonly int $id)
     {
         parent::__construct();
     }

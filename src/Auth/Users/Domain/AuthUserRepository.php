@@ -6,8 +6,6 @@ namespace MedineTech\Auth\Users\Domain;
 
 interface AuthUserRepository
 {
-    public function find(string $id): ?AuthUser;
-    public function search(array $filters): array;
-
+    public function find(int $id): ?AuthUser;
 
 }

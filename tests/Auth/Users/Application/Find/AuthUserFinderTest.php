@@ -17,8 +17,7 @@ class AuthUserFinderTest extends AuthUserUnitTestCase
     #[Test]
     public function it_should_find_a_auth_user(): void
     {
-        $id = Uuid::random()->value();
-        $authUser = AuthUserMother::create($id);
+        $authUser = AuthUserMother::create();
 
         /** @var AuthUserRepository $repository */
         $repository = $this->repository();

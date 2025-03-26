@@ -7,11 +7,11 @@ namespace MedineTech\Auth\Users\Application\Find;
 final readonly class AuthUserFinderRequest
 {
     public function __construct(
-        private readonly string $id
+        private readonly int $id
     ) {
     }
 
-    public function id(): string
+    public function id(): int
     {
         return $this->id;
     }

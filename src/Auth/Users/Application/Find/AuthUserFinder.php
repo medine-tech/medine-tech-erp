@@ -26,7 +26,7 @@ final readonly class AuthUserFinder
             $user->id(),
             $user->name(),
             $user->email(),
-            $user->password()
+            $user->defaultCompanyId()
         );
     }
 }

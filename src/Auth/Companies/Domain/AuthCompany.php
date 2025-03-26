@@ -23,11 +23,6 @@ final class AuthCompany extends AggregateRoot
             $name
         );
 
-        $company->record(new AuthCompanyCreatedDomainEvent(
-            $company->id(),
-            $company->name()
-        ));
-
         return $company;
     }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Auth\User;
+namespace App\Http\Controllers\Auth\Users;
 
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
@@ -19,16 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
  *     security={
  *         {"bearerAuth": {}}
  *     },
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
- *         description="ID of the users to retrieve",
- *         required=true,
- *         @OA\Schema(
- *             type="string",
- *             format="uuid"
- *         )
- *     ),
  *     @OA\Response(
  *         response=200,
  *         description="Successfully retrieved users information",
@@ -69,10 +59,15 @@ final class AuthUserGetController extends ApiController
     public function __invoke(Request $request): JsonResponse
     {
         return $this->execute(function () use ($request) {
-            $user = ($this->finder)(new AuthUserFinderRequest($request->id));
+            $user = $request->user()->id;
+
+            $response = ($this->finder)(new AuthUserFinderRequest($user));
+
             return new JsonResponse([
-                'id' => $user->id(),
-                'name' => $user->name()
+                'id' => $response->id(),
+                'name' => $response->name(),
+                'email' => $response->email(),
+                'defaultCompanyId' => $response->defaultCompanyId(),
             ], Response::HTTP_OK);
         });
     }

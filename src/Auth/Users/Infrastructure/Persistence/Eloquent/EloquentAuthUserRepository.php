@@ -10,7 +10,7 @@ use function Lambdish\Phunctional\map;
 
 final class EloquentAuthUserRepository implements AuthUserRepository
 {
-    public function find(string $id): ?AuthUser
+    public function find(int $id): ?AuthUser
     {
         $model = User::find($id);
 
@@ -22,19 +22,6 @@ final class EloquentAuthUserRepository implements AuthUserRepository
         return $fromDatabase($model);
     }
 
-    public function search(array $filters): array
-    {
-        $paginator = User::fromFilters($filters)
-            ->paginate(20);
-
-        return [
-            'items' => map($this->fromDatabase(), $paginator->items()),
-            'total' => $paginator->total(),
-            'perPage' => $paginator->perPage(),
-            'currentPage' => $paginator->currentPage(),
-        ];
-    }
-
     private function fromDatabase(): Closure
     {
         return function (User $model) {
@@ -42,7 +29,6 @@ final class EloquentAuthUserRepository implements AuthUserRepository
                 $model->id,
                 $model->name ?? "without name",
                 $model->email,
-                $model->password,
                 $model->default_company_id ?? ''
             );
         };
