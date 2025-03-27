@@ -9,6 +9,7 @@ use MedineTech\Backoffice\Security\Roles\Application\Create\RoleCreatorRequest;
 use MedineTech\Backoffice\Security\Roles\Domain\RoleCreatedDomainEvent;
 use MedineTech\Backoffice\Security\Roles\Domain\RoleRepository;
 use MedineTech\Backoffice\Security\Roles\Domain\RoleStatus;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Security\Roles\Domain\RoleMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -48,7 +49,7 @@ final class RoleCreatorTest extends UnitTestCase
 
         $this->shouldPublishDomainEvent($event);
 
-        /** @var RoleRepository $roleRepository */
+        /** @var RoleRepository&MockInterface $roleRepository */
         $creator = new RoleCreator(
             $roleRepository,
             $eventBus

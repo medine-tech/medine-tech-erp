@@ -76,9 +76,9 @@ final class CompanyPutController extends ApiController
     public function __invoke(string $id, Request $request): JsonResponse
     {
         return $this->execute(function () use ($id, $request) {
-            if (!$request->user()->can(CompaniesPermissions::UPDATE)) {
-                throw new UnauthorizedException(403);
-            }
+//            if (!$request->user()->can(CompaniesPermissions::UPDATE)) {
+//                throw new UnauthorizedException(403);
+//            }
 
             $validatedData = $request->validate([
                 'name' => 'required|string|min:3|max:40',

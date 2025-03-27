@@ -12,6 +12,7 @@ use MedineTech\Backoffice\FirstCompanies\Application\Register\FirstCompanyRegist
 use MedineTech\Backoffice\FirstCompanies\Application\Register\FirstCompanyRegisterRequest;
 use MedineTech\Backoffice\Users\Application\Create\UserCreator;
 use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 
@@ -63,9 +64,9 @@ final class FirstCompanyRegisterTest extends UnitTestCase
             )))
             ->andReturnNull();
 
-        /** @var CompanyCreator $companyCreator */
-        /** @var UserCreator $userCreator */
-        /** @var CompanyUserCreator $companyUserCreator */
+        /** @var CompanyCreator&MockInterface $companyCreator */
+        /** @var UserCreator&MockInterface $userCreator */
+        /** @var CompanyUserCreator&MockInterface $companyUserCreator */
         $register = new FirstCompanyRegister(
             $companyCreator,
             $userCreator,

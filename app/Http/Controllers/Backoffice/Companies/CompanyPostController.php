@@ -73,9 +73,9 @@ final class CompanyPostController extends ApiController
     public function __invoke(Request $request): JsonResponse
     {
         return $this->execute(function () use ($request) {
-            if (!$request->user()->can(CompaniesPermissions::CREATE)) {
-                throw new UnauthorizedException(403);
-            }
+//            if (!$request->user()->can(CompaniesPermissions::CREATE)) {
+//                throw new UnauthorizedException(403);
+//            }
 
             $validatedData = $request->validate([
                 'id' => 'required|string|uuid',

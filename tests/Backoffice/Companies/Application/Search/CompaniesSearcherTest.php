@@ -7,6 +7,7 @@ namespace Tests\Backoffice\Companies\Application\Search;
 use MedineTech\Backoffice\Companies\Application\Search\CompaniesSearcher;
 use MedineTech\Backoffice\Companies\Application\Search\CompaniesSearcherRequest;
 use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Companies\Domain\CompanyMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -30,7 +31,7 @@ final class CompaniesSearcherTest extends UnitTestCase
                 "currentPage" => 1,
             ]);
 
-        /** @var CompanyRepository $companyRepository */
+        /** @var CompanyRepository&MockInterface $companyRepository */
         $searcher = new CompaniesSearcher($companyRepository);
         ($searcher)(new CompaniesSearcherRequest($filters));
     }

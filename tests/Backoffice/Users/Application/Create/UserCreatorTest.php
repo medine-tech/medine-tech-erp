@@ -10,6 +10,7 @@ use MedineTech\Backoffice\Users\Application\Create\UserCreator;
 use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
 use MedineTech\Backoffice\Users\Domain\UserCreatedDomainEvent;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Users\Domain\UserMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -61,8 +62,8 @@ final class UserCreatorTest extends UnitTestCase
         );
         $this->shouldPublishDomainEvent($event);
 
-        /** @var UserRepository $userRepository */
-        /** @var CompanyUserCreator $userCompanyCreator */
+        /** @var UserRepository&MockInterface $userRepository */
+        /** @var CompanyUserCreator&MockInterface $userCompanyCreator */
         $creator = new UserCreator(
             $userRepository,
             $userCompanyCreator,

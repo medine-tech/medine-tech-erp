@@ -7,6 +7,7 @@ namespace Tests\Backoffice\Accounting\AccountingAccounts\Application\Search;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Search\AccountingAccountsSearcher;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Search\AccountingAccountsSearcherRequest;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountRepository;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -30,7 +31,7 @@ final class AccountingAccountsSearcherTest extends UnitTestCase
                 "currentPage" => 1,
             ]);
 
-        /** @var AccountingAccountRepository $accountingAccountRepository */
+        /** @var AccountingAccountRepository&MockInterface $accountingAccountRepository */
         $searcher = new AccountingAccountsSearcher($accountingAccountRepository);
         ($searcher)(new AccountingAccountsSearcherRequest($filters));
     }
