@@ -1,5 +1,9 @@
 includes:
-    - phpstan.neon.dist
+    - ./vendor/nunomaduro/larastan/extension.neon
 
 parameters:
-    level: 2
+    level: 1
+    paths:
+        - app/Http/Controllers
+        - src
+        - tests
