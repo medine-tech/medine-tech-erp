@@ -14,18 +14,6 @@ final class AuthCompany extends AggregateRoot
     ) {
     }
 
-    public static function create(
-        string $id,
-        string $name
-    ): self {
-        $company = new self(
-            $id,
-            $name
-        );
-
-        return $company;
-    }
-
     public function id(): string
     {
         return $this->id;

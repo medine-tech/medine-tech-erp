@@ -18,17 +18,6 @@ final class AuthUser extends AggregateRoot
         $this->email = new AuthUserEmail($email);
     }
 
-    public static function create(
-        int $id,
-        string $name,
-        string $email,
-        string $defaultCompanyId
-    ): self {
-        $user = new self($id, $name, $email, $defaultCompanyId);
-
-        return $user;
-    }
-
     public function id(): int
     {
         return $this->id;
