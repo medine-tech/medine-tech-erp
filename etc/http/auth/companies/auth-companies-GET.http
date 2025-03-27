@@ -1,0 +1,5 @@
+GET http://localhost/api/auth/companies
+accept: application/json
+Authorization: Bearer {{token}}
+
+###
