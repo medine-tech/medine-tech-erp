@@ -10,7 +10,7 @@ final class AuthCompany extends AggregateRoot
 {
     public function __construct(
         private readonly string $id,
-        private string $name
+        private readonly string $name
     ) {
     }
 
@@ -22,5 +22,13 @@ final class AuthCompany extends AggregateRoot
     public function name(): string
     {
         return $this->name;
+    }
+
+    public static function fromPrimitives(array $row): self
+    {
+        return new self(
+            (string)$row['id'],
+            (string)$row['name']
+        );
     }
 }

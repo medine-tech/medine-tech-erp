@@ -12,16 +12,17 @@ final class EloquentCompanyRepository implements CompanyRepository
     public function save(Company $company): void
     {
         try {
-            $data = [
-                'id' => $company->id(),
-                'name' => $company->name()
-            ];
+            $model = CompanyModel::find($company->id());
 
-            CompanyModel::updateOrCreate(
-                ['id' => $company->id()],
-                $data
-            );
-
+            if ($model) {
+                $model->name = $company->name();
+                $model->save();
+            } else {
+                $companyModel = new CompanyModel();
+                $companyModel->id = $company->id();
+                $companyModel->name = $company->name();
+                $companyModel->save();
+            }
         } catch (\Exception $e) {
             throw new \RuntimeException("Failed to save company: " . $e->getMessage(), 0, $e);
         }
