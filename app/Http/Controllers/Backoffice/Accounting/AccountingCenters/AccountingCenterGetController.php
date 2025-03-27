@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Find\AccountingCenterFinder;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Find\AccountingCenterFinderRequest;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterNotFound;
+use MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Authorization\AccountingCenterPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -85,10 +86,10 @@ final class AccountingCenterGetController extends ApiController
     public function __invoke(string $id, Request $request): JsonResponse
     {
         return $this->execute(function () use ($id, $request) {
-            // Permissions check is commented out in original code
-            // if (!$request->user()->can(AccountingCenterPermissions::VIEW)) {
-            //     throw new UnauthorizedException(403);
-            // }
+//             Permissions check is commented out in original code
+             if (!$request->user()->can(AccountingCenterPermissions::VIEW)) {
+                 throw new UnauthorizedException(403);
+             }
 
             $response = ($this->finder)(
                 new AccountingCenterFinderRequest($id));
