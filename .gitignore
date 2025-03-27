@@ -23,3 +23,4 @@ yarn-error.log
 /.zed
 http-client.private.env.json
 /.turbo
+phpstan.neon
