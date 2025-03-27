@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Security\RolePermissions\Domain;
 
+use InvalidArgumentException;
 use MedineTech\Shared\Domain\Bus\Event\DomainEvent;
 
 final class RolePermissionCreatedDomainEvent extends DomainEvent
@@ -28,7 +29,7 @@ final class RolePermissionCreatedDomainEvent extends DomainEvent
         if (!isset($body['role_id']) || !isset($body['permission_id'])) {
             throw new InvalidArgumentException('Role ID and Permission ID are required');
         }
-        
+
         return new self(
             $aggregateId,
             (int)$body['role_id'],
