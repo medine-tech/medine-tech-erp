@@ -48,11 +48,10 @@ final class EloquentAccountingAccountRepository implements AccountingAccountRepo
             return null;
         }
 
-        $AccountingAccountData = $model->toArray();
-        $AccountingAccountData['password'] = $model->password;
+        $accountingAccountData = $model->toArray();
 
         $fromDatabase = $this->fromDatabase();
-        return $fromDatabase($AccountingAccountData);
+        return $fromDatabase($accountingAccountData);
     }
 
     public function search(array $filters, int $perPage = 20): array
