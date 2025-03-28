@@ -1,14 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "@tanstack/react-router";
-import { Link } from "../components/Link";
 
 import { useAuth } from "@/lib/context/AuthContext";
 import { authService } from "@/lib/services/auth";
 import { type LoginFormValues, loginSchema } from "@/lib/validations/auth";
 
 import medineLogoSrc from "../assets/medine-logo.svg";
+import { Link } from "../components/Link";
 import { Button } from "../components/ui/button";
 import {
   Card,

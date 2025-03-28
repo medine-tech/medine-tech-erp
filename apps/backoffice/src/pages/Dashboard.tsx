@@ -13,7 +13,7 @@ import { useAuth } from "../lib/context/AuthContext";
 import { authService } from "../lib/services/auth";
 
 export function Dashboard() {
-  const { companyId } = useParams({ from: '/$companyId/dashboard' });
+  const { companyId } = useParams({ from: "/$companyId/dashboard" });
   const navigate = useNavigate();
   const { userInfo, logout } = useAuth();
 

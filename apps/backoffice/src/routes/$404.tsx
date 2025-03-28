@@ -1,6 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { LandingPage } from '../LandingPage'
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/$404')({
+import { LandingPage } from "../LandingPage";
+
+export const Route = createFileRoute("/$404")({
   component: LandingPage,
-})
+});

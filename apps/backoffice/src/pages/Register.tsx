@@ -1,8 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "@tanstack/react-router";
-import { Link } from "../components/Link";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import { type RegisterFormValues, registerSchema } from "@/lib/validations/auth";
 
 import medineLogoSrc from "../assets/medine-logo.svg";
+import { Link } from "../components/Link";
 
 export function Register() {
   const [loading, setLoading] = useState(false);

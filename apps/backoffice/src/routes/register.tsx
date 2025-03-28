@@ -1,6 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { FirstCompanyRegister } from '../pages/FirstCompanyRegister'
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/register')({
+import { FirstCompanyRegister } from "../pages/FirstCompanyRegister";
+
+export const Route = createFileRoute("/register")({
   component: FirstCompanyRegister,
-})
+});

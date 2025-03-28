@@ -1,8 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "@tanstack/react-router";
-import { Link } from "../components/Link";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 
@@ -21,6 +20,7 @@ import { companyService } from "@/lib/services/company";
 import { type FirstCompanyFormValues, firstCompanySchema } from "@/lib/validations/auth";
 
 import medineLogoSrc from "../assets/medine-logo.svg";
+import { Link } from "../components/Link";
 import { ApiError } from "../lib/services/auth";
 
 export function FirstCompanyRegister() {

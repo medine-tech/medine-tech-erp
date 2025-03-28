@@ -1,5 +1,3 @@
-import { Link } from "./components/Link";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +9,7 @@ import {
 } from "@/components/ui/card";
 
 import medineLogoSrc from "./assets/medine-logo.svg";
+import { Link } from "./components/Link";
 
 export function LandingPage() {
   return (
