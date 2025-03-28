@@ -25,6 +25,9 @@ import { Label } from "../components/ui/label";
 export function Login() {
   const { login, isAuthenticated, loading, error, clearError } = useAuth();
   const navigate = useNavigate();
+  // Usamos URLSearchParams para obtener el parámetro returnTo de la URL actual
+  const searchParams = new URLSearchParams(window.location.search);
+  const returnTo = searchParams.get("returnTo");
 
   const {
     register,
@@ -42,14 +45,20 @@ export function Login() {
   // Redirigir si ya está autenticado
   useEffect(() => {
     if (isAuthenticated) {
-      // Obtener el company_id de sessionStorage/localStorage para redirigir
+      // Si hay un returnTo, redirigir a esa URL
+      if (returnTo) {
+        window.location.href = returnTo;
+        return;
+      }
+      
+      // De lo contrario, redirigir al dashboard con el company_id por defecto
       const defaultCompanyId = authService.getDefaultCompanyId();
       if (defaultCompanyId) {
         void navigate({ to: `/$companyId/dashboard`, params: { companyId: defaultCompanyId } });
       }
       // Si no hay company_id disponible, el usuario tendrá que iniciar sesión de nuevo
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, returnTo]);
 
   // Limpiar errores al desmontar el componente
   useEffect(() => {
@@ -61,7 +70,14 @@ export function Login() {
   const onSubmit = async (data: LoginFormValues) => {
     try {
       const companyId = await login(data.email, data.password, data.rememberMe);
-      // Redirigir al dashboard con el company_id en la URL
+      
+      // Si hay un returnTo, redirigir a esa URL
+      if (returnTo) {
+        window.location.href = returnTo;
+        return;
+      }
+      
+      // De lo contrario, redirigir al dashboard con el company_id
       void navigate({ to: `/$companyId/dashboard`, params: { companyId } });
     } catch (_err) {
       // El error ya se maneja en el context
