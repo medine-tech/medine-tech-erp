@@ -8,27 +8,25 @@ use MedineTech\Shared\Domain\Aggregate\AggregateRoot;
 final class Role extends AggregateRoot
 {
     public function __construct(
-        private ?int    $id,
-        private string  $code,
-        private string  $name,
+        private readonly ?int $id,
+        private readonly string $code,
+        private string $name,
         private ?string $description,
-        private string  $status,
-        private int     $creatorId,
-        private int     $updaterId,
-        private string  $companyId,
-        private string  $guardName
-    )
-    {
+        private string $status,
+        private readonly int $creatorId,
+        private int $updaterId,
+        private readonly string $companyId,
+        private readonly string $guardName
+    ) {
     }
 
     public static function create(
-        string  $code,
-        string  $name,
+        string $code,
+        string $name,
         ?string $description,
-        int     $creatorId,
-        string  $companyId
-    ): self
-    {
+        int $creatorId,
+        string $companyId
+    ): self {
         $status = RoleStatus::ACTIVE;
         $updaterId = $creatorId;
         $guardName = 'sanctum';

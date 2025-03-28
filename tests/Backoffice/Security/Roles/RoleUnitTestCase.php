@@ -28,7 +28,7 @@ Abstract class RoleUnitTestCase extends UnitTestCase
             ->shouldReceive('save')
             ->once()
             ->with($this->similarTo($role))
-            ->andReturnNull();
+            ->andReturn($role->id());
     }
 
     protected function shouldFind(int $id, ?Role $role): void

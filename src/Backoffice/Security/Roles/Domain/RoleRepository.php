@@ -6,7 +6,7 @@ namespace MedineTech\Backoffice\Security\Roles\Domain;
 
 interface RoleRepository
 {
-    public function save(Role $role): void;
+    public function save(Role $role): int;
 
     public function find(int $id): ?Role;
 

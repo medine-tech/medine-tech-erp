@@ -9,8 +9,6 @@ use MedineTech\Backoffice\Security\Roles\Infrastructure\Persistence\RoleFilters;
 class RoleModel extends Role
 {
     protected $table = 'roles';
-    public $incrementing = true;
-    protected $keyType = 'string';
     protected $fillable = [
         'code',
         'name',

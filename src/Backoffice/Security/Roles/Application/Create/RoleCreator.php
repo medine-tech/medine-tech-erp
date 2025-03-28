@@ -15,7 +15,7 @@ class RoleCreator
     ) {
     }
 
-    public function __invoke(RoleCreatorRequest $request): void
+    public function __invoke(RoleCreatorRequest $request): int
     {
         $code = $this->repository->nextCode($request->companyId());
 
@@ -27,7 +27,9 @@ class RoleCreator
             $request->companyId()
         );
 
-        $this->repository->save($role);
+        $id = $this->repository->save($role);
         $this->eventBus->publish(...$role->pullDomainEvents());
+
+        return $id;
     }
 }

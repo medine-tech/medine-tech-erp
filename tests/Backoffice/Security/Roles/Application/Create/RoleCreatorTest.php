@@ -33,7 +33,7 @@ final class RoleCreatorTest extends UnitTestCase
         $roleRepository->shouldReceive('save')
             ->once()
             ->with($this->similarTo($role))
-            ->andReturnNull();
+            ->andReturn($roleId);
 
         $eventBus = $this->eventBus();
         $event = new RoleCreatedDomainEvent(
