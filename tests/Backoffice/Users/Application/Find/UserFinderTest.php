@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Backoffice\Users\Application\Find;
 
+use Mockery\MockInterface;
 use Tests\Backoffice\Users\UserUnitTestCase;
 use Tests\Backoffice\Users\Domain\UserMother;
 use MedineTech\Backoffice\Users\Application\Find\UserFinder;
@@ -18,7 +19,7 @@ class UserFinderTest extends UserUnitTestCase
 
         $this->shouldFindUser($user->id(), $user);
 
-        /** @var UserRepository $userRepository */
+        /** @var UserRepository&MockInterface $userRepository */
         $userRepository = $this->repository();
 
         $finder = new UserFinder($userRepository);

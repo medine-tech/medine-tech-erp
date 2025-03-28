@@ -12,9 +12,6 @@ use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
  */
 abstract class UserUnitTestCase extends UnitTestCase
 {
-    /**
-     * @var MockInterface|null
-     */
     private ?MockInterface $repository = null;
 
     protected function repository(): MockInterface

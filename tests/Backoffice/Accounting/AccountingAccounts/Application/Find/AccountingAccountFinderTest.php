@@ -8,6 +8,7 @@ use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Find\Account
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Find\AccountingAccountFinderRequest;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountRepository;
 use MedineTech\Shared\Domain\ValueObject\Uuid;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Accounting\AccountingAccounts\AccountingAccountUnitTestCase;
 use Tests\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountMother;
@@ -20,7 +21,7 @@ class AccountingAccountFinderTest extends AccountingAccountUnitTestCase
         $id = Uuid::random()->value();
         $accountingAccount = AccountingAccountMother::create($id);
 
-        /** @var AccountingAccountRepository $repository */
+        /** @var AccountingAccountRepository&MockInterface $repository */
         $repository = $this->repository();
         $this->shouldFind($accountingAccount->id(), $accountingAccount);
 

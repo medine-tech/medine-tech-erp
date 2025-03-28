@@ -7,6 +7,7 @@ namespace Tests\Auth\Companies\Application\Search;
 use MedineTech\Auth\Companies\Application\Search\AuthCompaniesSearcher;
 use MedineTech\Auth\Companies\Application\Search\AuthCompaniesSearcherRequest;
 use MedineTech\Auth\Companies\Domain\AuthCompanyRepository;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Auth\Companies\Domain\AuthCompanyMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -30,7 +31,7 @@ final class AuthCompaniesSearcherTest extends UnitTestCase
                 "currentPage" => 1,
             ]);
 
-        /** @var AuthCompanyRepository $companyRepository */
+        /** @var AuthCompanyRepository&MockInterface $companyRepository */
         $searcher = new AuthCompaniesSearcher($companyRepository);
         ($searcher)(new AuthCompaniesSearcherRequest($filters));
     }
