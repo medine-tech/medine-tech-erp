@@ -17,7 +17,7 @@ use Tests\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountMothe
 
 final class AccountingAccountUpdaterTest extends AccountingAccountUnitTestCase
 {
-    #[test]
+    #[Test]
     public function it_should_update_an_accounting_account(): void
     {
         $id = Uuid::random()->value();

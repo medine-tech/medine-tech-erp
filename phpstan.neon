@@ -3,7 +3,7 @@ includes:
     - ./vendor/phpstan/phpstan-mockery/extension.neon
 
 parameters:
-    level: 5
+    level: 6
     paths:
         - app/Http/Controllers
         - src

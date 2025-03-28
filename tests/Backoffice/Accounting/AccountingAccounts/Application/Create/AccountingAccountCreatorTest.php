@@ -45,7 +45,7 @@ final class AccountingAccountCreatorTest extends UnitTestCase
         );
         $this->shouldPublishDomainEvent($domainEvent);
 
-        /* @var AccountingAccountRepository&MockInterface $accountingAccountRepository */
+        /** @var AccountingAccountRepository&MockInterface $accountingAccountRepository */
         $creator = new AccountingAccountCreator(
             $accountingAccountRepository,
             $eventBus

@@ -44,7 +44,7 @@ final class AccountingCenterCreatorTest extends UnitTestCase
         $this->shouldPublishDomainEvent($domainEvent);
         $eventBus = $this->eventBus();
 
-        /* @var AccountingCenterRepository&MockInterface $repository */
+        /** @var AccountingCenterRepository&MockInterface $repository */
         $creator = new AccountingCenterCreator(
             $repository,
             $eventBus

@@ -47,8 +47,8 @@ final class CompanyCreatorTest extends UnitTestCase
         );
         $this->shouldPublishDomainEvent($domainEvent);
 
-        /* @var CompanyRepository&MockInterface $companyRepository */
-        /* @var CompanyUserCreator&MockInterface $userCompanyCreator */
+        /** @var CompanyRepository&MockInterface $companyRepository */
+        /** @var CompanyUserCreator&MockInterface $userCompanyCreator */
         $creator = new CompanyCreator(
             $companyRepository,
             $userCompanyCreator,

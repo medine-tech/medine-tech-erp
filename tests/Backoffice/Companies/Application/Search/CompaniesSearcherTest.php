@@ -14,7 +14,7 @@ use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 
 final class CompaniesSearcherTest extends UnitTestCase
 {
-    #[test]
+    #[Test]
     public function it_should_search_companies(): void
     {
         $company = CompanyMother::create();
