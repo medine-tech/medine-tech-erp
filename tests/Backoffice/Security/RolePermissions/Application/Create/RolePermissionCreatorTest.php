@@ -8,6 +8,7 @@ use MedineTech\Backoffice\Security\RolePermissions\Application\Create\RolePermis
 use MedineTech\Backoffice\Security\RolePermissions\Application\Create\RolePermissionCreatorRequest;
 use MedineTech\Backoffice\Security\RolePermissions\Domain\RolePermissionCreatedDomainEvent;
 use MedineTech\Backoffice\Security\RolePermissions\Domain\RolePermissionRepository;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Security\RolePermissions\Domain\RolePermissionMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -36,7 +37,7 @@ final class RolePermissionCreatorTest extends UnitTestCase
 
         $this->shouldPublishDomainEvent($domainEvent);
 
-        /** @var RolePermissionRepository $rolePermissionRepository */
+        /** @var RolePermissionRepository&MockInterface $rolePermissionRepository */
         $creator = new RolePermissionCreator(
             $rolePermissionRepository,
             $eventBus

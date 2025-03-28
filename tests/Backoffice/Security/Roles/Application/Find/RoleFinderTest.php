@@ -7,6 +7,7 @@ namespace Tests\Backoffice\Security\Roles\Application\Find;
 use MedineTech\Backoffice\Security\Roles\Application\Find\RoleFinder;
 use MedineTech\Backoffice\Security\Roles\Application\Find\RoleFinderRequest;
 use MedineTech\Backoffice\Security\Roles\Domain\RoleRepository;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Security\Roles\RoleUnitTestCase;
 use Tests\Backoffice\Security\Roles\Domain\RoleMother;
@@ -19,7 +20,7 @@ class RoleFinderTest extends RoleUnitTestCase
         $id = 1;
         $role = RoleMother::create($id);
 
-        /** @var RoleRepository $repository */
+        /** @var RoleRepository&MockInterface $repository */
         $repository = $this->repository();
         $this->shouldFind($role->id(), $role);
 

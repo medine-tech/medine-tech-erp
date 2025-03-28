@@ -26,10 +26,10 @@ final class EloquentAuthCompanyRepository implements AuthCompanyRepository
     private function fromDatabase(): Closure
     {
         return function (CompanyModel $model) {
-            return new AuthCompany(
-                $model->id,
-                $model->name ?? "without name"
-            );
+            return AuthCompany::fromPrimitives([
+                "id" => $model['id'],
+                "name" => $model["name"] ?? "without name",
+            ]);
         };
     }
 }

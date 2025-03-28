@@ -6,8 +6,10 @@ namespace Security\Roles\Application\Update;
 
 use MedineTech\Backoffice\Security\Roles\Application\Update\RoleUpdater;
 use MedineTech\Backoffice\Security\Roles\Application\Update\RoleUpdaterRequest;
+use MedineTech\Backoffice\Security\Roles\Domain\RoleNotFound;
 use MedineTech\Backoffice\Security\Roles\Domain\RoleRepository;
 use MedineTech\Backoffice\Security\Roles\Domain\RoleStatus;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Security\Roles\Domain\RoleMother;
 use Tests\Backoffice\Security\Roles\RoleUnitTestCase;
@@ -31,13 +33,13 @@ final class RoleUpdaterTest extends RoleUnitTestCase
         $originalRole->changeDescription($newDescription);
         $originalRole->changeStatus($newStatus);
 
-        /** @var RoleRepository $roleRepository */
-        $repository = $this->repository();
+        /** @var RoleRepository&MockInterface $roleRepository */
+        $roleRepository = $this->repository();
         $this->shouldFind($originalRole->id(), $originalRole);
         $this->shouldSave($originalRole);
 
 
-        $updater = new RoleUpdater($repository);
+        $updater = new RoleUpdater($roleRepository);
 
         ($updater)(new RoleUpdaterRequest(
             $id,

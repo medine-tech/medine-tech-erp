@@ -6,6 +6,7 @@ namespace Tests\Backoffice\Accounting\AccountingCenter\Application\Search;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Search\AccountingCentersSearcher;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Search\AccountingCentersSearcherRequest;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterRepository;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -29,7 +30,7 @@ final class AccountingCenterSearcherTest extends UnitTestCase
                 'currentPage' => 1,
             ]);
 
-        /** @var AccountingCenterRepository $accountingCenterRepository */
+        /** @var AccountingCenterRepository&MockInterface $accountingCenterRepository */
         $searcher = new AccountingCentersSearcher($accountingCenterRepository);
         ($searcher)(new AccountingCentersSearcherRequest($filters));
     }

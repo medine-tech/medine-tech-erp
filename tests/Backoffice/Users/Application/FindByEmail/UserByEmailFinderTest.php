@@ -7,6 +7,7 @@ namespace Tests\Backoffice\Users\Application\FindByEmail;
 use MedineTech\Backoffice\Users\Application\FindByEmail\UserByEmailFinder;
 use MedineTech\Backoffice\Users\Application\FindByEmail\UserByEmailFinderRequest;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Users\Domain\UserMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -24,7 +25,7 @@ final class UserByEmailFinderTest extends UnitTestCase
             ->with($user->email())
             ->andReturn($user);
 
-        /** @var UserRepository $userRepository */
+        /** @var UserRepository&MockInterface $userRepository */
         $finder = new UserByEmailFinder($userRepository);
         ($finder)(new UserByEmailFinderRequest($user->email()));
     }

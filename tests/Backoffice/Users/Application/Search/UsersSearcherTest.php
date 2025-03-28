@@ -7,6 +7,7 @@ namespace Tests\Backoffice\Users\Application\Search;
 use MedineTech\Backoffice\Users\Application\Search\UsersSearcher;
 use MedineTech\Backoffice\Users\Application\Search\UsersSearcherRequest;
 use MedineTech\Backoffice\Users\Domain\UserRepository;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Users\Domain\UserMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -30,7 +31,7 @@ final class UsersSearcherTest extends UnitTestCase
                 "currentPage" => 1,
             ]);
 
-        /** @var UserRepository $userRepository */
+        /** @var UserRepository&MockInterface $userRepository */
         $searcher = new UsersSearcher($userRepository);
         ($searcher)(new UsersSearcherRequest($filters));
     }

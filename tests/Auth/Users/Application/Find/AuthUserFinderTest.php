@@ -7,7 +7,7 @@ namespace Tests\Auth\Users\Application\Find;
 use MedineTech\Auth\Users\Application\Find\AuthUserFinder;
 use MedineTech\Auth\Users\Application\Find\AuthUserFinderRequest;
 use MedineTech\Auth\Users\Domain\AuthUserRepository;
-use MedineTech\Shared\Domain\ValueObject\Uuid;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Auth\Users\AuthUserUnitTestCase;
 use Tests\Auth\Users\Domain\AuthUserMother;
@@ -19,7 +19,7 @@ class AuthUserFinderTest extends AuthUserUnitTestCase
     {
         $authUser = AuthUserMother::create();
 
-        /** @var AuthUserRepository $repository */
+        /** @var AuthUserRepository&MockInterface $repository */
         $repository = $this->repository();
         $this->shouldFind($authUser->id(), $authUser);
 

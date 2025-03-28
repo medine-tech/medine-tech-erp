@@ -7,6 +7,7 @@ namespace Tests\Backoffice\Security\RolePermissions\Application\Delete;
 use MedineTech\Backoffice\Security\RolePermissions\Application\Delete\RolePermissionDeleter;
 use MedineTech\Backoffice\Security\RolePermissions\Application\Delete\RolePermissionDeleterRequest;
 use MedineTech\Backoffice\Security\RolePermissions\Domain\RolePermissionRepository;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Security\RolePermissions\Domain\RolePermissionMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -30,7 +31,7 @@ final class RolePermissionDeleterTest extends UnitTestCase
             ->with($this->similarTo($rolePermission))
             ->andReturnNull();
 
-        /** @var RolePermissionRepository $rolePermissionRepository */
+        /** @var RolePermissionRepository&MockInterface $rolePermissionRepository */
         $deleter = new RolePermissionDeleter(
             $rolePermissionRepository
         );

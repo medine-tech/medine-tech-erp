@@ -7,6 +7,7 @@ use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Find\Accountin
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Find\AccountingCenterFinderRequest;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterRepository;
 use MedineTech\Shared\Domain\ValueObject\Uuid;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Accounting\AccountingCenter\AccountingCenterUnitTestCase;
 use Tests\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterMother;
@@ -19,7 +20,7 @@ final class AccountingCenterFinderTest extends AccountingCenterUnitTestCase
         $id = Uuid::random()->value();
         $accountingCenter = AccountingCenterMother::create($id);
 
-        /** @var AccountingCenterRepository $repository */
+        /** @var AccountingCenterRepository&MockInterface $repository */
         $repository = $this->repository();
         $this->shouldFind($accountingCenter->id(), $accountingCenter);
 

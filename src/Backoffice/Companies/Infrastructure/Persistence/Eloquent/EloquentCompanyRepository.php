@@ -15,12 +15,12 @@ final class EloquentCompanyRepository implements CompanyRepository
             $model = CompanyModel::find($company->id());
 
             if ($model) {
-                $model->name = $company->name();
+                $model['name'] = $company->name();
                 $model->save();
             } else {
                 $companyModel = new CompanyModel();
                 $companyModel->id = $company->id();
-                $companyModel->name = $company->name();
+                $companyModel['name'] = $company->name();
                 $companyModel->save();
             }
         } catch (\Exception $e) {
