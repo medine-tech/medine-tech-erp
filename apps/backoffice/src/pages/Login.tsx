@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
+import { Link } from "../components/Link";
 
 import { useAuth } from "@/lib/context/AuthContext";
 import { authService } from "@/lib/services/auth";
@@ -44,7 +45,7 @@ export function Login() {
       // Obtener el company_id de sessionStorage/localStorage para redirigir
       const defaultCompanyId = authService.getDefaultCompanyId();
       if (defaultCompanyId) {
-        void navigate(`/${defaultCompanyId}/dashboard`);
+        void navigate({ to: `/$companyId/dashboard`, params: { companyId: defaultCompanyId } });
       }
       // Si no hay company_id disponible, el usuario tendrá que iniciar sesión de nuevo
     }
@@ -61,7 +62,7 @@ export function Login() {
     try {
       const companyId = await login(data.email, data.password, data.rememberMe);
       // Redirigir al dashboard con el company_id en la URL
-      void navigate(`/${companyId}/dashboard`);
+      void navigate({ to: `/$companyId/dashboard`, params: { companyId } });
     } catch (_err) {
       // El error ya se maneja en el context
     }

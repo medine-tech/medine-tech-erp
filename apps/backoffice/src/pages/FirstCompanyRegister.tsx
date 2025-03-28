@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
+import { Link } from "../components/Link";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 
@@ -54,7 +55,7 @@ export function FirstCompanyRegister() {
 
       // Redirigir al login después de un breve retraso para que el usuario vea el mensaje
       setTimeout(() => {
-        void navigate("/login");
+        void navigate({ to: "/login" });
       }, 2000);
     } catch (error) {
       const apiError = error as ApiError;

@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "@tanstack/react-router";
 
 import { Button } from "../components/ui/button";
 import {
@@ -13,7 +13,7 @@ import { useAuth } from "../lib/context/AuthContext";
 import { authService } from "../lib/services/auth";
 
 export function Dashboard() {
-  const { companyId } = useParams<{ companyId: string }>();
+  const { companyId } = useParams({ from: '/$companyId/dashboard' });
   const navigate = useNavigate();
   const { userInfo, logout } = useAuth();
 
@@ -21,7 +21,7 @@ export function Dashboard() {
     try {
       await authService.logout();
       logout(); // Actualiza el estado en el contexto
-      void navigate("/login");
+      void navigate({ to: "/login" });
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }

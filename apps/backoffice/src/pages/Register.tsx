@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
+import { Link } from "../components/Link";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -51,7 +52,7 @@ export function Register() {
       });
 
       // Simular éxito
-      void navigate("/login");
+      void navigate({ to: "/login" });
     } catch (error) {
       console.error("Error de registro:", error);
     } finally {
