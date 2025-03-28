@@ -37,13 +37,12 @@ final readonly class Utils
 
     public static function jsonEncode(array $values): string
     {
-        $json = json_encode($values, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
-
-        if (false === $json) {
+        try {
+            return json_encode($values, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+        } catch (\JsonException $e) {
             throw new \RuntimeException('Unable to encode data to JSON: ' . json_last_error_msg());
-        }
 
-        return $json;
+        }
     }
 
     public static function jsonDecode(string $json): array

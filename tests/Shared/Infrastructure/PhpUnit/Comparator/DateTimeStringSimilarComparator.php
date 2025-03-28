@@ -50,9 +50,11 @@ final class DateTimeStringSimilarComparator extends ObjectComparator
 
     protected function dateTimeToString(DateTimeInterface $datetime): string
     {
-        $string = $datetime->format(DateTimeInterface::ATOM);
-
-        return $string ?: 'Invalid DateTime object';
+        try {
+            return $datetime->format(DateTimeInterface::ATOM);
+        } catch (Throwable $e) {
+            return 'Invalid DateTime object';
+        }
     }
 
     private function isValidDateTimeString(string $expected): bool
