@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
+import { CompanySelector } from "../components/company/CompanySelector";
 import { Button } from "../components/ui/button";
 import {
   DropdownMenu,
@@ -68,7 +69,12 @@ export function Dashboard() {
       {/* Header con dropdown de usuario */}
       <header className="bg-white shadow-sm border-b border-slate-200">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-medium text-slate-800">Medine Tech</h1>
+          <div className="flex items-center">
+            <h1 className="text-xl font-medium text-slate-800 mr-6">Medine Tech</h1>
+            
+            {/* Selector de compañías */}
+            <CompanySelector currentCompanyId={companyId} />
+          </div>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
