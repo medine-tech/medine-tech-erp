@@ -1,0 +1,11 @@
+POST http://localhost/api/backoffice/{{tenant}}/security/role-permissions
+accept: application/json
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "role_id": 1,
+    "permission_id": 19
+}
+
+###

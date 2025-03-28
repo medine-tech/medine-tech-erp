@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Users\Domain;
@@ -9,11 +10,12 @@ final class User extends AggregateRoot
 {
     private UserEmail $email;
 
-    public function __construct(
-        private int $id,
+    private function __construct(
+        private readonly int $id,
         private string $name,
         string $email,
-        private ?string $password
+        private readonly string $password,
+        private readonly string $defaultCompanyId,
     ) {
         $this->email = new UserEmail($email);
     }
@@ -22,14 +24,16 @@ final class User extends AggregateRoot
         int $id,
         string $name,
         string $email,
-        ?string $password
+        string $password,
+        string $defaultCompanyId
     ): self {
-        $user = new self($id, $name, $email, $password);
+        $user = new self($id, $name, $email, $password, $defaultCompanyId);
 
         $user->record(new UserCreatedDomainEvent(
             (string)$user->id(),
             $user->name(),
-            $user->email()
+            $user->email(),
+            $user->defaultCompanyId()
         ));
 
         return $user;
@@ -41,7 +45,8 @@ final class User extends AggregateRoot
             (int)$primitives['id'],
             (string)$primitives['name'],
             (string)$primitives['email'],
-            (string)($primitives['password'] ?? '')
+            (string)($primitives['password'] ?? ''),
+            (string)$primitives["defaultCompanyId"]
         );
     }
 
@@ -60,9 +65,14 @@ final class User extends AggregateRoot
         return $this->email->value();
     }
 
-    public function password(): ?string
+    public function password(): string
     {
         return $this->password;
+    }
+
+    public function defaultCompanyId(): string
+    {
+        return $this->defaultCompanyId;
     }
 
     public function changeName(string $name): void
@@ -77,6 +87,7 @@ final class User extends AggregateRoot
             'name' => $this->name(),
             'email' => $this->email(),
             'password' => $this->password(),
+            'default_company_id' => $this->defaultCompanyId(),
         ];
     }
 }

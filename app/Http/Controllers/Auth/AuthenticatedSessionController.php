@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
-class AuthenticatedSessionController extends Controller
+class AuthenticatedSessionController extends ApiController
 {
     /**
      * @OA\Post(
@@ -28,23 +31,48 @@ class AuthenticatedSessionController extends Controller
      *         description="Successful authentication",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="token", type="string", example="your_token_here")
+     *             @OA\Property(property="token", type="string", example="your_token_here"),
+     *             @OA\Property(property="default_company_id", type="string", example="123e4567-e89b-12d3-a456-426614174000")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="title", type="string", example="Validation Error"),
+     *             @OA\Property(property="status", type="integer", example=422),
+     *             @OA\Property(property="detail", type="string", example="The given data was invalid."),
+     *             @OA\Property(property="errors", type="object")
      *         )
      *     ),
      *     @OA\Response(
      *         response=401,
      *         description="Invalid credentials",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="title", type="string", example="Unauthorized"),
+     *             @OA\Property(property="status", type="integer", example=401),
+     *             @OA\Property(property="detail", type="string", example="Invalid credentials")
+     *         )
      *     )
      * )
      */
     public function store(LoginRequest $request): JsonResponse
     {
-        $request->authenticate();
+        return $this->execute(function () use ($request) {
+            $request->authenticate();
 
-        $user = User::where('email', $request->email)->first();
-        $token = $user->createToken('api-token')->plainTextToken;
+            $user = User::where('email', $request->email)->first();
 
-        return response()->json(['token' => $token]);
+            $token = $user->createToken('api-token')->plainTextToken;
+            $defaultCompanyId = (string)$user->default_company_id;
+
+            return new JsonResponse([
+                'token' => $token,
+                'default_company_id' => $defaultCompanyId,
+            ], Response::HTTP_OK);
+        });
     }
 
     /**
@@ -60,13 +88,41 @@ class AuthenticatedSessionController extends Controller
      *             @OA\Property(property="message", type="string", example="Logged out")
      *         )
      *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="title", type="string", example="Unauthorized"),
+     *             @OA\Property(property="status", type="integer", example=401),
+     *             @OA\Property(property="detail", type="string", example="Unauthenticated")
+     *         )
+     *     ),
      *     security={{"bearerAuth":{}}}
      * )
      */
     public function destroy(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        return $this->execute(function () use ($request) {
+            $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Logged out']);
+            return new JsonResponse(['message' => 'Logged out'], Response::HTTP_OK);
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            ValidationException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
+        ];
+    }
+
+    protected function exceptionDetail(Exception $error): string
+    {
+        if ($error instanceof ValidationException) {
+            return 'The given data was invalid.';
+        }
+
+        return parent::exceptionDetail($error);
     }
 }

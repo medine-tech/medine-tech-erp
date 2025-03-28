@@ -3,15 +3,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Companies;
 
-use Exception;
+use App\Http\Controllers\ApiController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Companies\Application\Update\CompanyUpdater;
 use MedineTech\Backoffice\Companies\Application\Update\CompanyUpdaterRequest;
 use MedineTech\Backoffice\Companies\Domain\CompanyNotFound;
 use MedineTech\Backoffice\Companies\Infrastructure\Authorization\CompaniesPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Put(
@@ -64,7 +66,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
-final class CompanyPutController
+final class CompanyPutController extends ApiController
 {
     public function __construct(
         private readonly CompanyUpdater $updater
@@ -73,7 +75,7 @@ final class CompanyPutController
 
     public function __invoke(string $id, Request $request): JsonResponse
     {
-        try {
+        return $this->execute(function () use ($id, $request) {
             if (!$request->user()->can(CompaniesPermissions::UPDATE)) {
                 throw new UnauthorizedException(403);
             }
@@ -87,35 +89,33 @@ final class CompanyPutController
                 $validatedData['name']
             );
 
-            ($this->updater)($updaterRequest);
+            DB::transaction(function () use ($updaterRequest) {
+                ($this->updater)($updaterRequest);
+            });
 
-            return new JsonResponse(null, JsonResponse::HTTP_OK);
-        } catch (ValidationException $e) {
-            return new JsonResponse([
-                'title' => 'Validation Error',
-                'status' => JsonResponse::HTTP_BAD_REQUEST,
-                'detail' => 'The given data was invalid.',
-                'errors' => $e->errors(),
-            ], JsonResponse::HTTP_BAD_REQUEST);
-        } catch (CompanyNotFound $e) {
-            return new JsonResponse([
-                'title' => 'Not Found',
-                'status' => JsonResponse::HTTP_NOT_FOUND,
-                'detail' => 'Company not found with the provided ID.',
-            ], JsonResponse::HTTP_NOT_FOUND);
-        } catch (UnauthorizedException) {
-            return response()->json([
-                "title" => "Unauthorized",
-                "detail" => "You do not have permission to view this resource.",
-                "status" => 403,
-            ], 403);
-        } catch (Exception $e) {
-            return new JsonResponse([
-                'title' => 'Error',
-                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An unexpected error occurred while processing your request.',
-                'message' => $e->getMessage()
-                ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(null, Response::HTTP_OK);
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            ValidationException::class => Response::HTTP_BAD_REQUEST,
+            CompanyNotFound::class => Response::HTTP_NOT_FOUND,
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN,
+        ];
+    }
+
+    protected function exceptionDetail(\Exception $error): string
+    {
+        if ($error instanceof ValidationException) {
+            return 'The given data was invalid.';
         }
+
+        if ($error instanceof CompanyNotFound) {
+            return 'Company not found with the provided ID.';
+        }
+
+        return parent::exceptionDetail($error);
     }
 }

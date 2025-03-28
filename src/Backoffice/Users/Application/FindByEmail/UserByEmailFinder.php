@@ -10,7 +10,7 @@ use MedineTech\Backoffice\Users\Domain\UserRepository;
 class UserByEmailFinder
 {
     public function __construct(
-        private UserRepository $repository
+        private readonly UserRepository $repository
     ) {
     }
 
@@ -25,7 +25,7 @@ class UserByEmailFinder
         return new UserByEmailFinderResponse(
             $user->id(),
             $user->name(),
-            $user->email(),
+            $user->email()
         );
     }
 }

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Backoffice\Accounting\AccountingAccounts\Application\Create;
 
-use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountStatus;
-use Tests\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountMother;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\AccountingAccountCreator;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\AccountingAccountCreatorRequest;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountCreatedDomainEvent;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountRepository;
+use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountStatus;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 
 final class AccountingAccountCreatorTest extends UnitTestCase
 {
-    #[test]
+    #[Test]
     public function it_should_create_an_accounting_account(): void
     {
         $accountingAccount = AccountingAccountMother::create(
@@ -29,6 +29,7 @@ final class AccountingAccountCreatorTest extends UnitTestCase
             ->andReturnNull();
 
         $eventBus = $this->eventBus();
+
         $domainEvent = new AccountingAccountCreatedDomainEvent(
             $accountingAccount->id(),
             $accountingAccount->code(),

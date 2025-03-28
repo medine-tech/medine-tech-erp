@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Backoffice\FirstCompanies;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\FirstCompanies\Application\Register\FirstCompanyRegister;
 use MedineTech\Backoffice\FirstCompanies\Application\Register\FirstCompanyRegisterRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Post(
@@ -56,7 +58,7 @@ use MedineTech\Backoffice\FirstCompanies\Application\Register\FirstCompanyRegist
  *     )
  * )
  */
-final class FirstCompanyPostController extends Controller
+final class FirstCompanyPostController extends ApiController
 {
     public function __construct(
         private readonly FirstCompanyRegister $firstCompanyRegister,
@@ -65,7 +67,7 @@ final class FirstCompanyPostController extends Controller
 
     public function __invoke(Request $request): JsonResponse
     {
-        try {
+        return $this->execute(function () use ($request) {
             $validated = $request->validate([
                 'companyId' => ['required', 'uuid', 'max:36'],
                 'companyName' => ['required', 'string', 'max:255'],
@@ -74,28 +76,35 @@ final class FirstCompanyPostController extends Controller
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
             ]);
 
-            ($this->firstCompanyRegister)(new FirstCompanyRegisterRequest(
+            $registerRequest = new FirstCompanyRegisterRequest(
                 $validated['companyId'],
                 $validated['companyName'],
                 $validated['name'],
                 $validated['email'],
-                Hash::make($validated['password']),
-            ));
+                Hash::make($validated['password'])
+            );
 
-            return response()->json();
-        } catch (ValidationException $e) {
-            return response()->json([
-                "title" => "Validation Error",
-                "details" => "The given data was invalid.",
-                "status" => 422,
-                "errors" => $e->errors()
-            ], 422);
-        } catch (\Exception $e) {
-            return response()->json([
-                "title" => "Internal Server Error",
-                "details" => $e->getMessage(),
-                "status" => 500,
-            ], 500);
+            DB::transaction(function () use ($registerRequest) {
+                ($this->firstCompanyRegister)($registerRequest);
+            });
+
+            return new JsonResponse(null, Response::HTTP_OK);
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            ValidationException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
+        ];
+    }
+
+    protected function exceptionDetail(\Exception $error): string
+    {
+        if ($error instanceof ValidationException) {
+            return 'The given data was invalid.';
         }
+
+        return parent::exceptionDetail($error);
     }
 }

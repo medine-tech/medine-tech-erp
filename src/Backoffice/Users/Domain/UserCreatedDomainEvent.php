@@ -12,6 +12,7 @@ final class UserCreatedDomainEvent extends DomainEvent
         string $aggregateId,
         private readonly string $name,
         private readonly string $email,
+        private readonly string $defaultCompanyId,
         ?string $eventId = null,
         ?string $occurredOn = null
     ) {
@@ -28,6 +29,7 @@ final class UserCreatedDomainEvent extends DomainEvent
             $aggregateId,
             (string)$body['name'],
             (string)$body['email'],
+            (string)$body['defaultCompanyId'],
             $eventId,
             $occurredOn
         );
@@ -41,8 +43,9 @@ final class UserCreatedDomainEvent extends DomainEvent
     public function toPrimitives(): array
     {
         return [
-            'name' => $this->name,
-            'email' => $this->email,
+            'name' => $this->name(),
+            'email' => $this->email(),
+            'defaultCompanyId' => $this->defaultCompanyId(),
         ];
     }
 
@@ -54,5 +57,10 @@ final class UserCreatedDomainEvent extends DomainEvent
     public function email(): string
     {
         return $this->email;
+    }
+
+    public function defaultCompanyId(): string
+    {
+        return $this->defaultCompanyId;
     }
 }

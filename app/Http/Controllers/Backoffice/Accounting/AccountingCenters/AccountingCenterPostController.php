@@ -1,18 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenters;
 
-use Exception;
+use App\Http\Controllers\ApiController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\AccountingCenterCreator;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\AccountingCenterCreatorRequest;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Authorization\AccountingCenterPermissions;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Post(
@@ -68,7 +69,7 @@ use Spatie\Permission\Models\Role;
  *     )
  * )
  */
-final class AccountingCenterPostController
+final class AccountingCenterPostController extends ApiController
 {
     public function __construct(private readonly AccountingCenterCreator $creator)
     {
@@ -76,17 +77,10 @@ final class AccountingCenterPostController
 
     public function __invoke(Request $request): JsonResponse
     {
-        try {
+        return $this->execute(function () use ($request) {
             $user = $request->user();
-//            Role::create(['name' => 'developer']);
-//            Permission::create(['name' => AccountingCenterPermissions::CREATE]);
 
-//            $role = Role::findByName('developer');
-//            $permission = Permission::findByName(AccountingCenterPermissions::CREATE->value);
-//            $role->syncPermissions([$permission]);
-//            $user->syncRoles([$role->name]);
-
-            if (!$request->user()->can(AccountingCenterPermissions::CREATE)) {
+            if (!$user->can(AccountingCenterPermissions::CREATE)) {
                 throw new UnauthorizedException(403);
             }
 
@@ -98,7 +92,7 @@ final class AccountingCenterPostController
                 'parent_id' => 'nullable|string|uuid',
             ]);
 
-            $userId = $request->user()->id;
+            $userId = $user->id;
 
             $creatorRequest = new AccountingCenterCreatorRequest(
                 $validatedData['id'],
@@ -110,28 +104,32 @@ final class AccountingCenterPostController
                 tenant('id')
             );
 
-            ($this->creator)($creatorRequest);
+            DB::transaction(function () use ($creatorRequest) {
+                ($this->creator)($creatorRequest);
+            });
 
-            return new JsonResponse(null, JsonResponse::HTTP_CREATED);
-        } catch (ValidationException $e) {
-            return new JsonResponse([
-                'title' => 'Validation Error',
-                'status' => JsonResponse::HTTP_BAD_REQUEST,
-                'detail' => 'The given data was invalid.',
-                'errors' => $e->errors(),
-            ], JsonResponse::HTTP_BAD_REQUEST);
-        } catch (UnauthorizedException) {
-            return response()->json([
-                "title" => "Unauthorized",
-                "detail" => "You do not have permission to view this resource.",
-                "status" => 403,
-            ], 403);
-        } catch (Exception $e) {
-            return new JsonResponse([
-                'title' => 'Internal Server Error',
-                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An unexpected error occurred while processing your request.',
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(null, Response::HTTP_CREATED);
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            ValidationException::class => Response::HTTP_BAD_REQUEST,
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN,
+        ];
+    }
+
+    protected function exceptionDetail(\Exception $error): string
+    {
+        if ($error instanceof ValidationException) {
+            return 'The given data was invalid.';
         }
+
+        if ($error instanceof UnauthorizedException) {
+            return 'You do not have permission to view this resource.';
+        }
+
+        return parent::exceptionDetail($error);
     }
 }

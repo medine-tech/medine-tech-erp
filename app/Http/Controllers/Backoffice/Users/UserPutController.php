@@ -3,14 +3,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Users;
 
-use Exception;
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Users\Application\Update\UserUpdater;
 use MedineTech\Backoffice\Users\Application\Update\UserUpdaterRequest;
+use MedineTech\Backoffice\Users\Domain\UserNotFound;
 use MedineTech\Backoffice\Users\Infrastructure\Authorization\UsersPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Put(
@@ -71,16 +74,16 @@ use Spatie\Permission\Exceptions\UnauthorizedException;
  *     }
  * )
  */
-final readonly class UserPutController
+final class UserPutController extends ApiController
 {
     public function __construct(
-        private UserUpdater $updater
+        private readonly UserUpdater $updater
     ) {
     }
 
     public function __invoke(int $id, Request $request): JsonResponse
     {
-        try {
+        return $this->execute(function () use ($id, $request) {
             if (!$request->user()->can(UsersPermissions::UPDATE)) {
                 throw new UnauthorizedException(403);
             }
@@ -89,34 +92,34 @@ final readonly class UserPutController
                 'name' => 'required|string|min:3|max:30'
             ]);
 
-            ($this->updater)(
-                new UserUpdaterRequest(
-                    $id,
-                    $validatedData['name']
-                )
+            $updaterRequest = new UserUpdaterRequest(
+                $id,
+                $validatedData['name']
             );
 
-            return new JsonResponse(null, JsonResponse::HTTP_OK);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return new JsonResponse([
-                'title' => 'Validation Error',
-                'status' => JsonResponse::HTTP_BAD_REQUEST,
-                'detail' => 'The given data was invalid.',
-                'errors' => $e->errors()
-            ], JsonResponse::HTTP_BAD_REQUEST);
-        } catch (UnauthorizedException) {
-            return response()->json([
-                "title" => "Unauthorized",
-                "detail" => "You do not have permission to view this resource.",
-                "status" => 403,
-            ], 403);
-        } catch (Exception $e) {
-            Log::error('Server error: ' . $e->getMessage());
-            return new JsonResponse([
-                'title' => 'Internal Server Error',
-                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An unexpected error occurred'
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            DB::transaction(function () use ($updaterRequest) {
+                ($this->updater)($updaterRequest);
+            });
+
+            return new JsonResponse(null, Response::HTTP_OK);
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            ValidationException::class => Response::HTTP_BAD_REQUEST,
+            UserNotFound::class => Response::HTTP_NOT_FOUND,
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN,
+        ];
+    }
+
+    protected function exceptionDetail(\Exception $error): string
+    {
+        if ($error instanceof ValidationException) {
+            return 'The given data was invalid.';
         }
+
+        return parent::exceptionDetail($error);
     }
 }

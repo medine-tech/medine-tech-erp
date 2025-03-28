@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Accounting\AccountingCenters;
 
-use Exception;
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Find\AccountingCenterFinder;
@@ -11,11 +12,12 @@ use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Find\Accountin
 use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterNotFound;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Authorization\AccountingCenterPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Get(
  *     path="/api/backoffice/{tenant}/accounting/accounting-centers/{id}",
- *     tags={"Backoffice - Accounting Centers"},
+ *     tags={"Backoffice - Accounting - Accounting Centers"},
  *     summary="Retrieve an accounting center by ID",
  *     @OA\Parameter(
  *         name="id",
@@ -74,18 +76,20 @@ use Spatie\Permission\Exceptions\UnauthorizedException;
  *     }
  * )
  */
-final class AccountingCenterGetController
+final class AccountingCenterGetController extends ApiController
 {
-    public function __construct(private AccountingCenterFinder $finder)
-    {
+    public function __construct(
+        private readonly AccountingCenterFinder $finder
+    ) {
     }
 
     public function __invoke(string $id, Request $request): JsonResponse
     {
-        try {
-//            if (!$request->user()->can(AccountingCenterPermissions::VIEW)) {
-//                throw new UnauthorizedException(403);
-//            }
+        return $this->execute(function () use ($id, $request) {
+//             Permissions check is commented out in original code
+             if (!$request->user()->can(AccountingCenterPermissions::VIEW)) {
+                 throw new UnauthorizedException(403);
+             }
 
             $response = ($this->finder)(
                 new AccountingCenterFinderRequest($id));
@@ -100,26 +104,28 @@ final class AccountingCenterGetController
                 'creatorId' => $response->creatorId(),
                 'updaterId' => $response->updaterId(),
                 'companyId' => $response->companyId(),
-            ], JsonResponse::HTTP_OK);
+            ], Response::HTTP_OK);
+        });
+    }
 
-        } catch (AccountingCenterNotFound $e) {
-            return new JsonResponse([
-                'title' => 'Accounting Center Not Found',
-                'status' => JsonResponse::HTTP_NOT_FOUND,
-                'detail' => "Accounting Center with ID {$id} does not exist"
-            ], JsonResponse::HTTP_NOT_FOUND);
-        } catch (UnauthorizedException) {
-            return response()->json([
-                'title' => 'Unauthorized',
-                'detail' => 'You do not have permission to view this resource.',
-                'status' => 403,
-            ], 403);
-        } catch (Exception $e) {
-            return new JsonResponse([
-                'title' => 'Internal Server Error',
-                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An unexpected error occurred'
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+    protected function exceptions(): array
+    {
+        return [
+            AccountingCenterNotFound::class => Response::HTTP_NOT_FOUND,
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN,
+        ];
+    }
+
+    protected function exceptionDetail(\Exception $error): string
+    {
+        if ($error instanceof AccountingCenterNotFound) {
+            return 'Accounting Center with the given ID does not exist';
         }
+
+        if ($error instanceof UnauthorizedException) {
+            return 'You do not have permission to view this resource.';
+        }
+
+        return parent::exceptionDetail($error);
     }
 }

@@ -25,23 +25,23 @@ final class RoleMother
 
         $userId = $faker->randomNumber();
 
-        $status = $status ?? $faker->randomElement([
+        $newStatus = $status ?? $faker->randomElement([
             RoleStatus::ACTIVE,
             RoleStatus::INACTIVE
         ]);
 
-        $guardName = 'sanctum';
+        $newGuardName = 'sanctum';
 
         return new Role(
             $id,
             $code ?? "ROL25000001",
             $name ?? $faker->name(),
             $description ?? $faker->text(),
-            $status ?? $status,
+            $status ?? $newStatus,
             $creatorId ?? $userId,
             $updaterId ?? $userId,
             $companyId ?? $faker->uuid(),
-            $guardName ?? $guardName
+            $guardName ?? $newGuardName
         );
     }
 }

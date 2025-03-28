@@ -1,18 +1,19 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Backoffice\Accounting\AccountingAccounts;
 
-use Exception;
+use App\Http\Controllers\ApiController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Update\AccountingAccountUpdater;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Update\AccountingAccountUpdaterRequest;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountNotFound;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Infrastructure\Authorization\AccountingAccountsPermissions;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Put(
@@ -88,17 +89,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *     )
  * )
  */
-final class AccountingAccountPutController
+final class AccountingAccountPutController extends ApiController
 {
     public function __construct(
-        private AccountingAccountUpdater $updater,
-    )
-    {
+        private readonly AccountingAccountUpdater $updater,
+    ) {
     }
 
     public function __invoke(string $id, Request $request): JsonResponse
     {
-        try {
+        return $this->execute(function () use ($id, $request) {
             if (!$request->user()->can(AccountingAccountsPermissions::UPDATE)) {
                 throw new UnauthorizedException(403);
             }
@@ -123,33 +123,37 @@ final class AccountingAccountPutController
                 $validatedData['parent_id'],
             );
 
-            ($this->updater)($updaterRequest);
+            DB::transaction(function () use ($updaterRequest) {
+                ($this->updater)($updaterRequest);
+            });
 
-            return new JsonResponse(null, JsonResponse::HTTP_OK);
-        } catch (ValidationException $e) {
-            return new JsonResponse([
-                'title' => 'Validation Error',
-                'status' => JsonResponse::HTTP_BAD_REQUEST,
-                'errors' => $e->errors(),
-            ], JsonResponse::HTTP_BAD_REQUEST);
-        } catch (AccountingAccountNotFound $e) {
-            return new JsonResponse([
-                'title' => 'Not Found',
-                'status' => JsonResponse::HTTP_NOT_FOUND,
-                'detail' => 'Accounting account not found with the provided ID.',
-            ], JsonResponse::HTTP_NOT_FOUND);
-        } catch (UnauthorizedException $e) {
-            return new JsonResponse([
-                'title' => 'Unauthorized',
-                'status' => JsonResponse::HTTP_FORBIDDEN,
-                'detail' => 'You do not have permission to view this resource.',
-            ], JsonResponse::HTTP_FORBIDDEN);
-        } catch (Exception $e) {
-            return new JsonResponse([
-                'title' => 'Error',
-                'status' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR,
-                'detail' => 'An unexpected error occurred while processing your request.'
-            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(null, Response::HTTP_OK);
+        });
+    }
+
+    protected function exceptions(): array
+    {
+        return [
+            ValidationException::class => Response::HTTP_BAD_REQUEST,
+            AccountingAccountNotFound::class => Response::HTTP_NOT_FOUND,
+            UnauthorizedException::class => Response::HTTP_FORBIDDEN,
+        ];
+    }
+
+    protected function exceptionDetail(\Exception $error): string
+    {
+        if ($error instanceof ValidationException) {
+            return 'The given data was invalid.';
         }
+
+        if ($error instanceof AccountingAccountNotFound) {
+            return 'Accounting account not found with the provided ID.';
+        }
+
+        if ($error instanceof UnauthorizedException) {
+            return 'You do not have permission to view this resource.';
+        }
+
+        return parent::exceptionDetail($error);
     }
 }

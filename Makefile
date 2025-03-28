@@ -21,3 +21,7 @@ test:
 .PHONY:  generate-docs
 generate-docs:
 	./vendor/bin/sail php artisan l5-swagger:generate
+
+.PHONY:  static-analysis
+static-analysis:
+	./vendor/bin/sail php vendor/bin/phpstan analyse

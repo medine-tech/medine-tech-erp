@@ -31,9 +31,10 @@ final class EloquentUserRepository implements UserRepository
             'name' => $user->name(),
             'email' => $user->email(),
             'password' => $user->password(),
+            'default_company_id' => $user->defaultCompanyId(),
         ]);
 
-        if(null === $model) {
+        if (null === $model) {
             throw new RuntimeException("Failed to save user");
         }
 
@@ -90,6 +91,7 @@ final class EloquentUserRepository implements UserRepository
             'name' => $user['name'],
             'email' => $user['email'],
             'password' => $user['password'] ?? "",
+            "defaultCompanyId" => $user['default_company_id'] ?? "",
         ]);
     }
 }

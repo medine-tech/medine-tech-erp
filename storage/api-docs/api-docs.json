@@ -54,6 +54,37 @@
                                         "token": {
                                             "type": "string",
                                             "example": "your_token_here"
+                                        },
+                                        "default_company_id": {
+                                            "type": "string",
+                                            "example": "123e4567-e89b-12d3-a456-426614174000"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 422
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -62,7 +93,28 @@
                         }
                     },
                     "401": {
-                        "description": "Invalid credentials"
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 401
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "Invalid credentials"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -90,6 +142,1194 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 401
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/companies": {
+            "get": {
+                "tags": [
+                    "Auth - Companies"
+                ],
+                "summary": "Retrieve a list of companies",
+                "description": "Returns a paginated list of companies for authorized users. Accepts optional query parameters for filtering.",
+                "operationId": "ab862e795e9632886b7cc0dec86a6ae9",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of entries per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "1"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Company 1"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 100
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/email/verification-notification": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Send a new email verification notification",
+                "operationId": "21ff3f9f9b9e1407909089f864312e1c",
+                "responses": {
+                    "200": {
+                        "description": "Verification link sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "verification-link-sent"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 401
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reset-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Reset user password with token",
+                "operationId": "28566bf52aa8f35c19b304b2c2be3829",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "token",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": "reset-token"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "new-password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "new-password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "Your password has been reset!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 422
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/forgot-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Send a password reset link to the given email",
+                "operationId": "e6a36e6e48542536284f7f26f6cc4d7f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset link sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "We have emailed your password reset link!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 422
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/user": {
+            "get": {
+                "tags": [
+                    "Auth - User"
+                ],
+                "summary": "Get specific users information",
+                "operationId": "205c730b0e208eb365cd23e0cffbc5b3",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved users information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "f7c5bdb2-1f8e-4f19-9c6d-f8c4a4d54a9a"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "john.doe@example.com"
+                                        },
+                                        "defaultCompanyId": {
+                                            "type": "string",
+                                            "example": "comp-123"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Resource not found"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The requested users does not exist."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/verify-email/{id}/{hash}": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Verify user email address",
+                "operationId": "2a87bcc29fb717d6dd51a631c1b13064",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "hash",
+                        "in": "path",
+                        "description": "Email verification hash",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email verified successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "verified"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email verified successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 401
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/backoffice/{tenant}/accounting/accounting-accounts/{id}": {
+            "get": {
+                "tags": [
+                    "Backoffice - Accounting - Accounting Accounts"
+                ],
+                "summary": "Get an accounting account by ID",
+                "description": "Returns the details of an accounting account based on the provided ID.",
+                "operationId": "1f3db0e079de3f562d396f126a78ca1f",
+                "parameters": [
+                    {
+                        "name": "tenant",
+                        "in": "path",
+                        "description": "The tenant ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the accounting account to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "123e4567-e89b-12d3-a456-426655440000"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Accounting account details retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "123e4567-e89b-12d3-a456-426655440000"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "101"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Cash Account"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Main cash account",
+                                            "nullable": true
+                                        },
+                                        "type": {
+                                            "description": "1 = asset, 2 = liability, 3 = equity, 4 = revenue, 5 = expense",
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "status": {
+                                            "description": "Account status",
+                                            "type": "string",
+                                            "example": "ACTIVE"
+                                        },
+                                        "parent_id": {
+                                            "type": "string",
+                                            "example": "123e4567-e89b-12d3-a456-426655440001",
+                                            "nullable": true
+                                        },
+                                        "creator_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "updater_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "company_id": {
+                                            "type": "string",
+                                            "example": "company-123"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Accounting account not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Accounting account not found"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The accounting account with id <123e4567-e89b-12d3-a456-426655440000> does not exist."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Backoffice - Accounting - Accounting Accounts"
+                ],
+                "summary": "Update an existing accounting account",
+                "operationId": "cee96334d99bf309383ca19f699a42f6",
+                "parameters": [
+                    {
+                        "name": "tenant",
+                        "in": "path",
+                        "description": "The tenant ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the accounting account to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "type",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Updated Account Name"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Updated account description",
+                                        "nullable": true
+                                    },
+                                    "type": {
+                                        "description": "1 = asset, 2 = liability, 3 = equity, 4 = revenue, 5 = expense",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "status": {
+                                        "description": "Account status",
+                                        "type": "string",
+                                        "example": "INACTIVE"
+                                    },
+                                    "parent_id": {
+                                        "description": "Parent account ID",
+                                        "type": "string",
+                                        "example": "123e4567-e89b-12d3-a456-426655440000",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Accounting account updated successfully"
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Accounting account not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Not Found"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "Accounting account not found with the provided ID."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred while processing your request."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/backoffice/{tenant}/accounting/accounting-accounts": {
+            "get": {
+                "tags": [
+                    "Backoffice - Accounting - Accounting Accounts"
+                ],
+                "summary": "Search accounting accounts based on filters",
+                "operationId": "50b5c7109b85e1930afa54a0b7651a53",
+                "parameters": [
+                    {
+                        "name": "tenant",
+                        "in": "path",
+                        "description": "The tenant ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful retrieval of accounting accounts list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "123e4567-e89b-12d3-a456-426655440000"
+                                                    },
+                                                    "code": {
+                                                        "type": "string",
+                                                        "example": "101"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Cash Account"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Main cash account",
+                                                        "nullable": true
+                                                    },
+                                                    "type": {
+                                                        "description": "1 = asset, 2 = liability, 3 = equity, 4 = revenue, 5 = expense",
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "status": {
+                                                        "description": "Account status",
+                                                        "type": "string",
+                                                        "example": "ACTIVE"
+                                                    },
+                                                    "parent_id": {
+                                                        "type": "string",
+                                                        "example": "123e4567-e89b-12d3-a456-426655440001",
+                                                        "nullable": true
+                                                    },
+                                                    "creator_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "updater_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "company_id": {
+                                                        "type": "string",
+                                                        "example": "company-123"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 100
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Backoffice - Accounting - Accounting Accounts"
+                ],
+                "summary": "Create a new accounting account",
+                "operationId": "8fa28129042baf3e6f59635291d4d927",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "name",
+                                    "code",
+                                    "type"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "123e4567-e89b-12d3-a456-426655440000"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Cash Account"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Cash account for the company",
+                                        "nullable": true
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "101"
+                                    },
+                                    "type": {
+                                        "description": "1 = asset, 2 = liability, 3 = equity, 4 = revenue, 5 = expense",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "parent_id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "123e4567-e89b-12d3-a456-426655440001",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Accounting account created successfully"
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred while processing your request."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -102,10 +1342,10 @@
         "/api/backoffice/{tenant}/accounting/accounting-centers/{id}": {
             "get": {
                 "tags": [
-                    "Backoffice - Accounting Centers"
+                    "Backoffice - Accounting - Accounting Centers"
                 ],
                 "summary": "Retrieve an accounting center by ID",
-                "operationId": "b0afa2c3ba7cd422430aa85441bd2006",
+                "operationId": "7e59caac36647f09a9cfb1fe04be0619",
                 "parameters": [
                     {
                         "name": "id",
@@ -251,7 +1491,7 @@
                     "Backoffice - Accounting - Accounting Centers"
                 ],
                 "summary": "Update an existing accounting center",
-                "operationId": "e8fc0e9bdff6f111de4fb1e8da4ea960",
+                "operationId": "637f3147b0942fee681350bac51b3e4a",
                 "parameters": [
                     {
                         "name": "tenant",
@@ -423,10 +1663,10 @@
         "/api/backoffice/{tenant}/accounting/accounting-centers": {
             "get": {
                 "tags": [
-                    "Backoffice - Accounting Centers"
+                    "Backoffice - Accounting - Accounting Centers"
                 ],
                 "summary": "Search accounting centers based on filters",
-                "operationId": "5699e95fab857d7f9382c4ca348dd17e",
+                "operationId": "4d23008111f292059007264f77558a10",
                 "parameters": [
                     {
                         "name": "tenant",
@@ -578,7 +1818,7 @@
                     "Backoffice - Accounting - Accounting Centers"
                 ],
                 "summary": "Create a new accounting center",
-                "operationId": "148f2061c9de8e81731754c0ea728ccf",
+                "operationId": "509908f36d7f5fb589c8c45dfc2a09b6",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -610,11 +1850,6 @@
                                         "type": "string",
                                         "example": "Main accounting center description",
                                         "nullable": true
-                                    },
-                                    "status": {
-                                        "description": "active or inactive",
-                                        "type": "string",
-                                        "example": "active"
                                     },
                                     "parent_id": {
                                         "type": "string",
@@ -1338,6 +2573,886 @@
                 }
             }
         },
+        "/api/backoffice/{tenant}/security/role-permissions": {
+            "post": {
+                "tags": [
+                    "Backoffice - Security - Role Permissions"
+                ],
+                "summary": "Attach a permission to a role",
+                "operationId": "40cb5e97f8ffc772c1aa3b1010d3eba9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "role_id",
+                                    "permission_id"
+                                ],
+                                "properties": {
+                                    "role_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "permission_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Permission attached to role successfully"
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred while processing your request."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Backoffice - Security - Role Permissions"
+                ],
+                "summary": "Detach a permission from a role",
+                "operationId": "9e1a568400ce67cb9186280685184556",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "role_id",
+                                    "permission_id"
+                                ],
+                                "properties": {
+                                    "role_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "permission_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Permission detached from role successfully"
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Role permission not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Not Found"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "Role permission not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred while processing your request."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/backoffice/{tenant}/security/roles/{id}": {
+            "get": {
+                "tags": [
+                    "Backoffice - Security - Roles"
+                ],
+                "summary": "Get a role by ID",
+                "description": "Returns the details of a role based on the provided ID.",
+                "operationId": "404c5d205f7229ece33e78acd5f06180",
+                "parameters": [
+                    {
+                        "name": "tenant",
+                        "in": "path",
+                        "description": "The tenant ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the role to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role details retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "ROL23000001"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Admin"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Administrator role",
+                                            "nullable": true
+                                        },
+                                        "status": {
+                                            "description": "Role status",
+                                            "type": "string",
+                                            "example": "ACTIVE"
+                                        },
+                                        "creatorId": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "updaterId": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "companyId": {
+                                            "type": "string",
+                                            "example": "company-123"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Role not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Role not found"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The role with id <1> does not exist."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Backoffice - Security - Roles"
+                ],
+                "summary": "Update an existing role",
+                "description": "Updates an existing role with the provided details.",
+                "operationId": "8f20ff2d204fa10090e08954d6c90c15",
+                "parameters": [
+                    {
+                        "name": "tenant",
+                        "in": "path",
+                        "description": "The tenant ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the role to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "The name of the role.",
+                                        "type": "string",
+                                        "example": "Updated Role Name"
+                                    },
+                                    "description": {
+                                        "description": "A brief description of the role.",
+                                        "type": "string",
+                                        "example": "Updated role description",
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "description": "Role status",
+                                        "type": "string",
+                                        "example": "INACTIVE"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Role updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Role updated successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Role not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Not Found"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "Role not found with the provided ID."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to update this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred while processing your request."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/backoffice/{tenant}/security/roles": {
+            "get": {
+                "tags": [
+                    "Backoffice - Security - Roles"
+                ],
+                "summary": "Search roles based on filters",
+                "operationId": "6e26d9d413a5c08234a519a0d609cb28",
+                "parameters": [
+                    {
+                        "name": "tenant",
+                        "in": "path",
+                        "description": "The tenant ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful retrieval of roles list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "code": {
+                                                        "type": "string",
+                                                        "example": "ROL23000001"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Admin"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Administrator role",
+                                                        "nullable": true
+                                                    },
+                                                    "status": {
+                                                        "description": "Role status",
+                                                        "type": "string",
+                                                        "example": "ACTIVE"
+                                                    },
+                                                    "creatorId": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "updaterId": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "companyId": {
+                                                        "type": "string",
+                                                        "example": "company-123"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 100
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to view this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Backoffice - Security - Roles"
+                ],
+                "summary": "Create a new role",
+                "description": "Creates a new role with the provided details.",
+                "operationId": "a8dca705db1e999af5f9c773df6919ae",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "The name of the role.",
+                                        "type": "string",
+                                        "example": "Admin"
+                                    },
+                                    "description": {
+                                        "description": "A brief description of the role.",
+                                        "type": "string",
+                                        "example": "Administrator role",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Role created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Role created successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Validation Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 403
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "You do not have permission to create this resource."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "detail": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred while processing your request."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/backoffice/users/{id}": {
             "get": {
                 "tags": [
@@ -1840,8 +3955,16 @@
             "description": "Authentication"
         },
         {
-            "name": "Backoffice - Accounting Centers",
-            "description": "Backoffice - Accounting Centers"
+            "name": "Auth - Companies",
+            "description": "Auth - Companies"
+        },
+        {
+            "name": "Auth - User",
+            "description": "Auth - User"
+        },
+        {
+            "name": "Backoffice - Accounting - Accounting Accounts",
+            "description": "Backoffice - Accounting - Accounting Accounts"
         },
         {
             "name": "Backoffice - Accounting - Accounting Centers",
@@ -1854,6 +3977,14 @@
         {
             "name": "Backoffice - First Companies",
             "description": "Backoffice - First Companies"
+        },
+        {
+            "name": "Backoffice - Security - Role Permissions",
+            "description": "Backoffice - Security - Role Permissions"
+        },
+        {
+            "name": "Backoffice - Security - Roles",
+            "description": "Backoffice - Security - Roles"
         },
         {
             "name": "Backoffice - Users",

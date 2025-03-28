@@ -8,6 +8,14 @@ require __DIR__ . '/auth.php';
 require __DIR__ . '/backoffice/first-companies.php';
 
 Route::group([
+    'prefix' => 'auth',
+    'middleware' => ['auth:sanctum'],
+], function () {
+    require __DIR__ . '/auth/companies/auth-companies.php';
+    require __DIR__ . '/auth/users/auth-user.php';
+});
+
+Route::group([
     'prefix' => 'backoffice/{tenant}',
     'middleware' => [
         'auth:sanctum',
@@ -40,4 +48,5 @@ Route::group([
     ],
 ], function () {
     require __DIR__ . '/backoffice/security/roles/roles.php';
+    require __DIR__ . '/backoffice/security/role-permissions/role-permissions.php';
 });
