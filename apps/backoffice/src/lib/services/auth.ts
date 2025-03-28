@@ -82,38 +82,35 @@ export const authService = {
 
     localStorage.removeItem("auth_token");
     localStorage.removeItem("default_company_id");
-    sessionStorage.removeItem("auth_token");
-    sessionStorage.removeItem("default_company_id");
+    localStorage.removeItem("user_info");
   },
 
   // Guardar información de autenticación
   saveAuthInfo(
     token: string,
     companyId: string,
-    rememberMe: boolean = false,
+    _rememberMe: boolean = false, // Parámetro mantenido por compatibilidad pero no utilizado
     userInfo?: UserInfo,
   ): void {
-    const storage = rememberMe ? localStorage : sessionStorage;
-    storage.setItem("auth_token", token);
+    // Siempre usamos localStorage para mejorar la persistencia entre pestañas
+    localStorage.setItem("auth_token", token);
     // No guardamos company_id localmente, se manejará a través de la URL
-    storage.setItem("default_company_id", companyId); // Guardamos solo como referencia inicial
+    localStorage.setItem("default_company_id", companyId); // Guardamos solo como referencia inicial
 
     // Guardar información del usuario si está disponible
     if (userInfo) {
-      storage.setItem("user_info", JSON.stringify(userInfo));
+      localStorage.setItem("user_info", JSON.stringify(userInfo));
     }
   },
 
   // Obtener token
   getToken(): string | null {
-    return localStorage.getItem("auth_token") ?? sessionStorage.getItem("auth_token");
+    return localStorage.getItem("auth_token");
   },
 
   // Obtener ID de compañía por defecto (solo para redirección inicial)
   getDefaultCompanyId(): string | null {
-    return (
-      localStorage.getItem("default_company_id") ?? sessionStorage.getItem("default_company_id")
-    );
+    return localStorage.getItem("default_company_id");
   },
 
   // Verificar si el usuario está autenticado
@@ -123,7 +120,7 @@ export const authService = {
 
   // Obtener información del usuario actual
   getUserInfo(): UserInfo | null {
-    const userInfoStr = localStorage.getItem("user_info") ?? sessionStorage.getItem("user_info");
+    const userInfoStr = localStorage.getItem("user_info");
     if (userInfoStr) {
       try {
         return JSON.parse(userInfoStr) as UserInfo;
