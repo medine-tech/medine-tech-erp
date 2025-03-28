@@ -10,6 +10,8 @@ use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreator;
 use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreatorRequest;
 use MedineTech\Backoffice\Security\Roles\Application\Create\RoleCreator;
 use MedineTech\Backoffice\Security\Roles\Application\Create\RoleCreatorRequest;
+use MedineTech\Backoffice\UserRoles\Application\Create\UserRoleCreator;
+use MedineTech\Backoffice\UserRoles\Application\Create\UserRoleCreatorRequest;
 use MedineTech\Backoffice\Users\Application\Create\UserCreator;
 use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
 
@@ -19,7 +21,8 @@ final readonly class FirstCompanyRegister
         private CompanyCreator $companyCreator,
         private UserCreator $userCreator,
         private CompanyUserCreator $companyUserCreator,
-        private RoleCreator $roleCreator
+        private RoleCreator $roleCreator,
+        private UserRoleCreator $userRoleCreator
     ) {
     }
 
@@ -45,10 +48,18 @@ final readonly class FirstCompanyRegister
             $userId,
         ));
 
+        // role
         $roleId = ($this->roleCreator)(new RoleCreatorRequest(
             "Super-Admin",
             "Super admin role",
             $userId,
+            $request->companyId()
+        ));
+
+        // user role
+        ($this->userRoleCreator)(new UserRoleCreatorRequest(
+            $userId,
+            $roleId,
             $request->companyId()
         ));
     }

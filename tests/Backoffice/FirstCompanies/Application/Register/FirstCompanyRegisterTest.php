@@ -12,6 +12,8 @@ use MedineTech\Backoffice\FirstCompanies\Application\Register\FirstCompanyRegist
 use MedineTech\Backoffice\FirstCompanies\Application\Register\FirstCompanyRegisterRequest;
 use MedineTech\Backoffice\Security\Roles\Application\Create\RoleCreator;
 use MedineTech\Backoffice\Security\Roles\Application\Create\RoleCreatorRequest;
+use MedineTech\Backoffice\UserRoles\Application\Create\UserRoleCreator;
+use MedineTech\Backoffice\UserRoles\Application\Create\UserRoleCreatorRequest;
 use MedineTech\Backoffice\Users\Application\Create\UserCreator;
 use MedineTech\Backoffice\Users\Application\Create\UserCreatorRequest;
 use Mockery\MockInterface;
@@ -79,15 +81,28 @@ final class FirstCompanyRegisterTest extends UnitTestCase
             )))
             ->andReturn($roleId);
 
+        // user role
+        $userRoleCreator = $this->mock(UserRoleCreator::class);
+        $userRoleCreator->shouldReceive('__invoke')
+            ->once()
+            ->with($this->similarTo(new UserRoleCreatorRequest(
+                $userId,
+                $roleId,
+                $request->companyId()
+            )))
+            ->andReturnNull();
+
         /** @var CompanyCreator&MockInterface $companyCreator */
         /** @var UserCreator&MockInterface $userCreator */
         /** @var CompanyUserCreator&MockInterface $companyUserCreator */
         /** @var RoleCreator&MockInterface $roleCreator */
+        /** @var UserRoleCreator&MockInterface $userRoleCreator */
         $register = new FirstCompanyRegister(
             $companyCreator,
             $userCreator,
             $companyUserCreator,
-            $roleCreator
+            $roleCreator,
+            $userRoleCreator
         );
         ($register)(new FirstCompanyRegisterRequest(
             $request->companyId(),
