@@ -5,7 +5,9 @@ namespace Tests\Backoffice\Accounting\AccountingCenter\Application\Update;
 
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Update\AccountingCenterUpdater;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Update\AccountingCenterUpdaterRequest;
+use MedineTech\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterRepository;
 use MedineTech\Shared\Domain\ValueObject\Uuid;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Accounting\AccountingCenter\AccountingCenterUnitTestCase;
 use Tests\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterMother;
@@ -31,11 +33,12 @@ final class AccountingCenterUpdaterTest extends AccountingCenterUnitTestCase
         $originalCenter->changeUpdaterId($updaterId);
         $originalCenter->changeParentId($parentId);
 
-        $repository = $this->repository();
+        /** @var AccountingCenterRepository&MockInterface $accountingCenterRepository */
+        $accountingCenterRepository = $this->repository();
         $this->shouldFind($originalCenter->id(), $originalCenter);
         $this->shouldSave($originalCenter);
 
-        $updater = new AccountingCenterUpdater($repository);
+        $updater = new AccountingCenterUpdater($accountingCenterRepository);
         ($updater)(new AccountingCenterUpdaterRequest(
             $originalCenter->id(),
             $newName,
