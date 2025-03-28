@@ -31,16 +31,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Verificar si el usuario está autenticado al cargar la aplicación
   useEffect(() => {
-    const checkAuthStatus = () => {
-      const isAuth = authService.isAuthenticated();
-      setIsAuthenticated(isAuth);
+    const checkAuthStatus = async () => {
+      try {
+        const isAuth = authService.isAuthenticated();
+        setIsAuthenticated(isAuth);
 
-      if (isAuth) {
-        const userData = authService.getUserInfo();
-        setUserInfo(userData);
+        if (isAuth) {
+          // Intentar obtener datos actualizados del usuario desde el backend
+          try {
+            const userData = await authService.fetchUserInfo();
+            setUserInfo(userData);
+          } catch (fetchError) {
+            console.error("Error al obtener datos del usuario desde la API:", fetchError);
+            // Si falla la petición, usar datos almacenados localmente como respaldo
+            const localUserData = authService.getUserInfo();
+            setUserInfo(localUserData);
+          }
+        }
+      } catch (error) {
+        console.error("Error al verificar estado de autenticación:", error);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     checkAuthStatus();
@@ -70,6 +82,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         // Si no viene en la respuesta, usamos valores por defecto o los dejamos en blanco
         authService.saveAuthInfo(response.token, response.default_company_id, rememberMe);
+        
+        // Obtener datos completos del usuario desde la API
+        try {
+          const userData = await authService.fetchUserInfo();
+          setUserInfo(userData);
+        } catch (fetchError) {
+          console.error("Error al obtener datos completos del usuario:", fetchError);
+        }
       }
 
       setIsAuthenticated(true);

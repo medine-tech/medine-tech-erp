@@ -5,6 +5,7 @@ export interface UserInfo {
   id: string;
   name: string;
   email: string;
+  defaultCompanyId?: string;
 }
 
 export interface LoginRequest {
@@ -139,5 +140,51 @@ export const authService = {
     const userInfo = this.getUserInfo();
 
     return userInfo?.name ?? "Usuario";
+  },
+  
+  // Obtener la información del usuario autenticado desde el backend
+  async fetchUserInfo(): Promise<UserInfo> {
+    try {
+      const token = this.getToken();
+      if (!token) {
+        throw new Error("No hay sesión de usuario");
+      }
+
+      const response = await fetch(`${API_BASE_URL}/auth/user`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        const apiError: ApiError = {
+          title: errorData.title || "Error",
+          status: response.status,
+          detail: errorData.details || "Ha ocurrido un error al obtener la información del usuario",
+          errors: errorData.errors,
+        };
+        throw apiError;
+      }
+
+      const userData = await response.json();
+      
+      // Guardar la información del usuario en el localStorage para uso futuro
+      this.saveUserInfo(userData);
+      
+      return userData;
+    } catch (error) {
+      if ((error as ApiError).status) {
+        throw error;
+      }
+      throw new Error("Ha ocurrido un error al obtener la información del usuario");
+    }
+  },
+  
+  // Guardar la información del usuario en el localStorage
+  saveUserInfo(userInfo: UserInfo): void {
+    localStorage.setItem("user_info", JSON.stringify(userInfo));
   },
 };
