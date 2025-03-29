@@ -1,8 +1,8 @@
-import { useParams, useNavigate } from "@tanstack/react-router";
+import { useParams, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { UserProfile } from "../../auth/components/UserProfile";
 import { Breadcrumb } from "../../shared/components/ui/breadcrumb";
@@ -27,10 +27,28 @@ const companySchema = z.object({
 type CompanyFormValues = z.infer<typeof companySchema>;
 
 export function CompanyFormPage() {
-  const { companyId } = useParams({ from: "/$companyId/companies/create" });
-  const navigate = useNavigate({ from: "/$companyId/companies/create" });
+  // Obtener el companyId y el id de la compañía a editar si existe
+  const routerState = useRouterState();
+  const routePath = routerState.matches[routerState.matches.length - 1].routeId;
+  const isEditMode = routePath.includes("/edit/$id");
+  
+  // Obtenemos los parámetros según la ruta
+  let companyId = "";
+  let companyIdToEdit = "";
+  
+  if (isEditMode) {
+    const editParams = useParams({ from: "/$companyId/companies/edit/$id" });
+    companyId = editParams.companyId as string;
+    companyIdToEdit = editParams.id as string;
+  } else {
+    const createParams = useParams({ from: "/$companyId/companies/create" });
+    companyId = createParams.companyId as string;
+  }
+  
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<CompanyFormValues>({
     resolver: zodResolver(companySchema),
@@ -39,20 +57,56 @@ export function CompanyFormPage() {
       name: "",
     },
   });
+  
+  // Cargar datos de la compañía si estamos en modo edición
+  useEffect(() => {
+    if (isEditMode && companyIdToEdit) {
+      const fetchCompanyDetails = async () => {
+        setIsLoading(true);
+        try {
+          const company = await companyService.getCompany(companyId, companyIdToEdit);
+          form.setValue("id", company.id);
+          form.setValue("name", company.name);
+        } catch (error) {
+          toast({
+            title: "Error",
+            description: "No se pudo cargar la información de la compañía",
+            variant: "destructive",
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+      fetchCompanyDetails();
+    }
+  }, [companyId, companyIdToEdit, form, isEditMode, toast]);
 
   async function onSubmit(data: CompanyFormValues) {
     setIsSubmitting(true);
     try {
-      await companyService.createCompany(companyId, data);
-      toast({
-        title: "Éxito",
-        description: "Compañía creada correctamente",
-      });
+      if (isEditMode && companyIdToEdit) {
+        // Actualizar compañía existente
+        await companyService.updateCompany(companyId, companyIdToEdit, { name: data.name });
+        toast({
+          title: "Éxito",
+          description: "Compañía actualizada correctamente",
+        });
+      } else {
+        // Crear nueva compañía
+        await companyService.createCompany(companyId, data);
+        toast({
+          title: "Éxito",
+          description: "Compañía creada correctamente",
+        });
+      }
       navigate({ to: "/$companyId/companies/list", params: { companyId } });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Ha ocurrido un error al crear la compañía",
+        description: isEditMode
+          ? "Ha ocurrido un error al actualizar la compañía"
+          : "Ha ocurrido un error al crear la compañía",
         variant: "destructive",
       });
     } finally {
@@ -76,13 +130,13 @@ export function CompanyFormPage() {
           <Breadcrumb
             segments={[
               { label: "Compañías", href: "/$companyId/companies/list" },
-              { label: "Crear Compañía" },
+              { label: isEditMode ? "Editar Compañía" : "Crear Compañía" },
             ]}
           />
         </div>
 
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Crear Compañía</h2>
+          <h2 className="text-2xl font-bold">{isEditMode ? "Editar Compañía" : "Crear Compañía"}</h2>
         </div>
         
         <div className="bg-card shadow-md rounded-lg p-6 max-w-2xl mx-auto">
@@ -115,8 +169,8 @@ export function CompanyFormPage() {
                 >
                   Cancelar
                 </Button>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Guardando..." : "Guardar"}
+                <Button type="submit" disabled={isSubmitting || isLoading}>
+                  {isLoading ? "Cargando..." : isSubmitting ? "Guardando..." : "Guardar"}
                 </Button>
               </div>
             </form>

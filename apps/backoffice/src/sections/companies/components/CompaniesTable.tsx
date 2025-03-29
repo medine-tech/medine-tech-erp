@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 
 import { ApiError } from "../../auth/services/auth";
 import {
@@ -120,24 +121,28 @@ export function CompaniesTable({
                   <TableCell className="font-medium">{company.name}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          console.log("Ver detalles de la compañía:", company.id);
-                        }}
+                      <Link 
+                        to="/$companyId/companies/edit/$id" 
+                        params={{ companyId, id: company.id }}
                       >
-                        Ver
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          console.log("Editar compañía:", company.id);
-                        }}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                        >
+                          Ver
+                        </Button>
+                      </Link>
+                      <Link 
+                        to="/$companyId/companies/edit/$id" 
+                        params={{ companyId, id: company.id }}
                       >
-                        Editar
-                      </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                        >
+                          Editar
+                        </Button>
+                      </Link>
                     </div>
                   </TableCell>
                 </TableRow>

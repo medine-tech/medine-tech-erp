@@ -20,7 +20,9 @@ import { Route as IndexImport } from './routes/index'
 import { Route as CompanyIdDashboardImport } from './routes/$companyId/dashboard'
 import { Route as CompanyIdCompaniesRouteImport } from './routes/$companyId/companies/route'
 import { Route as CompanyIdCompaniesListImport } from './routes/$companyId/companies/list'
+import { Route as CompanyIdCompaniesEditImport } from './routes/$companyId/companies/edit'
 import { Route as CompanyIdCompaniesCreateImport } from './routes/$companyId/companies/create'
+import { Route as CompanyIdCompaniesEditIdImport } from './routes/$companyId/companies/edit/$id'
 
 // Create/Update Routes
 
@@ -78,10 +80,22 @@ const CompanyIdCompaniesListRoute = CompanyIdCompaniesListImport.update({
   getParentRoute: () => CompanyIdCompaniesRouteRoute,
 } as any)
 
+const CompanyIdCompaniesEditRoute = CompanyIdCompaniesEditImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => CompanyIdCompaniesRouteRoute,
+} as any)
+
 const CompanyIdCompaniesCreateRoute = CompanyIdCompaniesCreateImport.update({
   id: '/create',
   path: '/create',
   getParentRoute: () => CompanyIdCompaniesRouteRoute,
+} as any)
+
+const CompanyIdCompaniesEditIdRoute = CompanyIdCompaniesEditIdImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => CompanyIdCompaniesEditRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -151,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompanyIdCompaniesCreateImport
       parentRoute: typeof CompanyIdCompaniesRouteImport
     }
+    '/$companyId/companies/edit': {
+      id: '/$companyId/companies/edit'
+      path: '/edit'
+      fullPath: '/$companyId/companies/edit'
+      preLoaderRoute: typeof CompanyIdCompaniesEditImport
+      parentRoute: typeof CompanyIdCompaniesRouteImport
+    }
     '/$companyId/companies/list': {
       id: '/$companyId/companies/list'
       path: '/list'
@@ -158,19 +179,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompanyIdCompaniesListImport
       parentRoute: typeof CompanyIdCompaniesRouteImport
     }
+    '/$companyId/companies/edit/$id': {
+      id: '/$companyId/companies/edit/$id'
+      path: '/$id'
+      fullPath: '/$companyId/companies/edit/$id'
+      preLoaderRoute: typeof CompanyIdCompaniesEditIdImport
+      parentRoute: typeof CompanyIdCompaniesEditImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface CompanyIdCompaniesEditRouteChildren {
+  CompanyIdCompaniesEditIdRoute: typeof CompanyIdCompaniesEditIdRoute
+}
+
+const CompanyIdCompaniesEditRouteChildren: CompanyIdCompaniesEditRouteChildren =
+  {
+    CompanyIdCompaniesEditIdRoute: CompanyIdCompaniesEditIdRoute,
+  }
+
+const CompanyIdCompaniesEditRouteWithChildren =
+  CompanyIdCompaniesEditRoute._addFileChildren(
+    CompanyIdCompaniesEditRouteChildren,
+  )
+
 interface CompanyIdCompaniesRouteRouteChildren {
   CompanyIdCompaniesCreateRoute: typeof CompanyIdCompaniesCreateRoute
+  CompanyIdCompaniesEditRoute: typeof CompanyIdCompaniesEditRouteWithChildren
   CompanyIdCompaniesListRoute: typeof CompanyIdCompaniesListRoute
 }
 
 const CompanyIdCompaniesRouteRouteChildren: CompanyIdCompaniesRouteRouteChildren =
   {
     CompanyIdCompaniesCreateRoute: CompanyIdCompaniesCreateRoute,
+    CompanyIdCompaniesEditRoute: CompanyIdCompaniesEditRouteWithChildren,
     CompanyIdCompaniesListRoute: CompanyIdCompaniesListRoute,
   }
 
@@ -203,7 +247,9 @@ export interface FileRoutesByFullPath {
   '/$companyId/companies': typeof CompanyIdCompaniesRouteRouteWithChildren
   '/$companyId/dashboard': typeof CompanyIdDashboardRoute
   '/$companyId/companies/create': typeof CompanyIdCompaniesCreateRoute
+  '/$companyId/companies/edit': typeof CompanyIdCompaniesEditRouteWithChildren
   '/$companyId/companies/list': typeof CompanyIdCompaniesListRoute
+  '/$companyId/companies/edit/$id': typeof CompanyIdCompaniesEditIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -216,7 +262,9 @@ export interface FileRoutesByTo {
   '/$companyId/companies': typeof CompanyIdCompaniesRouteRouteWithChildren
   '/$companyId/dashboard': typeof CompanyIdDashboardRoute
   '/$companyId/companies/create': typeof CompanyIdCompaniesCreateRoute
+  '/$companyId/companies/edit': typeof CompanyIdCompaniesEditRouteWithChildren
   '/$companyId/companies/list': typeof CompanyIdCompaniesListRoute
+  '/$companyId/companies/edit/$id': typeof CompanyIdCompaniesEditIdRoute
 }
 
 export interface FileRoutesById {
@@ -230,7 +278,9 @@ export interface FileRoutesById {
   '/$companyId/companies': typeof CompanyIdCompaniesRouteRouteWithChildren
   '/$companyId/dashboard': typeof CompanyIdDashboardRoute
   '/$companyId/companies/create': typeof CompanyIdCompaniesCreateRoute
+  '/$companyId/companies/edit': typeof CompanyIdCompaniesEditRouteWithChildren
   '/$companyId/companies/list': typeof CompanyIdCompaniesListRoute
+  '/$companyId/companies/edit/$id': typeof CompanyIdCompaniesEditIdRoute
 }
 
 export interface FileRouteTypes {
@@ -245,7 +295,9 @@ export interface FileRouteTypes {
     | '/$companyId/companies'
     | '/$companyId/dashboard'
     | '/$companyId/companies/create'
+    | '/$companyId/companies/edit'
     | '/$companyId/companies/list'
+    | '/$companyId/companies/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -257,7 +309,9 @@ export interface FileRouteTypes {
     | '/$companyId/companies'
     | '/$companyId/dashboard'
     | '/$companyId/companies/create'
+    | '/$companyId/companies/edit'
     | '/$companyId/companies/list'
+    | '/$companyId/companies/edit/$id'
   id:
     | '__root__'
     | '/'
@@ -269,7 +323,9 @@ export interface FileRouteTypes {
     | '/$companyId/companies'
     | '/$companyId/dashboard'
     | '/$companyId/companies/create'
+    | '/$companyId/companies/edit'
     | '/$companyId/companies/list'
+    | '/$companyId/companies/edit/$id'
   fileRoutesById: FileRoutesById
 }
 
@@ -336,6 +392,7 @@ export const routeTree = rootRoute
       "parent": "/$companyId",
       "children": [
         "/$companyId/companies/create",
+        "/$companyId/companies/edit",
         "/$companyId/companies/list"
       ]
     },
@@ -347,9 +404,20 @@ export const routeTree = rootRoute
       "filePath": "$companyId/companies/create.tsx",
       "parent": "/$companyId/companies"
     },
+    "/$companyId/companies/edit": {
+      "filePath": "$companyId/companies/edit.tsx",
+      "parent": "/$companyId/companies",
+      "children": [
+        "/$companyId/companies/edit/$id"
+      ]
+    },
     "/$companyId/companies/list": {
       "filePath": "$companyId/companies/list.tsx",
       "parent": "/$companyId/companies"
+    },
+    "/$companyId/companies/edit/$id": {
+      "filePath": "$companyId/companies/edit/$id.tsx",
+      "parent": "/$companyId/companies/edit"
     }
   }
 }

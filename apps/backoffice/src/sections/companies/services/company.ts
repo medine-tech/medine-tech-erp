@@ -48,6 +48,42 @@ export const companyService = {
     }
   },
 
+  // Obtener una compañía específica por ID
+  async getCompany(companyId: string, id: string): Promise<Company> {
+    try {
+      const token = authService.getToken();
+      if (!token) {
+        throw new Error("No hay sesión de usuario");
+      }
+
+      const response = await fetch(`${API_BASE_URL}/backoffice/${companyId}/companies/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          accept: "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        const apiError: ApiError = {
+          title: errorData.title || "Error",
+          status: response.status,
+          detail: errorData.detail || "Ha ocurrido un error al obtener la compañía",
+          errors: errorData.errors,
+        };
+        throw apiError;
+      }
+
+      return await response.json();
+    } catch (error) {
+      if ((error as ApiError).status) {
+        throw error;
+      }
+      throw new Error("Ha ocurrido un error al obtener la compañía");
+    }
+  },
+
   // Obtener la lista de compañías del usuario actual
   async getCompanies(
     companyId: string,
