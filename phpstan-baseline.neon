@@ -1,0 +1,11 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method MedineTech\\\\Backoffice\\\\Accounting\\\\AccountingCenter\\\\Infrastructure\\\\Persistence\\\\Eloquent\\\\AccountingCenterModel\\:\\:company_users\\(\\) should return Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<MedineTech\\\\Backoffice\\\\CompanyUsers\\\\Infrastructure\\\\Persistence\\\\Eloquent\\\\CompanyUserModel, MedineTech\\\\Backoffice\\\\Accounting\\\\AccountingCenter\\\\Infrastructure\\\\Persistence\\\\Eloquent\\\\AccountingCenterModel\\> but returns Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<MedineTech\\\\Backoffice\\\\CompanyUsers\\\\Infrastructure\\\\Persistence\\\\Eloquent\\\\CompanyUserModel, \\$this\\(MedineTech\\\\Backoffice\\\\Accounting\\\\AccountingCenter\\\\Infrastructure\\\\Persistence\\\\Eloquent\\\\AccountingCenterModel\\)\\>\\.$#"
+			count: 1
+			path: src/Backoffice/Accounting/AccountingCenter/Infrastructure/Persistence/Eloquent/AccountingCenterModel.php
+
+		-
+			message: "#^Method MedineTech\\\\Backoffice\\\\Companies\\\\Infrastructure\\\\Persistence\\\\Eloquent\\\\CompanyModel\\:\\:company_users\\(\\) should return Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<MedineTech\\\\Backoffice\\\\CompanyUsers\\\\Infrastructure\\\\Persistence\\\\Eloquent\\\\CompanyUserModel, MedineTech\\\\Backoffice\\\\Companies\\\\Infrastructure\\\\Persistence\\\\Eloquent\\\\CompanyModel\\> but returns Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<MedineTech\\\\Backoffice\\\\CompanyUsers\\\\Infrastructure\\\\Persistence\\\\Eloquent\\\\CompanyUserModel, \\$this\\(MedineTech\\\\Backoffice\\\\Companies\\\\Infrastructure\\\\Persistence\\\\Eloquent\\\\CompanyModel\\)\\>\\.$#"
+			count: 1
+			path: src/Backoffice/Companies/Infrastructure/Persistence/Eloquent/CompanyModel.php

@@ -36,7 +36,6 @@ final class AccountingCenterModel extends Model
 
     /**
      * @phpstan-return HasMany<CompanyUserModel, AccountingCenterModel>
-     * @phpstan-ignore-next-line
      */
     public function company_users(): HasMany
     {

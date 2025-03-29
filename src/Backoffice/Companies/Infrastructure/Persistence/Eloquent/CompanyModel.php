@@ -28,7 +28,6 @@ final class CompanyModel extends Tenant
 
     /**
      * @phpstan-return HasMany<CompanyUserModel, CompanyModel>
-     * @phpstan-ignore-next-line
      */
     public function company_users(): HasMany
     {
