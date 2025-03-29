@@ -11,23 +11,27 @@ export function useCompanySelector(currentCompanyId: string) {
 
   useEffect(() => {
     let isMounted = true;
-    
+
     async function loadCompanies() {
-      if (isLoading) return;
-      
+      if (isLoading) {
+        return;
+      }
+
       setIsLoading(true);
-      
+
       try {
         const response = await companyService.getCompanies();
-        
+
         if (isMounted) {
           setCompanies(response.items);
-          
-          const company = response.items.find((company: Company) => company.id === currentCompanyId);
+
+          const company = response.items.find(
+            (company: Company) => company.id === currentCompanyId,
+          );
           if (company) {
             setCurrentCompany(company);
           }
-          
+
           setIsLoading(false);
         }
       } catch (err) {
@@ -39,7 +43,7 @@ export function useCompanySelector(currentCompanyId: string) {
     }
 
     void loadCompanies();
-    
+
     return () => {
       isMounted = false;
     };
@@ -49,6 +53,6 @@ export function useCompanySelector(currentCompanyId: string) {
     companies,
     currentCompany,
     isLoading,
-    error
+    error,
   };
 }
