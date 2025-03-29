@@ -24,13 +24,13 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
       // Utilizamos la función login del AuthContext
       const companyId = await login(values.email, values.password, true);
-      
+
       if (onSuccess) {
         onSuccess();
       } else {
         void navigate({ to: "/$companyId/dashboard", params: { companyId } });
       }
-    } catch (err) {
+    } catch (_err) {
       setIsLoading(false);
       setError("Credenciales inválidas. Inténtelo de nuevo.");
     }
@@ -43,9 +43,9 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         <p className="text-gray-500">Ingrese sus credenciales para acceder a su cuenta</p>
       </div>
 
-      {(error || authError) && (
+      {(error ?? authError) && (
         <div className="bg-destructive/15 p-3 rounded-md text-destructive text-sm">
-          {error || (authError && authError.detail)}
+          {error ?? (authError && authError.detail)}
         </div>
       )}
 

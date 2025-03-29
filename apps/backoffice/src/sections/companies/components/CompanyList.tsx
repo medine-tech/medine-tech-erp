@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import React from "react";
 
-import { DataTable } from "../../shared/components/data-table";
+import { DataTable } from "../../shared/components/data-table/DataTable.tsx";
 
 interface Company {
   id: string;

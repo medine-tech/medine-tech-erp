@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
-import { ApiError } from "../../auth/services";
+import { ApiError } from "../../auth/services/auth";
 import { Company, CompanyPagination, companyService } from "../services/company";
 
 interface CompanyContextType {
@@ -39,6 +39,7 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
       const response = await companyService.getCompanies(page, perPage);
       setCompanies(response.items);
       setIsLoading(false);
+
       return response;
     } catch (err) {
       setError(err as ApiError);

@@ -22,7 +22,7 @@ export function LoginPage() {
         return;
       }
 
-      const defaultCompanyId = authService.getDefaultCompanyId() || "";
+      const defaultCompanyId = authService.getDefaultCompanyId() ?? "";
       void navigate({ to: "/$companyId/dashboard", params: { companyId: defaultCompanyId } });
     }
   }, [isAuthenticated, navigate, returnTo]);
@@ -34,7 +34,7 @@ export function LoginPage() {
       return;
     }
 
-    const defaultCompanyId = authService.getDefaultCompanyId() || "";
+    const defaultCompanyId = authService.getDefaultCompanyId() ?? "";
     void navigate({ to: "/$companyId/dashboard", params: { companyId: defaultCompanyId } });
   };
 

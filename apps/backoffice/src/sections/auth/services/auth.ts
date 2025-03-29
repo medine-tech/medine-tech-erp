@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../../shared/config";
+import { API_BASE_URL } from "../../shared/config/constants.ts";
 
 // Tipos para la API de autenticación
 export interface UserInfo {

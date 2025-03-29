@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
-import { ApiError, authService, UserInfo } from "../services";
+import { ApiError, authService, UserInfo } from "../services/auth";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -78,7 +78,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         authService.saveAuthInfo(response.token, response.default_company_id, rememberMe);
 
         try {
-          console.log("console1");
           const userData = await authService.fetchUserInfo();
           setUserInfo(userData);
         } catch (fetchError) {

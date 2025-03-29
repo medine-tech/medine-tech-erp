@@ -1,7 +1,7 @@
 import { FirstCompanyFormValues } from "../../auth/lib/validations";
 // Importamos los tipos desde su nueva ubicación
 import { ApiError, authService } from "../../auth/services/auth";
-import { API_BASE_URL } from "../../shared/config";
+import { API_BASE_URL } from "../../shared/config/constants.ts";
 
 // Interfaz para la compañía
 export interface Company {
