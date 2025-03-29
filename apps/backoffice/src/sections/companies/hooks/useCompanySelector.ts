@@ -52,7 +52,7 @@ export function useCompanySelector(currentCompanyId: string): {
     return () => {
       isMounted = false;
     };
-  }, [currentCompanyId, isLoading]);
+  }, [currentCompanyId]);
 
   return {
     companies,

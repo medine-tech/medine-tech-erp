@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { CompaniesTable } from "../components/CompaniesTable";
 import { CompanySearchForm } from "../components/CompanySearchForm";
-import { UserProfile } from "../../auth/components/UserProfile";
 import { Breadcrumb } from "../../shared/components/ui/breadcrumb";
 import { Button } from "../../shared/components/ui/button";
 
@@ -22,20 +21,11 @@ export function CompaniesListPage() {
   const [isSearchFormVisible, setIsSearchFormVisible] = useState(!!search.name);
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="bg-card shadow-sm border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center">
-            <h1 className="text-xl font-medium text-foreground mr-6">Medine Tech</h1>
-          </div>
-          <UserProfile />
-        </div>
-      </header>
+    <>
+      <div className="mb-6">
+        <Breadcrumb segments={[{ label: "Compañías" }]} />
+      </div>
 
-      <div className="container mx-auto py-8 px-4">
-        <div className="mb-6">
-          <Breadcrumb segments={[{ label: "Compañías" }]} />
-        </div>
 
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-4">
@@ -83,7 +73,6 @@ export function CompaniesListPage() {
             onPerPageChange={setPerPage}
           />
         </div>
-      </div>
-    </div>
+    </>
   );
 }

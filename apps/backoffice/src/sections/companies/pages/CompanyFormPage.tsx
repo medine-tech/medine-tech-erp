@@ -14,7 +14,7 @@ import {
 } from "../../../sections/shared/components/ui/form";
 import { Input } from "../../../sections/shared/components/ui/input";
 import { useToast } from "../../../sections/shared/hooks/useToast";
-import { UserProfile } from "../../auth/components/UserProfile";
+
 import { Breadcrumb } from "../../shared/components/ui/breadcrumb";
 import { Button } from "../../shared/components/ui/button";
 import { companyService } from "../services/company";
@@ -139,17 +139,7 @@ function CompanyFormPageComponent() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="bg-card shadow-sm border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center">
-            <h1 className="text-xl font-medium text-foreground mr-6">Medine Tech</h1>
-          </div>
-          <UserProfile />
-        </div>
-      </header>
-
-      <div className="container mx-auto py-8 px-4">
+    <>
         <div className="mb-6">
           <Breadcrumb
             segments={[
@@ -208,8 +198,7 @@ function CompanyFormPageComponent() {
             </form>
           </Form>
         </div>
-      </div>
-    </div>
+    </>
   );
 }
 

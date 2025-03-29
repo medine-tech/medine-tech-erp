@@ -1,9 +1,8 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+
+import { ProtectedLayout } from "../../sections/shared/layouts/ProtectedLayout";
 
 // Este archivo define la ruta base para las rutas con ID de compañía
 export const Route = createFileRoute("/$companyId")({
-  component: () => {
-    // Es importante usar Outlet para renderizar las rutas hijas
-    return <Outlet />;
-  },
+  component: ProtectedLayout,
 });
