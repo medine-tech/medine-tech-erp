@@ -22,6 +22,7 @@ export function Form<T extends FieldValues>({
 }: FormProps<T>) {
   const methods = useForm<T>({
     resolver: zodResolver(schema),
+    // @ts-expect-error defaultValues...
     defaultValues,
     ...formOptions,
   });
