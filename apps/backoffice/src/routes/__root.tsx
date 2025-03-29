@@ -1,6 +1,6 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 
-import { Toaster } from "../components/ui/sonner";
+import { Toaster } from "../sections/shared/components/ui/sonner";
 
 export const Route = createRootRoute({
   component: () => (
