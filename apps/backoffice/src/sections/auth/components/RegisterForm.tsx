@@ -1,8 +1,9 @@
-import React from 'react';
-import { useNavigate } from '@tanstack/react-router';
-import { Form, FormField } from '../../shared/components/form';
-import { registerSchema } from '../lib/validations';
-import { Checkbox } from '../../shared/components/ui/checkbox';
+import { useNavigate } from "@tanstack/react-router";
+import React from "react";
+
+import { Form, FormField } from "../../shared/components/form";
+import { Checkbox } from "../../shared/components/ui/checkbox";
+import { registerSchema } from "../lib/validations";
 
 interface RegisterFormProps {
   onSuccess?: () => void;
@@ -17,19 +18,19 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // Simulación de registro - en producción llamaría a la API
       setTimeout(() => {
         setIsLoading(false);
         if (onSuccess) {
           onSuccess();
         } else {
-          navigate({ to: '/login' });
+          void navigate({ to: "/login" });
         }
       }, 1500);
-    } catch (err) {
+    } catch (_err) {
       setIsLoading(false);
-      setError('Error al registrar el usuario. Inténtelo de nuevo.');
+      setError("Error al registrar el usuario. Inténtelo de nuevo.");
     }
   };
 
@@ -37,41 +38,33 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
     <div className="space-y-6 w-full max-w-md">
       <div className="space-y-2 text-center">
         <h1 className="text-3xl font-bold">Crear cuenta</h1>
-        <p className="text-gray-500">
-          Ingrese sus datos para registrarse
-        </p>
+        <p className="text-gray-500">Ingrese sus datos para registrarse</p>
       </div>
-      
+
       {error && (
-        <div className="bg-destructive/15 p-3 rounded-md text-destructive text-sm">
-          {error}
-        </div>
+        <div className="bg-destructive/15 p-3 rounded-md text-destructive text-sm">{error}</div>
       )}
-      
-      <Form 
-        schema={registerSchema} 
+
+      <Form
+        schema={registerSchema}
         onSubmit={handleSubmit}
         defaultValues={{
-          name: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-          termsAccepted: false
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          termsAccepted: false,
         }}
       >
-        <FormField
-          name="name"
-          label="Nombre completo"
-          placeholder="Ingrese su nombre completo"
-        />
-        
+        <FormField name="name" label="Nombre completo" placeholder="Ingrese su nombre completo" />
+
         <FormField
           name="email"
           label="Correo electrónico"
           type="email"
           placeholder="correo@ejemplo.com"
         />
-        
+
         <FormField
           name="password"
           label="Contraseña"
@@ -79,37 +72,37 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           placeholder="********"
           description="La contraseña debe tener al menos 8 caracteres"
         />
-        
+
         <FormField
           name="confirmPassword"
           label="Confirmar contraseña"
           type="password"
           placeholder="********"
         />
-        
+
         <div className="flex items-center space-x-2 mt-4">
           <FormField name="termsAccepted" label="">
             <Checkbox />
           </FormField>
           <label className="text-sm">
-            Acepto los{' '}
+            Acepto los{" "}
             <a href="/terms" className="text-primary hover:underline">
               términos y condiciones
             </a>
           </label>
         </div>
-        
+
         <button
           type="submit"
           disabled={isLoading}
           className="mt-6 w-full rounded-md bg-primary py-2.5 font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
         >
-          {isLoading ? 'Registrando...' : 'Registrarse'}
+          {isLoading ? "Registrando..." : "Registrarse"}
         </button>
       </Form>
-      
+
       <div className="text-center text-sm">
-        ¿Ya tiene una cuenta?{' '}
+        ¿Ya tiene una cuenta?{" "}
         <a href="/login" className="text-primary hover:underline">
           Iniciar sesión
         </a>

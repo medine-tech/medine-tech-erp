@@ -10,23 +10,25 @@ export function DashboardPage() {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading } = useAuth();
   const [isAuthChecked, setIsAuthChecked] = useState(false);
-  
+
   useEffect(() => {
-    if (isLoading) return;
-    
+    if (isLoading) {
+      return;
+    }
+
     if (!isAuthenticated) {
       const currentPath = window.location.pathname;
-      navigate({
+      void navigate({
         to: "/login",
         search: {
-          returnTo: currentPath
-        }
+          returnTo: currentPath,
+        },
       });
     } else {
       setIsAuthChecked(true);
     }
   }, [isLoading, isAuthenticated, navigate]);
-  
+
   if (!isAuthChecked && isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -41,7 +43,7 @@ export function DashboardPage() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center">
             <h1 className="text-xl font-medium text-foreground mr-6">Medine Tech</h1>
-            <CompanySelector currentCompanyId={companyId || ''} />
+            <CompanySelector currentCompanyId={companyId || ""} />
           </div>
           <UserProfile />
         </div>

@@ -1,21 +1,18 @@
-import React from 'react';
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
+import React from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
@@ -31,13 +28,13 @@ export function DataTable<TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} className="border-b transition-colors hover:bg-muted/50">
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                  <th
+                    key={header.id}
+                    className="h-12 px-4 text-left align-middle font-medium text-muted-foreground"
+                  >
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </th>
                 ))}
               </tr>
@@ -46,10 +43,7 @@ export function DataTable<TData, TValue>({
           <tbody className="[&_tr:last-child]:border-0">
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className="border-b transition-colors hover:bg-muted/50"
-                >
+                <tr key={row.id} className="border-b transition-colors hover:bg-muted/50">
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="p-4 align-middle">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -70,8 +64,7 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center justify-between px-4 py-2">
         <div className="flex items-center space-x-2">
           <p className="text-sm text-muted-foreground">
-            Página {table.getState().pagination.pageIndex + 1} de{" "}
-            {table.getPageCount()}
+            Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
           </p>
         </div>
         <div className="flex items-center space-x-2">

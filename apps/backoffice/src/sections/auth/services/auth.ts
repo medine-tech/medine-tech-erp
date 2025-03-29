@@ -122,6 +122,7 @@ export const authService = {
         return JSON.parse(userInfoStr) as UserInfo;
       } catch (e) {
         console.error("Error al parsear la información del usuario:", e);
+
         return null;
       }
     }
@@ -132,9 +133,10 @@ export const authService = {
   // Obtener el nombre del usuario actual
   getUserName(): string {
     const userInfo = this.getUserInfo();
+
     return userInfo?.name ?? "Usuario";
   },
-  
+
   // Obtener la información del usuario autenticado desde el backend
   async fetchUserInfo(): Promise<UserInfo> {
     try {
@@ -163,9 +165,9 @@ export const authService = {
       }
 
       const userData = await response.json();
-      
+
       this.saveUserInfo(userData);
-      
+
       return userData;
     } catch (error) {
       if ((error as ApiError).status) {
@@ -174,7 +176,7 @@ export const authService = {
       throw new Error("Ha ocurrido un error al obtener la información del usuario");
     }
   },
-  
+
   // Guardar la información del usuario en el localStorage
   saveUserInfo(userInfo: UserInfo): void {
     localStorage.setItem("user_info", JSON.stringify(userInfo));

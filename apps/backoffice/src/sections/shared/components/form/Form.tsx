@@ -1,14 +1,14 @@
-import React from 'react';
-import { useForm, FormProvider, UseFormProps, FieldValues, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
+import { FieldValues, FormProvider, SubmitHandler, useForm, UseFormProps } from "react-hook-form";
+import { z } from "zod";
 
 interface FormProps<T extends FieldValues> {
   schema: z.ZodType<T>;
   defaultValues?: Partial<T>;
   onSubmit: SubmitHandler<T>;
   children: React.ReactNode;
-  formOptions?: Omit<UseFormProps<T>, 'resolver'>;
+  formOptions?: Omit<UseFormProps<T>, "resolver">;
   className?: string;
 }
 
@@ -28,11 +28,7 @@ export function Form<T extends FieldValues>({
 
   return (
     <FormProvider {...methods}>
-      <form
-        onSubmit={methods.handleSubmit(onSubmit)}
-        className={className}
-        noValidate
-      >
+      <form onSubmit={methods.handleSubmit(onSubmit)} className={className} noValidate>
         {children}
       </form>
     </FormProvider>

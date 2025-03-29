@@ -1,8 +1,13 @@
-import { API_BASE_URL } from "../../shared/config";
-
+import { FirstCompanyFormValues } from "../../auth/lib/validations";
 // Importamos los tipos desde su nueva ubicación
 import { ApiError, authService } from "../../auth/services/auth";
-import { FirstCompanyFormValues } from "../../auth/lib/validations";
+import { API_BASE_URL } from "../../shared/config";
+
+// Interfaz para la compañía
+export interface Company {
+  id: string;
+  name: string;
+}
 
 // Interfaz para la paginación de compañías
 export interface CompanyPagination {
@@ -10,12 +15,6 @@ export interface CompanyPagination {
   total: number;
   per_page: number;
   current_page: number;
-}
-
-// Interfaz para la compañía
-export interface Company {
-  id: string;
-  name: string;
 }
 
 // Servicio para gestión de compañías
@@ -65,7 +64,7 @@ export const companyService = {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       if (!response.ok) {
@@ -79,7 +78,7 @@ export const companyService = {
         throw apiError;
       }
 
-      return await response.json() as CompanyPagination;
+      return (await response.json()) as CompanyPagination;
     } catch (error) {
       if ((error as ApiError).status) {
         throw error;

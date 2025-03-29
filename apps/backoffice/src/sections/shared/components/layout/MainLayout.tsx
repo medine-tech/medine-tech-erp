@@ -1,11 +1,7 @@
-import React from 'react';
-import { Outlet } from '@tanstack/react-router';
+import { Outlet } from "@tanstack/react-router";
+import React from "react";
 
-export function MainLayout({ 
-  children 
-}: { 
-  children?: React.ReactNode 
-}) {
+export function MainLayout({ children }: { children?: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background">
       <div className="flex">
@@ -45,7 +41,7 @@ export function MainLayout({
             </ul>
           </nav>
         </div>
-        
+
         {/* Contenido principal */}
         <div className="flex-1">
           <header className="h-16 border-b flex items-center px-6 justify-between bg-card">
@@ -60,10 +56,8 @@ export function MainLayout({
               <div className="h-8 w-8 rounded-full bg-primary" />
             </div>
           </header>
-          
-          <main className="p-6">
-            {children || <Outlet />}
-          </main>
+
+          <main className="p-6">{children ?? <Outlet />}</main>
         </div>
       </div>
     </div>

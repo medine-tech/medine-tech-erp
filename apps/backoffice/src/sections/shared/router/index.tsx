@@ -8,15 +8,16 @@ export interface AuthContext {
   loading: boolean;
 }
 
+// Primero definimos el router y luego lo referenciamos en la declaración del módulo
+export const router = createRouter({
+  routeTree,
+});
+
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
   }
 }
-
-export const router = createRouter({
-  routeTree,
-});
 
 export function RouterWithAuth() {
   const auth = useAuth();

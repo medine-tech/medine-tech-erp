@@ -1,5 +1,5 @@
-import React from 'react';
-import { useFormContext, Controller } from 'react-hook-form';
+import React from "react";
+import { Controller, useFormContext } from "react-hook-form";
 
 interface FormFieldProps {
   name: string;
@@ -13,12 +13,15 @@ interface FormFieldProps {
 export function FormField({
   name,
   label,
-  type = 'text',
+  type = "text",
   placeholder,
   children,
   description,
 }: FormFieldProps) {
-  const { control, formState: { errors } } = useFormContext();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
   const errorMessage = errors[name]?.message as string | undefined;
 
   return (
@@ -29,11 +32,9 @@ export function FormField({
       >
         {label}
       </label>
-      
-      {description && (
-        <p className="text-sm text-muted-foreground">{description}</p>
-      )}
-      
+
+      {description && <p className="text-sm text-muted-foreground">{description}</p>}
+
       {children ? (
         <Controller
           name={name}
@@ -59,9 +60,7 @@ export function FormField({
         />
       )}
 
-      {errorMessage && (
-        <p className="text-sm text-destructive">{errorMessage}</p>
-      )}
+      {errorMessage && <p className="text-sm text-destructive">{errorMessage}</p>}
     </div>
   );
 }

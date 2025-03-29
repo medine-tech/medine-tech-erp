@@ -1,6 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useCompanies, Company } from "../hooks/useCompanies";
 
 import { Button } from "../../shared/components/ui/button";
 import {
@@ -11,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../shared/components/ui/dropdown-menu";
+import { Company, useCompanies } from "../hooks/useCompanies";
 
 interface CompanySelectorProps {
   currentCompanyId: string;
@@ -25,12 +25,10 @@ export function CompanySelector({ currentCompanyId }: CompanySelectorProps) {
     async function loadData() {
       try {
         const result = await fetchCompanies();
-        
+
         // Encontrar la compañía actual según el ID
-        const company = result.items.find(
-          (company) => company.id === currentCompanyId
-        );
-        
+        const company = result.items.find((company) => company.id === currentCompanyId);
+
         if (company) {
           setCurrentCompany(company);
         }
@@ -39,11 +37,11 @@ export function CompanySelector({ currentCompanyId }: CompanySelectorProps) {
       }
     }
 
-    loadData();
+    void loadData();
   }, [currentCompanyId, fetchCompanies]);
 
   const handleCompanyChange = (company: Company) => {
-    navigate({
+    void navigate({
       to: "/$companyId/dashboard",
       params: { companyId: company.id },
     });
@@ -90,9 +88,7 @@ export function CompanySelector({ currentCompanyId }: CompanySelectorProps) {
             <path d="M15 22V12" />
           </svg>
 
-          <span className="text-sm font-medium max-w-[150px] truncate">
-            {currentCompany.name}
-          </span>
+          <span className="text-sm font-medium max-w-[150px] truncate">{currentCompany.name}</span>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -119,9 +115,7 @@ export function CompanySelector({ currentCompanyId }: CompanySelectorProps) {
         <DropdownMenuSeparator />
 
         {companies.length === 0 ? (
-          <div className="px-2 py-2 text-sm text-slate-500">
-            No tienes compañías disponibles
-          </div>
+          <div className="px-2 py-2 text-sm text-slate-500">No tienes compañías disponibles</div>
         ) : (
           companies.map((company) => (
             <DropdownMenuItem

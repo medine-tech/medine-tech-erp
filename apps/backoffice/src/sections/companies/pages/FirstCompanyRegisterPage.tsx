@@ -1,17 +1,16 @@
 import { useNavigate } from "@tanstack/react-router";
 
-import { FirstCompanyForm } from "../components";
-import { Link } from "../../shared/components/Link";
-
 import medineLogoSrc from "../../../assets/medine-logo.svg";
+import { Link } from "../../shared/components/Link";
+import { FirstCompanyForm } from "../components";
 
 export function FirstCompanyRegisterPage() {
   const navigate = useNavigate();
 
   const handleCompanyCreated = (companyId: string) => {
-    navigate({ 
-      to: '/$companyId/dashboard', 
-      params: { companyId }
+    void navigate({
+      to: "/$companyId/dashboard",
+      params: { companyId },
     });
   };
 

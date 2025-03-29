@@ -1,16 +1,15 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
+import medineLogoSrc from "../../../assets/medine-logo.svg";
+import { Link } from "../../shared/components/Link";
 import { LoginForm } from "../components";
 import { useAuth } from "../hooks/useAuth";
-import { Link } from "../../shared/components/Link";
-
-import medineLogoSrc from "../../../assets/medine-logo.svg";
 
 export function LoginPage() {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  
+
   const searchParams = new URLSearchParams(window.location.search);
   const returnTo = searchParams.get("returnTo");
 
@@ -18,20 +17,22 @@ export function LoginPage() {
     if (isAuthenticated) {
       if (returnTo) {
         window.location.href = returnTo;
+
         return;
       }
-      
-      navigate({ to: '/$companyId/dashboard', params: { companyId: '1' } });
+
+      void navigate({ to: "/$companyId/dashboard", params: { companyId: "1" } });
     }
   }, [isAuthenticated, navigate, returnTo]);
 
   const handleLoginSuccess = () => {
     if (returnTo) {
       window.location.href = returnTo;
+
       return;
     }
-    
-    navigate({ to: '/$companyId/dashboard', params: { companyId: '1' } });
+
+    void navigate({ to: "/$companyId/dashboard", params: { companyId: "1" } });
   };
 
   return (

@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useAuth } from "../hooks/useAuth";
+import { useState } from "react";
 
 import { Button } from "../../shared/components/ui/button";
 import {
@@ -11,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../shared/components/ui/dropdown-menu";
+import { useAuth } from "../hooks/useAuth";
 
 export function UserProfile() {
   const { user, logout } = useAuth();
@@ -18,14 +18,14 @@ export function UserProfile() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Usando datos del usuario del hook de autenticación
-  const userName = user?.name || "Usuario";
-  const userEmail = user?.email || "";
+  const userName = user?.name ?? "Usuario";
+  const userEmail = user?.email ?? "";
 
   const handleLogout = async () => {
     try {
       setIsLoading(true);
       await logout();
-      navigate({ to: "/login" });
+      void navigate({ to: "/login" });
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     } finally {

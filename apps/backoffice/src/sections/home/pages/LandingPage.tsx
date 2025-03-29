@@ -1,3 +1,6 @@
+import medineLogoSrc from "../../../assets/medine-logo.svg";
+import { Link } from "../../shared/components/Link";
+import { Button } from "../../shared/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,10 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../../shared/components/ui/card";
-import { Button } from "../../shared/components/ui/button";
-
-import medineLogoSrc from "../../../assets/medine-logo.svg";
-import { Link } from "../../shared/components/Link";
 
 export function LandingPage() {
   return (
@@ -106,7 +105,7 @@ export function LandingPage() {
       <section id="caracteristicas" className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-10">Características Principales</h2>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-sky-100 flex items-center justify-center">
@@ -150,7 +149,8 @@ export function LandingPage() {
               </div>
               <h3 className="text-xl font-semibold mb-3">Seguridad Avanzada</h3>
               <p className="text-gray-600">
-                Protección de datos con múltiples capas de seguridad y controles de acceso personalizados.
+                Protección de datos con múltiples capas de seguridad y controles de acceso
+                personalizados.
               </p>
             </div>
 
@@ -189,32 +189,72 @@ export function LandingPage() {
             <div className="md:w-1/2">
               <h3 className="text-2xl font-semibold mb-4">Diseñada Para Tu Negocio</h3>
               <p className="text-gray-700 mb-6">
-                Nuestra plataforma integra todas las herramientas que necesitas para gestionar tu empresa
-                de manera eficiente. Desde la gestión financiera hasta el seguimiento de inventario, todo
-                en un solo lugar.
+                Nuestra plataforma integra todas las herramientas que necesitas para gestionar tu
+                empresa de manera eficiente. Desde la gestión financiera hasta el seguimiento de
+                inventario, todo en un solo lugar.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-center">
-                  <svg className="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                  <svg
+                    className="h-5 w-5 text-green-500 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                   Interfaz intuitiva y fácil de usar
                 </li>
                 <li className="flex items-center">
-                  <svg className="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                  <svg
+                    className="h-5 w-5 text-green-500 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                   Personalizable según tus necesidades
                 </li>
                 <li className="flex items-center">
-                  <svg className="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                  <svg
+                    className="h-5 w-5 text-green-500 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                   Actualizaciones constantes y soporte técnico
                 </li>
                 <li className="flex items-center">
-                  <svg className="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                  <svg
+                    className="h-5 w-5 text-green-500 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                   Acceso desde cualquier dispositivo
                 </li>
@@ -234,8 +274,8 @@ export function LandingPage() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-8">¿Necesitas Ayuda?</h2>
           <p className="max-w-2xl mx-auto text-slate-300 mb-8">
-            Nuestro equipo de soporte está disponible para ayudarte con cualquier consulta o problema
-            que puedas tener.
+            Nuestro equipo de soporte está disponible para ayudarte con cualquier consulta o
+            problema que puedas tener.
           </p>
           <Button className="bg-sky-600 hover:bg-sky-700 px-8 py-3 text-lg" size="lg">
             Contactar Soporte
@@ -252,23 +292,49 @@ export function LandingPage() {
                 <img src={medineLogoSrc} alt="Medine Logo" className="h-8 w-auto" />
                 <span className="text-white font-semibold">MEDINE</span>
               </div>
-              <p className="mt-2 text-sm">© {new Date().getFullYear()} Medine Tech. Todos los derechos reservados.</p>
+              <p className="mt-2 text-sm">
+                © {new Date().getFullYear()} Medine Tech. Todos los derechos reservados.
+              </p>
             </div>
             <div className="flex gap-8">
               <div>
                 <h4 className="text-white font-semibold mb-3">Empresa</h4>
                 <ul className="space-y-2 text-sm">
-                  <li><a href="#" className="hover:text-sky-400 transition-colors">Sobre Nosotros</a></li>
-                  <li><a href="#" className="hover:text-sky-400 transition-colors">Careers</a></li>
-                  <li><a href="#" className="hover:text-sky-400 transition-colors">Blog</a></li>
+                  <li>
+                    <a href="#" className="hover:text-sky-400 transition-colors">
+                      Sobre Nosotros
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="hover:text-sky-400 transition-colors">
+                      Careers
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="hover:text-sky-400 transition-colors">
+                      Blog
+                    </a>
+                  </li>
                 </ul>
               </div>
               <div>
                 <h4 className="text-white font-semibold mb-3">Legal</h4>
                 <ul className="space-y-2 text-sm">
-                  <li><a href="#" className="hover:text-sky-400 transition-colors">Términos</a></li>
-                  <li><a href="#" className="hover:text-sky-400 transition-colors">Privacidad</a></li>
-                  <li><a href="#" className="hover:text-sky-400 transition-colors">Cookies</a></li>
+                  <li>
+                    <a href="#" className="hover:text-sky-400 transition-colors">
+                      Términos
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="hover:text-sky-400 transition-colors">
+                      Privacidad
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="hover:text-sky-400 transition-colors">
+                      Cookies
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>

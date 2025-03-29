@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    checkAuthStatus();
+    void checkAuthStatus();
   }, []);
 
   const login = async (
@@ -76,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         );
       } else {
         authService.saveAuthInfo(response.token, response.default_company_id, rememberMe);
-        
+
         try {
           const userData = await authService.fetchUserInfo();
           setUserInfo(userData);

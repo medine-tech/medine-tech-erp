@@ -1,12 +1,13 @@
-import React from 'react';
-import { DataTable } from '../../../shared/components/data-table';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate } from "@tanstack/react-router";
+import React from "react";
+
+import { DataTable } from "../../../shared/components/data-table";
 
 interface Account {
   id: string;
   code: string;
   name: string;
-  type: 'asset' | 'liability' | 'equity' | 'income' | 'expense';
+  type: "asset" | "liability" | "equity" | "income" | "expense";
   balance: number;
   isActive: boolean;
 }
@@ -24,109 +25,108 @@ export function AccountList() {
         // Datos de ejemplo
         const data: Account[] = [
           {
-            id: '1',
-            code: '1.1.01',
-            name: 'Caja Principal',
-            type: 'asset',
-            balance: 15000.00,
+            id: "1",
+            code: "1.1.01",
+            name: "Caja Principal",
+            type: "asset",
+            balance: 15000.0,
             isActive: true,
           },
           {
-            id: '2',
-            code: '1.1.02',
-            name: 'Banco Nacional Cuenta Corriente',
-            type: 'asset',
+            id: "2",
+            code: "1.1.02",
+            name: "Banco Nacional Cuenta Corriente",
+            type: "asset",
             balance: 25680.45,
             isActive: true,
           },
           {
-            id: '3',
-            code: '2.1.01',
-            name: 'Proveedores Nacionales',
-            type: 'liability',
-            balance: 8750.20,
+            id: "3",
+            code: "2.1.01",
+            name: "Proveedores Nacionales",
+            type: "liability",
+            balance: 8750.2,
             isActive: true,
           },
           {
-            id: '4',
-            code: '4.1.01',
-            name: 'Ventas de Mercancía',
-            type: 'income',
+            id: "4",
+            code: "4.1.01",
+            name: "Ventas de Mercancía",
+            type: "income",
             balance: 32450.75,
             isActive: true,
           },
         ];
-        
+
         setTimeout(() => {
           setAccounts(data);
           setIsLoading(false);
         }, 1000);
       } catch (error) {
         setIsLoading(false);
-        console.error('Error al cargar cuentas contables:', error);
+        console.error("Error al cargar cuentas contables:", error);
       }
     };
 
-    loadAccounts();
+    void loadAccounts();
   }, []);
 
   // Función para obtener el nombre del tipo de cuenta en español
-  const getAccountTypeName = (type: Account['type']) => {
+  const getAccountTypeName = (type: Account["type"]) => {
     const types = {
-      asset: 'Activo',
-      liability: 'Pasivo',
-      equity: 'Patrimonio',
-      income: 'Ingreso',
-      expense: 'Gasto'
+      asset: "Activo",
+      liability: "Pasivo",
+      equity: "Patrimonio",
+      income: "Ingreso",
+      expense: "Gasto",
     };
+
     return types[type];
   };
 
   // Función para formatear montos
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-VE', {
-      style: 'currency',
-      currency: 'VES'
+    return new Intl.NumberFormat("es-VE", {
+      style: "currency",
+      currency: "VES",
     }).format(amount);
   };
 
   const columns = [
     {
-      accessorKey: 'code',
-      header: 'Código',
+      accessorKey: "code",
+      header: "Código",
     },
     {
-      accessorKey: 'name',
-      header: 'Nombre',
+      accessorKey: "name",
+      header: "Nombre",
     },
     {
-      accessorKey: 'type',
-      header: 'Tipo',
+      accessorKey: "type",
+      header: "Tipo",
       cell: ({ row }: any) => getAccountTypeName(row.original.type),
     },
     {
-      accessorKey: 'balance',
-      header: 'Saldo',
+      accessorKey: "balance",
+      header: "Saldo",
       cell: ({ row }: any) => formatCurrency(row.original.balance),
     },
     {
-      accessorKey: 'isActive',
-      header: 'Estado',
+      accessorKey: "isActive",
+      header: "Estado",
       cell: ({ row }: any) => (
         <span
           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            row.original.isActive
-              ? 'bg-green-100 text-green-800'
-              : 'bg-red-100 text-red-800'
+            row.original.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
           }`}
         >
-          {row.original.isActive ? 'Activa' : 'Inactiva'}
+          {row.original.isActive ? "Activa" : "Inactiva"}
         </span>
       ),
     },
     {
-      id: 'actions',
-      header: 'Acciones',
+      id: "actions",
+      header: "Acciones",
       cell: ({ row }: any) => (
         <div className="flex items-center space-x-2">
           <button
@@ -156,7 +156,10 @@ export function AccountList() {
         <h2 className="text-2xl font-bold">Cuentas Contables</h2>
         <button
           className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md"
-          onClick={() => navigate({ to: '/accounting/accounts/new' })}
+          onClick={() => {
+            // Temporalmente redirigimos al dashboard mientras se configura la ruta correcta
+            void navigate({ to: "/$companyId/dashboard", params: { companyId: "1" } });
+          }}
         >
           Nueva Cuenta
         </button>
