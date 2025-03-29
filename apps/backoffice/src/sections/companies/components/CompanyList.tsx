@@ -78,7 +78,7 @@ export function CompanyList() {
     {
       accessorKey: "status",
       header: "Estado",
-      cell: ({ row }: any) => (
+      cell: ({ row }: { row: { original: Company } }) => (
         <span
           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
             row.original.status === "active"
@@ -93,7 +93,7 @@ export function CompanyList() {
     {
       id: "actions",
       header: "Acciones",
-      cell: ({ row }: any) => (
+      cell: ({ row }: { row: { original: Company } }) => (
         <div className="flex items-center space-x-2">
           <button
             className="text-blue-600 hover:text-blue-800"

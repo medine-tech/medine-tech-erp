@@ -12,6 +12,12 @@ interface Account {
   isActive: boolean;
 }
 
+interface CellProps {
+  row: {
+    original: Account;
+  };
+}
+
 export function AccountList() {
   const navigate = useNavigate();
   const [accounts, setAccounts] = React.useState<Account[]>([]);
@@ -104,17 +110,17 @@ export function AccountList() {
     {
       accessorKey: "type",
       header: "Tipo",
-      cell: ({ row }: any) => getAccountTypeName(row.original.type),
+      cell: ({ row }: CellProps) => getAccountTypeName(row.original.type),
     },
     {
       accessorKey: "balance",
       header: "Saldo",
-      cell: ({ row }: any) => formatCurrency(row.original.balance),
+      cell: ({ row }: CellProps) => formatCurrency(row.original.balance),
     },
     {
       accessorKey: "isActive",
       header: "Estado",
-      cell: ({ row }: any) => (
+      cell: ({ row }: CellProps) => (
         <span
           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
             row.original.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
@@ -127,7 +133,7 @@ export function AccountList() {
     {
       id: "actions",
       header: "Acciones",
-      cell: ({ row }: any) => (
+      cell: ({ row }: CellProps) => (
         <div className="flex items-center space-x-2">
           <button
             className="text-blue-600 hover:text-blue-800"
