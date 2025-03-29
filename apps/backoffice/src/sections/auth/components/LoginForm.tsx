@@ -2,6 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import React from "react";
 
 import { Form, FormField } from "../../shared/components/form";
+import { useAuth } from "../context/AuthContext";
 import { loginSchema } from "../lib/validations";
 
 interface LoginFormProps {
@@ -10,28 +11,25 @@ interface LoginFormProps {
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
   const navigate = useNavigate();
+  const { login, error: authError, clearError } = useAuth();
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: { email: string; password: string }) => {
     try {
       setIsLoading(true);
       setError(null);
+      clearError();
 
-      // Ejemplo de petición de login
-      // Aquí iría la llamada a la API de autenticación
-      // const response = await api.auth.login(values);
-
-      // Simulación de login exitoso
-      setTimeout(() => {
-        setIsLoading(false);
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          void navigate({ to: "/$companyId/dashboard", params: { companyId: "1" } });
-        }
-      }, 1000);
-    } catch (_err) {
+      // Utilizamos la función login del AuthContext
+      const companyId = await login(values.email, values.password, true);
+      
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        void navigate({ to: "/$companyId/dashboard", params: { companyId } });
+      }
+    } catch (err) {
       setIsLoading(false);
       setError("Credenciales inválidas. Inténtelo de nuevo.");
     }
@@ -44,8 +42,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         <p className="text-gray-500">Ingrese sus credenciales para acceder a su cuenta</p>
       </div>
 
-      {error && (
-        <div className="bg-destructive/15 p-3 rounded-md text-destructive text-sm">{error}</div>
+      {(error || authError) && (
+        <div className="bg-destructive/15 p-3 rounded-md text-destructive text-sm">
+          {error || (authError && authError.detail)}
+        </div>
       )}
 
       <Form

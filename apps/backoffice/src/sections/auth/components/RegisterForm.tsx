@@ -2,6 +2,8 @@ import { useNavigate } from "@tanstack/react-router";
 import React from "react";
 
 import { Form, FormField } from "../../shared/components/form";
+import { useAuth } from "../context/AuthContext";
+import { authService } from "../services";
 import { registerSchema } from "../lib/validations";
 
 interface RegisterFormProps {
@@ -10,24 +12,39 @@ interface RegisterFormProps {
 
 export function RegisterForm({ onSuccess }: RegisterFormProps) {
   const navigate = useNavigate();
+  const { login, error: authError, clearError } = useAuth();
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }) => {
     try {
       setIsLoading(true);
       setError(null);
+      clearError();
 
-      // Simulación de registro - en producción llamaría a la API
-      setTimeout(() => {
-        setIsLoading(false);
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          void navigate({ to: "/login" });
-        }
-      }, 1500);
-    } catch (_err) {
+      // Llamada a la API para registrar al usuario
+      await authService.register({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      });
+
+      // Iniciar sesión automáticamente después del registro
+      await login(values.email, values.password);
+
+      setIsLoading(false);
+
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        void navigate({ to: "/login" });
+      }
+    } catch (err) {
       setIsLoading(false);
       setError("Error al registrar el usuario. Inténtelo de nuevo.");
     }
@@ -40,8 +57,10 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         <p className="text-gray-500">Ingrese sus datos para registrarse</p>
       </div>
 
-      {error && (
-        <div className="bg-destructive/15 p-3 rounded-md text-destructive text-sm">{error}</div>
+      {(error || authError) && (
+        <div className="bg-destructive/15 p-3 rounded-md text-destructive text-sm">
+          {error || (authError && authError.detail)}
+        </div>
       )}
 
       <Form

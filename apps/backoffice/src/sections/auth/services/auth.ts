@@ -14,6 +14,12 @@ export interface LoginRequest {
   rememberMe?: boolean;
 }
 
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+}
+
 export interface LoginResponse {
   token: string;
   default_company_id: string;
@@ -29,6 +35,36 @@ export interface ApiError {
 
 // Servicio de autenticación
 export const authService = {
+  // Registrar nuevo usuario
+  async register(userData: RegisterRequest): Promise<void> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/backoffice/first-companies`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const apiError: ApiError = {
+          title: data.title || "Error",
+          status: response.status,
+          detail: data.detail || "Ha ocurrido un error durante el registro",
+          errors: data.errors,
+        };
+        throw apiError;
+      }
+    } catch (error) {
+      if ((error as ApiError).status) {
+        throw error;
+      }
+      throw new Error("No se pudo conectar con el servidor. Verifica tu conexión a internet.");
+    }
+  },
+
   // Iniciar sesión
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     try {
