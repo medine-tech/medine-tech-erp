@@ -89,6 +89,7 @@ export const companyService = {
     companyId: string,
     page: number = 1,
     perPage: number = 10,
+    searchName?: string,
   ): Promise<CompanyPagination> {
     try {
       const token = authService.getToken();
@@ -96,8 +97,14 @@ export const companyService = {
         throw new Error("No hay sesión de usuario");
       }
 
+      let url = `${API_BASE_URL}/backoffice/${companyId}/companies?page=${page}&per_page=${perPage}`;
+      
+      if (searchName) {
+        url += `&name=${encodeURIComponent(searchName)}`;
+      }
+      
       const response = await fetch(
-        `${API_BASE_URL}/backoffice/${companyId}/companies?page=${page}&per_page=${perPage}`,
+        url,
         {
           method: "GET",
           headers: {

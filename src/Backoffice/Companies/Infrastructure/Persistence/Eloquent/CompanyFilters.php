@@ -22,4 +22,12 @@ final class CompanyFilters extends EloquentFilters
             $query->whereIn('user_id', $value);
         });
     }
+
+    /**
+     * @param string $value
+     */
+    protected function name(string $value): void
+    {
+        $this->builder->whereRaw('JSON_EXTRACT(data, "$.name") LIKE ?', ["%$value%"]);
+    }
 }

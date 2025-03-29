@@ -17,6 +17,7 @@ interface CompaniesTableProps {
   companyId: string;
   currentPage: number;
   perPage: number;
+  searchName?: string;
   onPageChange: (page: number) => void;
   onPerPageChange: (perPage: number) => void;
 }
@@ -25,6 +26,7 @@ export function CompaniesTable({
   companyId,
   currentPage,
   perPage,
+  searchName,
   onPageChange,
   onPerPageChange: _onPerPageChange,
 }: CompaniesTableProps) {
@@ -53,7 +55,7 @@ export function CompaniesTable({
       setError(null);
 
       try {
-        const response = await companyService.getCompanies(companyId, currentPage, perPage);
+        const response = await companyService.getCompanies(companyId, currentPage, perPage, searchName);
 
         if (isMounted) {
           setCompanies(response.items);
@@ -77,7 +79,7 @@ export function CompaniesTable({
     return () => {
       isMounted = false;
     };
-  }, [currentPage, perPage, companyId]);
+  }, [currentPage, perPage, companyId, searchName]);
 
   const handlePageChange = (page: number) => {
     onPageChange(page);
