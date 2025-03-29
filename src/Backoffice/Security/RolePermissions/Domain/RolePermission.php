@@ -34,6 +34,10 @@ final class RolePermission extends AggregateRoot
         return $rolePermission;
     }
 
+    /**
+     * @param array<string, mixed> $primitives
+     * @return self
+     */
     public static function fromPrimitives(array $primitives): self
     {
         return new self(

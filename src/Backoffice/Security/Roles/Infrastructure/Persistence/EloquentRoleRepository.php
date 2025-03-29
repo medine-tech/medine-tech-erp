@@ -13,7 +13,7 @@ use function Lambdish\Phunctional\map;
 
 final class EloquentRoleRepository implements RoleRepository
 {
-    public function save(Role $role): void
+    public function save(Role $role): int
     {
         try {
             $data = [
@@ -27,10 +27,12 @@ final class EloquentRoleRepository implements RoleRepository
                 'guard_name' => $role->guardName()
             ];
 
-            RoleModel::updateOrCreate(
+            $model = RoleModel::updateOrCreate(
                 ['id' => $role->id()],
                 $data
             );
+
+            return $model->id;
         } catch (Exception $e) {
             throw new RuntimeException("Failed to save accounting account: " . $e->getMessage(), 0, $e);
         }
@@ -49,6 +51,11 @@ final class EloquentRoleRepository implements RoleRepository
         return $fromDatabase($data);
     }
 
+    /**
+     * @param array<string, mixed> $filters
+     * @param int $perPage
+     * @return array{items: array<int, Role>, total: int, perPage: int, currentPage: int}
+     */
     public function search(array $filters, int $perPage = 20): array
     {
         $paginator = RoleModel::fromFilters($filters)

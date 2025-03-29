@@ -13,6 +13,10 @@ use Throwable;
 
 final class DateTimeStringSimilarComparator extends ObjectComparator
 {
+    /**
+     * @param mixed $expected
+     * @param mixed $actual
+     */
     public function accepts($expected, $actual): bool
     {
         return (null !== $actual)
@@ -22,6 +26,14 @@ final class DateTimeStringSimilarComparator extends ObjectComparator
             && $this->isValidDateTimeString($actual);
     }
 
+    /**
+     * @param string $expected
+     * @param string $actual
+     * @param float $delta
+     * @param bool $canonicalize
+     * @param bool $ignoreCase
+     * @param array<mixed> $processed
+     */
     public function assertEquals(
         $expected,
         $actual,

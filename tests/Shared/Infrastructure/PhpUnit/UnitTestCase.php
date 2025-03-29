@@ -53,16 +53,28 @@ abstract class UnitTestCase extends TestCase
         $subscriber($event);
     }
 
+    /**
+     * @param mixed $expected
+     * @param mixed $actual
+     */
     protected function isSimilar($expected, $actual): bool
     {
         return TestUtils::isSimilar($expected, $actual);
     }
 
+    /**
+     * @param mixed $expected
+     * @param mixed $actual
+     */
     protected function assertSimilar($expected, $actual): void
     {
         TestUtils::assertSimilar($expected, $actual);
     }
 
+    /**
+     * @param mixed $value
+     * @param float $delta
+     */
     protected function similarTo($value, $delta = 0.0): MatcherIsSimilar
     {
         return TestUtils::similarTo($value, $delta);

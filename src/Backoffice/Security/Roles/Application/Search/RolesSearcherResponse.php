@@ -6,7 +6,14 @@ namespace MedineTech\Backoffice\Security\Roles\Application\Search;
 
 final readonly class RolesSearcherResponse
 {
+    /**
+     * @param array<int, RoleSearcherResponse> $items
+     * @param int $total
+     * @param int $perPage
+     * @param int $currentPage
+     */
     public function __construct(
+        /** @var array<int, RoleSearcherResponse> */
         private array $items,
         private int $total,
         private int $perPage,
@@ -15,6 +22,9 @@ final readonly class RolesSearcherResponse
     {
     }
 
+    /**
+     * @return array<int, RoleSearcherResponse>
+     */
     public function items(): array
     {
         return $this->items;

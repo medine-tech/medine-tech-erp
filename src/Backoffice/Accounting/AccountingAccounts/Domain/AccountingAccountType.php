@@ -14,6 +14,7 @@ class AccountingAccountType
     public const REVENUE = 4;
     public const EXPENSE = 5;
 
+    /** @var array<int, string> */
     private static array $typeName = [
         self::ASSET => 'Activo',
         self::LIABILITY => 'Pasivo',

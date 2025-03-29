@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import { ThemeProvider } from "./sections/shared/context/ThemeContext";
 import App from "./App.tsx";
 
 import "./index.css";
@@ -10,11 +11,12 @@ const rootElement = document.getElementById("root");
 if (rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
-      <App />
+      <ThemeProvider defaultTheme="system" storageKey="medine-theme-preference">
+        <App />
+      </ThemeProvider>
     </StrictMode>,
   );
 } else {
-  // Unable to find root element - show fallback error UI
   document.body.innerHTML =
-    "<div style='color:red;padding:20px'>Failed to initialize application: Root element not found</div>";
+    "<div style='color:red;padding:20px'>Error al inicializar la aplicación: Elemento root no encontrado</div>";
 }

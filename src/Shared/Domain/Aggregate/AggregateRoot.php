@@ -8,8 +8,12 @@ use MedineTech\Shared\Domain\Bus\Event\DomainEvent;
 
 abstract class AggregateRoot
 {
+    /** @var array<int, DomainEvent> */
     private array $domainEvents = [];
 
+    /**
+     * @return array<int, DomainEvent>
+     */
     final public function pullDomainEvents(): array
     {
         $domainEvents = $this->domainEvents;

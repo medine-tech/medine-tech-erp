@@ -19,6 +19,13 @@ abstract class DomainEvent
         $this->occurredOn = $occurredOn ?: Utils::dateToString(new DateTimeImmutable());
     }
 
+    /**
+     * @param string $aggregateId
+     * @param array<string, mixed> $body
+     * @param string $eventId
+     * @param string $occurredOn
+     * @return static
+     */
     abstract public static function fromPrimitives(
         string $aggregateId,
         array $body,
@@ -28,6 +35,9 @@ abstract class DomainEvent
 
     abstract public static function eventName(): string;
 
+    /**
+     * @return array<string, mixed>
+     */
     abstract public function toPrimitives(): array;
 
     public function aggregateId(): string

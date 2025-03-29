@@ -12,6 +12,9 @@ final readonly class AuthCompanySearcherResponse
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $row
+     */
     public static function fromPrimitives(array $row): self
     {
         return new self(

@@ -7,8 +7,14 @@ namespace MedineTech\Backoffice\Companies\Infrastructure\Persistence\Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use MedineTech\Shared\Infrastructure\Persistence\Eloquent\EloquentFilters;
 
+/**
+ * @extends EloquentFilters<\MedineTech\Backoffice\Companies\Infrastructure\Persistence\Eloquent\CompanyModel>
+ */
 final class CompanyFilters extends EloquentFilters
 {
+    /**
+     * @param string|array<int, string> $value
+     */
     protected function userId($value): void
     {
         $value = $this->getValue($value);

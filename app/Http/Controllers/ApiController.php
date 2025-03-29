@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use MedineTech\Shared\Domain\DomainError;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,6 +41,7 @@ abstract class ApiController extends Controller
                 'title' => $this->exceptionTitle($error),
                 'status' => $statusCode,
                 'detail' => $this->exceptionDetail($error),
+                'errors' => $error instanceof ValidationException ? $error->errors() : null,
             ],
             $statusCode
         );
@@ -99,6 +101,18 @@ abstract class ApiController extends Controller
      *     UserNotFound::class => Response::HTTP_NOT_FOUND,
      *     InvalidUserId::class => Response::HTTP_BAD_REQUEST,
      * ];
+     */
+    /**
+     * Define exception mapping for specific controller.
+     * Override this method in child controllers to add specific exception mappings.
+     *
+     * Example:
+     * return [
+     *     UserNotFound::class => Response::HTTP_NOT_FOUND,
+     *     InvalidUserId::class => Response::HTTP_BAD_REQUEST,
+     * ];
+     *
+     * @return array<class-string, int>
      */
     protected function exceptions(): array
     {

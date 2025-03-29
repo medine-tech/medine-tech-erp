@@ -15,6 +15,10 @@ use function Lambdish\Phunctional\instance_of;
 
 final class AggregateRootArraySimilarComparator extends Comparator
 {
+    /**
+     * @param mixed $expected
+     * @param mixed $actual
+     */
     public function accepts($expected, $actual): bool
     {
         return is_array($expected)
@@ -23,6 +27,13 @@ final class AggregateRootArraySimilarComparator extends Comparator
                 && all(instance_of(AggregateRoot::class), $actual));
     }
 
+    /**
+     * @param array<int, AggregateRoot> $expected
+     * @param array<int, AggregateRoot> $actual
+     * @param float $delta
+     * @param bool $canonicalize
+     * @param bool $ignoreCase
+     */
     public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false): void
     {
         if (!$this->contains($expected, $actual) || count($expected) !== count($actual)) {
@@ -36,6 +47,10 @@ final class AggregateRootArraySimilarComparator extends Comparator
         }
     }
 
+    /**
+     * @param array<int, AggregateRoot> $expectedArray
+     * @param array<int, AggregateRoot> $actualArray
+     */
     private function contains(array $expectedArray, array $actualArray): bool
     {
         $exists = fn(AggregateRoot $expected): bool => any(

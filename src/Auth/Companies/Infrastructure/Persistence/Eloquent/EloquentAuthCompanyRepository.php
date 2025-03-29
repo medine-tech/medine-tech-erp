@@ -10,6 +10,10 @@ use function Lambdish\Phunctional\map;
 
 final class EloquentAuthCompanyRepository implements AuthCompanyRepository
 {
+    /**
+     * @param array<string, mixed> $filters
+     * @return array{items: array<int, AuthCompany>, total: int, perPage: int, currentPage: int}
+     */
     public function search(array $filters): array
     {
         $paginator = CompanyModel::fromFilters($filters)

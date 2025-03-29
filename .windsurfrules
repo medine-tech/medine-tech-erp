@@ -28,3 +28,5 @@ We LOVE DDD in Backend!!!
 - We use shadcn-ui for our frontend.
 - All our form must be validated using zod and react hook form.
 - Our api backend docs is located in `storage/api-docs/api-docs.json`
+- Avoid to use any type in TypeScript in our frontend.
+- Avoid using barrel files whenever possible (index).

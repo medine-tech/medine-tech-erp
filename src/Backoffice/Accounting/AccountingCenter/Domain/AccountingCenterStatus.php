@@ -11,6 +11,7 @@ class AccountingCenterStatus
     public const ACTIVE = 'active';
     public const INACTIVE = 'inactive';
 
+    /** @var array<string, string> */
     private static array $statusNone = [
         self::ACTIVE => 'activo',
         self::INACTIVE => 'inactivo'
@@ -24,11 +25,18 @@ class AccountingCenterStatus
         $this->value = $value;
     }
 
+    /**
+     * @return string
+     */
     private function value(): string
     {
         return $this->value;
     }
 
+    /**
+     * @param string $value
+     * @throws InvalidArgumentException
+     */
     private function ensureIsValidStatus(string $value): void
     {
         if (!in_array($value, [
@@ -39,11 +47,18 @@ class AccountingCenterStatus
         }
     }
 
+    /**
+     * @param AccountingCenterStatus $status
+     * @return bool
+     */
     public function isEqual(AccountingCenterStatus $status): bool
     {
         return $this->value() === $status->value();
     }
 
+    /**
+     * @return string
+     */
     public function statusName(): string
     {
         return self::$statusNone[$this->value()];

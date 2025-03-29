@@ -14,6 +14,10 @@ interface UserRepository
 
     public function nextId(): int;
 
+    /**
+     * @param array<string, mixed> $filters
+     * @return array{items: array<int, User>, total: int, perPage: int, currentPage: int}
+     */
     public function search(array $filters): array;
 
 }

@@ -6,10 +6,20 @@ namespace MedineTech\Shared\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ */
 abstract class EloquentFilters
 {
+    /**
+     * @var Builder<TModel>
+     */
     protected Builder $builder;
 
+    /**
+     * @param Builder<TModel> $builder
+     * @param array<string, mixed> $filters
+     */
     public function apply(Builder $builder, array $filters): void
     {
         $this->builder = $builder;
@@ -24,6 +34,10 @@ abstract class EloquentFilters
         }
     }
 
+    /**
+     * @param mixed $value
+     * @return array<int, mixed>
+     */
     protected function getValue($value): array
     {
         return is_array($value) ? $value : [$value];

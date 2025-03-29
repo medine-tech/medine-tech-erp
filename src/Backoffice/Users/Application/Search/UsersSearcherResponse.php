@@ -5,11 +5,18 @@ namespace MedineTech\Backoffice\Users\Application\Search;
 
 final class UsersSearcherResponse
 {
+    /** @var array<int, UserSearcherResponse> */
     private array $items;
     private int $total;
     private int $perPage;
     private int $currentPage;
 
+    /**
+     * @param array<int, UserSearcherResponse> $items
+     * @param int $total
+     * @param int $perPage
+     * @param int $currentPage
+     */
     public function __construct(array $items, int $total, int $perPage, int $currentPage)
     {
         $this->items       = $items;
@@ -18,6 +25,9 @@ final class UsersSearcherResponse
         $this->currentPage = $currentPage;
     }
 
+    /**
+     * @return array<int, UserSearcherResponse>
+     */
     public function items(): array
     {
         return $this->items;

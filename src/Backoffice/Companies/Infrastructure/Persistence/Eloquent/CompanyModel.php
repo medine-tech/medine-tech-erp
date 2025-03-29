@@ -26,11 +26,18 @@ final class CompanyModel extends Tenant
         'data' => 'array',
     ];
 
+    /**
+     * @phpstan-return HasMany<CompanyUserModel, CompanyModel>
+     */
     public function company_users(): HasMany
     {
         return $this->hasMany(CompanyUserModel::class, 'company_id');
     }
 
+    /**
+     * @param Builder<CompanyModel> $builder
+     * @param array<string, mixed> $filters
+     */
     public function scopeFromFilters(Builder $builder, array $filters): void
     {
         (new CompanyFilters())->apply($builder, $filters);

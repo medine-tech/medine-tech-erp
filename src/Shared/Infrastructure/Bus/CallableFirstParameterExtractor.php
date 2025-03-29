@@ -15,21 +15,35 @@ use function Lambdish\Phunctional\reindex;
 
 final class CallableFirstParameterExtractor
 {
+    /**
+     * @param iterable<object> $callables
+     * @return array<string, array<int, string>>
+     */
     public static function forCallables(iterable $callables): array
     {
         return map(self::unflatten(), reindex(self::classExtractor(new self()), $callables));
     }
 
+    /**
+     * @param iterable<DomainEventSubscriber> $callables
+     * @return array<string, array<int, DomainEventSubscriber>>
+     */
     public static function forPipedCallables(iterable $callables): array
     {
         return reduce(self::pipedCallablesReducer(), $callables, []);
     }
 
+    /**
+     * @return callable(object): ?string
+     */
     private static function classExtractor(self $parameterExtractor): callable
     {
         return static fn(object $handler): ?string => $parameterExtractor->extract($handler);
     }
 
+    /**
+     * @return callable(array<string, array<int, DomainEventSubscriber>>, DomainEventSubscriber): array<string, array<int, DomainEventSubscriber>>
+     */
     private static function pipedCallablesReducer(): callable
     {
         return static function (array $subscribers, DomainEventSubscriber $subscriber): array {
@@ -43,6 +57,9 @@ final class CallableFirstParameterExtractor
         };
     }
 
+    /**
+     * @return callable(mixed): array<int, mixed>
+     */
     private static function unflatten(): callable
     {
         return static fn(mixed $value): array => [$value];

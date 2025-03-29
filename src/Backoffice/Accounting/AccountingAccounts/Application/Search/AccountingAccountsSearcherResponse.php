@@ -6,6 +6,9 @@ namespace MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Search
 
 final class AccountingAccountsSearcherResponse
 {
+    /**
+     * @param array<int, mixed> $items
+     */
     public function __construct(
         private array $items,
         private int $total,
@@ -15,6 +18,9 @@ final class AccountingAccountsSearcherResponse
     {
     }
 
+    /**
+     * @return array<int, mixed>
+     */
     public function items(): array
     {
         return $this->items;

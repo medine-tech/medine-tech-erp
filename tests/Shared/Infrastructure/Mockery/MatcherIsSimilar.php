@@ -11,6 +11,10 @@ final readonly class MatcherIsSimilar implements MatcherInterface
 {
     private ConstraintIsSimilar $constraint;
 
+    /**
+     * @param mixed $value
+     * @param float $delta
+     */
     public function __construct($value, $delta = 0.0)
     {
         $this->constraint = new ConstraintIsSimilar($value, $delta);
@@ -21,6 +25,10 @@ final readonly class MatcherIsSimilar implements MatcherInterface
         return 'Is similar';
     }
 
+    /**
+     * @param mixed $actual
+     * @return bool
+     */
     public function match(&$actual)
     {
         return $this->constraint->evaluate($actual, '', true);

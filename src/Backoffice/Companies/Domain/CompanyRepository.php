@@ -10,5 +10,10 @@ interface CompanyRepository
 
     public function find(string $id): ?Company;
 
-    public function search(array $filters): array;
+    /**
+     * @param array<string, mixed> $filters
+     * @param int $perPage
+     * @return array{items: array<int, Company>, total: int, perPage: int, currentPage: int}
+     */
+    public function search(array $filters, int $perPage = 20): array;
 }
