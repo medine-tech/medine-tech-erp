@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Post(
- *     path="/api/backoffice/users",
+ *     path="/api/backoffice/{tenant}/users",
  *     tags={"Backoffice - Users"},
  *     summary="Create a new user",
  *     @OA\RequestBody(

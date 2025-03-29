@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Get(
- *     path="/api/backoffice/users",
+ *     path="/api/backoffice/{tenant}/users",
  *     summary="Search users based on filters",
  *     tags={"Backoffice - Users"},
  *     security={

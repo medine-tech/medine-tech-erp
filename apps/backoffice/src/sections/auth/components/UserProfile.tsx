@@ -150,6 +150,32 @@ export function UserProfile() {
           <span>Lista de Compañías</span>
         </DropdownMenuItem>
 
+        <DropdownMenuItem
+          className="text-foreground cursor-pointer rounded-md transition-all duration-150 py-2 my-0.5 px-2 mx-1 hover:bg-primary/10 dark:hover:bg-primary/30 dark:hover:text-primary-foreground hover:translate-x-1 hover:border-l-2 hover:border-primary/70 group"
+          onClick={() =>
+            navigate({ to: "/$companyId/users/list", params: { companyId: companyId || "" } })
+          }
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="mr-2 group-hover:text-primary dark:group-hover:text-primary-foreground transition-colors duration-150"
+          >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          <span>Gestión de Usuarios</span>
+        </DropdownMenuItem>
+
         <DropdownMenuItem className="text-foreground cursor-pointer rounded-md transition-all duration-150 py-2 my-0.5 px-2 mx-1 hover:bg-primary/10 dark:hover:bg-primary/30 dark:hover:text-primary-foreground hover:translate-x-1 hover:border-l-2 hover:border-primary/70 group">
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Get(
- *     path="/api/backoffice/users/{id}",
+ *     path="/api/backoffice/{tenant}/users/{id}",
  *     tags={"Backoffice - Users"},
  *     summary="Retrieve a user by ID",
  *     @OA\Parameter(

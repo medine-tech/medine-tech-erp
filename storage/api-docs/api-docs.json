@@ -3453,13 +3453,13 @@
                 ]
             }
         },
-        "/api/backoffice/users/{id}": {
+        "/api/backoffice/{tenant}/users/{id}": {
             "get": {
                 "tags": [
                     "Backoffice - Users"
                 ],
                 "summary": "Retrieve a user by ID",
-                "operationId": "854dec5e1a31613a225fe935782c50ee",
+                "operationId": "bcb996bd07915986dc758d4fb35aa506",
                 "parameters": [
                     {
                         "name": "id",
@@ -3580,7 +3580,7 @@
                     "Backoffice - Users"
                 ],
                 "summary": "Update an existing user",
-                "operationId": "ade359c92a6593cbb373a63713e820b8",
+                "operationId": "94e6977ba9619110534c2c071c3adb72",
                 "parameters": [
                     {
                         "name": "id",
@@ -3697,13 +3697,13 @@
                 ]
             }
         },
-        "/api/backoffice/users": {
+        "/api/backoffice/{tenant}/users": {
             "get": {
                 "tags": [
                     "Backoffice - Users"
                 ],
                 "summary": "Search users based on filters",
-                "operationId": "acea973d32a10041d2bc7a21126eaa0f",
+                "operationId": "115ebe8c6a58445aaefa8b43a02c91b7",
                 "parameters": [
                     {
                         "name": "page",
@@ -3821,7 +3821,7 @@
                     "Backoffice - Users"
                 ],
                 "summary": "Create a new user",
-                "operationId": "24b0958da33d8c102ef0643d082d722d",
+                "operationId": "6366779489beb175b37a620420298144",
                 "requestBody": {
                     "required": true,
                     "content": {

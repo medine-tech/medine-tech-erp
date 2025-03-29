@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Put(
- *     path="/api/backoffice/users/{id}",
+ *     path="/api/backoffice/{tenant}/users/{id}",
  *     tags={"Backoffice - Users"},
  *     summary="Update an existing user",
  *     @OA\Parameter(
