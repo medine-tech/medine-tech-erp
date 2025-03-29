@@ -25,18 +25,18 @@ export function CompanySearchForm({ companyId, onClose }: CompanySearchFormProps
   type SearchParams = {
     name?: string;
   };
-  
+
   const search = useSearch({ from: "/$companyId/companies/list" }) as SearchParams;
-  
+
   const form = useForm<SearchFormValues>({
     resolver: zodResolver(searchSchema),
     defaultValues: {
-      name: search.name || "",
+      name: search.name ?? "",
     },
   });
 
   const onSubmit = (data: SearchFormValues) => {
-    router.navigate({
+    void router.navigate({
       to: "/$companyId/companies/list",
       params: { companyId },
       search: data.name ? { name: data.name } : undefined,
@@ -47,7 +47,7 @@ export function CompanySearchForm({ companyId, onClose }: CompanySearchFormProps
   const handleCancel = () => {
     form.reset();
     if (search.name) {
-      router.navigate({
+      void router.navigate({
         to: "/$companyId/companies/list",
         params: { companyId },
         search: {},

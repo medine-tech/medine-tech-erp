@@ -98,21 +98,18 @@ export const companyService = {
       }
 
       let url = `${API_BASE_URL}/backoffice/${companyId}/companies?page=${page}&per_page=${perPage}`;
-      
+
       if (searchName) {
         url += `&name=${encodeURIComponent(searchName)}`;
       }
-      
-      const response = await fetch(
-        url,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            accept: "application/json",
-          },
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          accept: "application/json",
         },
-      );
+      });
 
       if (!response.ok) {
         const errorData = await response.json();

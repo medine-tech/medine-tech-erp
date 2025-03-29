@@ -14,7 +14,6 @@ import {
 } from "../../../sections/shared/components/ui/form";
 import { Input } from "../../../sections/shared/components/ui/input";
 import { useToast } from "../../../sections/shared/hooks/useToast";
-
 import { Breadcrumb } from "../../shared/components/ui/breadcrumb";
 import { Button } from "../../shared/components/ui/button";
 import { companyService } from "../services/company";
@@ -31,7 +30,7 @@ function CompanyFormPageComponent() {
   const routerState = useRouterState();
   const currentRoute = routerState.matches[routerState.matches.length - 1].routeId;
   const isEditMode = currentRoute.includes("/edit");
-  
+
   // Obtenemos los parámetros desde el objeto de estado del enrutador
   // Utilizamos type assertion porque sabemos qué parámetros deben estar disponibles
   // basados en la definición de nuestras rutas
@@ -39,14 +38,14 @@ function CompanyFormPageComponent() {
     companyId?: string;
     id?: string;
   };
-  
+
   const routeParams = routerState.matches.reduce<RouteParams>((params, match) => {
     return { ...params, ...match.params };
   }, {});
-  
+
   // Extraemos los parámetros necesarios con valores por defecto
-  const companyId = routeParams.companyId || "";
-  const companyIdToEdit = isEditMode ? (routeParams.id || "") : "";
+  const companyId = routeParams.companyId ?? "";
+  const companyIdToEdit = isEditMode ? (routeParams.id ?? "") : "";
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -140,64 +139,58 @@ function CompanyFormPageComponent() {
 
   return (
     <>
-        <div className="mb-6">
-          <Breadcrumb
-            segments={[
-              { label: "Compañías", href: "/$companyId/companies/list" },
-              { label: isEditMode ? "Editar Compañía" : "Crear Compañía" },
-            ]}
-          />
-        </div>
+      <div className="mb-6">
+        <Breadcrumb
+          segments={[
+            { label: "Compañías", href: "/$companyId/companies/list" },
+            { label: isEditMode ? "Editar Compañía" : "Crear Compañía" },
+          ]}
+        />
+      </div>
 
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">
-            {isEditMode ? "Editar Compañía" : "Crear Compañía"}
-          </h2>
-        </div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">{isEditMode ? "Editar Compañía" : "Crear Compañía"}</h2>
+      </div>
 
-        <div className="bg-card shadow-md rounded-lg p-6 max-w-2xl mx-auto">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* Campo ID oculto, autogenerado con crypto */}
-              <input type="hidden" {...form.register("id")} />
+      <div className="bg-card shadow-md rounded-lg p-6 max-w-2xl mx-auto">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Campo ID oculto, autogenerado con crypto */}
+            <input type="hidden" {...form.register("id")} />
 
-              <FormField
-                control={form.control}
-                name="name"
-                render={({
-                  field,
-                }: {
-                  field: ControllerRenderProps<CompanyFormValues, "name">;
-                }) => (
-                  <FormItem>
-                    <FormLabel>Nombre</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Nombre de la compañía" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }: { field: ControllerRenderProps<CompanyFormValues, "name"> }) => (
+                <FormItem>
+                  <FormLabel>Nombre</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Nombre de la compañía" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              {/* Solo se mantiene el campo de nombre como visible */}
+            {/* Solo se mantiene el campo de nombre como visible */}
 
-              <div className="flex justify-end gap-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() =>
-                    navigate({ to: "/$companyId/companies/list", params: { companyId } })
-                  }
-                >
-                  Cancelar
-                </Button>
-                <Button type="submit" disabled={isSubmitting || isLoading}>
-                  {isLoading ? "Cargando..." : isSubmitting ? "Guardando..." : "Guardar"}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </div>
+            <div className="flex justify-end gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  navigate({ to: "/$companyId/companies/list", params: { companyId } })
+                }
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" disabled={isSubmitting || isLoading}>
+                {isLoading ? "Cargando..." : isSubmitting ? "Guardando..." : "Guardar"}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </div>
     </>
   );
 }

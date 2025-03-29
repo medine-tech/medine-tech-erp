@@ -55,7 +55,7 @@ export function UserProfile() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={`${userName.length > 0 ? 'mr-1.5' : ''} text-primary/80`}
+            className={`${userName.length > 0 ? "mr-1.5" : ""} text-primary/80`}
           >
             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
@@ -88,7 +88,10 @@ export function UserProfile() {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-56 bg-card/95 backdrop-blur-sm border border-border/30 shadow-md dark:shadow-primary/20 dark:border-primary/20 rounded-lg p-1 animate-in fade-in-80 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
+      <DropdownMenuContent
+        align="end"
+        className="w-56 bg-card/95 backdrop-blur-sm border border-border/30 shadow-md dark:shadow-primary/20 dark:border-primary/20 rounded-lg p-1 animate-in fade-in-80 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+      >
         <DropdownMenuLabel className="text-muted-foreground font-medium text-xs px-2 py-1.5">
           Mi cuenta
         </DropdownMenuLabel>
@@ -121,9 +124,11 @@ export function UserProfile() {
           <span>Mi perfil</span>
         </DropdownMenuItem>
 
-        <DropdownMenuItem 
+        <DropdownMenuItem
           className="text-foreground cursor-pointer rounded-md transition-all duration-150 py-2 my-0.5 px-2 mx-1 hover:bg-primary/10 dark:hover:bg-primary/30 dark:hover:text-primary-foreground hover:translate-x-1 hover:border-l-2 hover:border-primary/70 group"
-          onClick={() => navigate({ to: "/$companyId/companies/list", params: { companyId: companyId || "" } })}
+          onClick={() =>
+            navigate({ to: "/$companyId/companies/list", params: { companyId: companyId || "" } })
+          }
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

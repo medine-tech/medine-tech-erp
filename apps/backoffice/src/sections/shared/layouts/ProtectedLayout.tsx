@@ -46,8 +46,10 @@ export function ProtectedLayout() {
       <header className="bg-card/80 backdrop-blur-md border-b border-border/40 sticky top-0 z-10 dark:bg-card/70 shadow-sm dark:shadow-primary/5">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center space-x-3">
-            <button 
-              onClick={() => navigate({ to: "/$companyId/dashboard", params: { companyId: companyId || "" } })}
+            <button
+              onClick={() =>
+                navigate({ to: "/$companyId/dashboard", params: { companyId: companyId || "" } })
+              }
               className="flex items-center text-foreground hover:text-primary transition-all duration-300 transform hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 focus:ring-offset-background rounded-md p-1.5"
               title="Ir al Panel de Control"
             >
@@ -68,7 +70,9 @@ export function ProtectedLayout() {
                 <rect width="7" height="9" x="14" y="12" rx="1" />
                 <rect width="7" height="5" x="3" y="16" rx="1" />
               </svg>
-              <h1 className="text-xl font-medium bg-gradient-to-r from-primary to-indigo-500 dark:from-primary dark:to-blue-400 bg-clip-text text-transparent">Medine Tech</h1>
+              <h1 className="text-xl font-medium bg-gradient-to-r from-primary to-indigo-500 dark:from-primary dark:to-blue-400 bg-clip-text text-transparent">
+                Medine Tech
+              </h1>
             </button>
             {companyId && <CompanySelector currentCompanyId={companyId} />}
           </div>
