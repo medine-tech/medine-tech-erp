@@ -1,10 +1,11 @@
 import { useNavigate } from "@tanstack/react-router";
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { Form, FormField } from "../../shared/components/form";
 import { useAuth } from "../context/AuthContext";
 import { authService } from "../services";
-import { registerSchema } from "../lib/validations";
+import { firstCompanySchema } from "../lib/validations";
 
 interface RegisterFormProps {
   onSuccess?: () => void;
@@ -17,21 +18,28 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
   const [error, setError] = React.useState<string | null>(null);
 
   const handleSubmit = async (values: {
+    companyName: string;
     name: string;
     email: string;
     password: string;
-    confirmPassword: string;
+    password_confirmation: string;
   }) => {
     try {
       setIsLoading(true);
       setError(null);
       clearError();
 
-      // Llamada a la API para registrar al usuario
+      // Generamos un UUID para la compañía
+      const companyId = uuidv4();
+
+      // Llamada a la API para registrar al usuario y la primera compañía
       await authService.register({
+        companyId,
+        companyName: values.companyName,
         name: values.name,
         email: values.email,
         password: values.password,
+        password_confirmation: values.password_confirmation,
       });
 
       // Iniciar sesión automáticamente después del registro
@@ -64,16 +72,28 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       )}
 
       <Form
-        schema={registerSchema}
+        schema={firstCompanySchema}
         onSubmit={handleSubmit}
         defaultValues={{
+          companyId: uuidv4(),
+          companyName: "",
           name: "",
           email: "",
           password: "",
-          confirmPassword: "",
+          password_confirmation: "",
         }}
       >
-        <FormField name="name" label="Nombre completo" placeholder="Ingrese su nombre completo" />
+        <FormField 
+          name="companyName" 
+          label="Nombre de la Empresa" 
+          placeholder="Ingrese el nombre de su empresa" 
+        />
+
+        <FormField 
+          name="name" 
+          label="Nombre completo" 
+          placeholder="Ingrese su nombre completo" 
+        />
 
         <FormField
           name="email"
@@ -91,7 +111,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         />
 
         <FormField
-          name="confirmPassword"
+          name="password_confirmation"
           label="Confirmar contraseña"
           type="password"
           placeholder="********"

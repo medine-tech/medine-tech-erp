@@ -15,9 +15,12 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
+  companyId: string;
+  companyName: string;
   name: string;
   email: string;
   password: string;
+  password_confirmation: string;
 }
 
 export interface LoginResponse {
