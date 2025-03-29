@@ -77,7 +77,7 @@ export function CompaniesTable({
     return () => {
       isMounted = false;
     };
-  }, [currentPage, perPage, companyId, isLoading]);
+  }, [currentPage, perPage, companyId]);
 
   const handlePageChange = (page: number) => {
     onPageChange(page);
