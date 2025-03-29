@@ -98,7 +98,7 @@ export function UsersTable({
                   <TableCell>{user.email}</TableCell>
                   <TableCell className="text-right">
                     <Link
-                      to="/$companyId/users/$id/edit"
+                      to="/$companyId/users/edit/$id"
                       params={{ companyId, id: user.id }}
                       className="inline-block"
                     >

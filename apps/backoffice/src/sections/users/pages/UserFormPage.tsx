@@ -1,7 +1,7 @@
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -37,10 +37,12 @@ export function UserFormPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const hasLoadedUser = useRef(false);
 
   const routerState = useRouterState();
   const currentRoute = routerState.matches[routerState.matches.length - 1].routeId;
-  const isEditMode = currentRoute.includes("/edit");
+  // Verificamos específicamente si estamos en la ruta de edición
+  const isEditMode = currentRoute.includes("/users/edit/");
 
   // Obtenemos los parámetros desde el objeto de estado del enrutador
   type RouteParams = {
@@ -93,9 +95,13 @@ export function UserFormPage() {
     }
   }, [isEditMode, userId, form, toast]);
 
+  // Ejecutamos loadUser solo una vez cuando tenemos los valores necesarios
   useEffect(() => {
-    loadUser();
-  }, [loadUser]);
+    if (isEditMode && userId && !hasLoadedUser.current) {
+      hasLoadedUser.current = true;
+      loadUser();
+    }
+  }, [isEditMode, userId, loadUser]);
 
   // Manejar envío del formulario
   const onSubmit = async (data: UserFormValues) => {
