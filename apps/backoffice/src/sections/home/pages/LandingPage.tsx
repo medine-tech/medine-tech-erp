@@ -50,7 +50,7 @@ export function LandingPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">
             Backoffice Administrativo
           </h1>
-          <p className="text-xl text-slate-300 text-center max-w-3xl mb-12">
+          <p className="text-xl text-primary-foreground/90 dark:text-white/90 text-center max-w-3xl mb-12 font-medium">
             Gestiona los recursos de tu empresa de forma eficiente con nuestro panel administrativo
             diseñado para optimizar tus operaciones diarias.
           </p>
@@ -59,12 +59,12 @@ export function LandingPage() {
             <Card className="bg-card/10 border-border shadow-xl backdrop-blur-sm hover:shadow-primary/20 hover:border-primary/50 transition-all duration-300">
               <CardHeader>
                 <CardTitle className="text-card-foreground">Iniciar Sesión</CardTitle>
-                <CardDescription className="text-muted-foreground">
+                <CardDescription className="text-foreground/70 dark:text-white/70">
                   Accede a tu cuenta existente
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
+                <p className="text-foreground/80 dark:text-white/80">
                   Ingresa con tus credenciales para acceder a todas las herramientas y
                   funcionalidades del panel administrativo.
                 </p>
@@ -79,12 +79,12 @@ export function LandingPage() {
             <Card className="bg-card/10 border-border shadow-xl backdrop-blur-sm hover:shadow-primary/20 hover:border-primary/50 transition-all duration-300">
               <CardHeader>
                 <CardTitle className="text-card-foreground">Crear Cuenta</CardTitle>
-                <CardDescription className="text-muted-foreground">
+                <CardDescription className="text-foreground/70 dark:text-white/70">
                   Regístrate como nuevo usuario
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
+                <p className="text-foreground/80 dark:text-white/80">
                   Crea una nueva cuenta para comenzar a utilizar nuestro sistema de gestión
                   empresarial avanzado.
                 </p>
@@ -127,7 +127,7 @@ export function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-3">Análisis y Reportes</h3>
-              <p className="text-muted-foreground">
+              <p className="text-foreground/80 dark:text-gray-200">
                 Obtén informes detallados y visualizaciones para tomar decisiones basadas en datos.
               </p>
             </div>
@@ -150,7 +150,7 @@ export function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-3">Seguridad Avanzada</h3>
-              <p className="text-muted-foreground">
+              <p className="text-foreground/80 dark:text-gray-200">
                 Protección de datos con múltiples capas de seguridad y controles de acceso
                 personalizados.
               </p>
@@ -174,7 +174,7 @@ export function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-3">Gestión de Usuarios</h3>
-              <p className="text-muted-foreground">
+              <p className="text-foreground/80 dark:text-gray-200">
                 Administra permisos y roles para cada miembro de tu equipo con facilidad.
               </p>
             </div>
