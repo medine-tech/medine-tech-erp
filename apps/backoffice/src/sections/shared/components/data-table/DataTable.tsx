@@ -6,26 +6,50 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import { Button } from "../ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isLoading?: boolean;
+  pagination?: {
+    pageCount: number;
+    pageIndex: number;
+    pageSize: number;
+    onPageChange: (page: number) => void;
+  };
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+  isLoading,
+  pagination,
+}: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    state: {
+      pagination: pagination
+        ? {
+            pageIndex: pagination.pageIndex,
+            pageSize: pagination.pageSize,
+          }
+        : undefined,
+    },
+    manualPagination: !!pagination,
+    pageCount: pagination?.pageCount || -1,
   });
-
-  return (
-    <div className="rounded-md border">
-      <div className="relative w-full overflow-auto">
-        <table className="w-full caption-bottom text-sm">
-          <thead className="[&_tr]:border-b">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="border-b transition-colors hover:bg-muted/50">
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
