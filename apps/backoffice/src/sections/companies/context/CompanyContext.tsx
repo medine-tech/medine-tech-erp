@@ -1,6 +1,7 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 
 import { ApiError } from "../../auth/services/auth";
+import { useAuth } from "../../auth/context/AuthContext";
 import { Company, CompanyPagination, companyService } from "../services/company";
 
 interface CompanyContextType {
@@ -26,12 +27,36 @@ export function useCompanies() {
 }
 
 export function CompanyProvider({ children }: { children: ReactNode }) {
+  const { isAuthenticated } = useAuth();
   const [companies, setCompanies] = useState<Company[]>([]);
   const [currentCompany, setCurrentCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
+  const [initialized, setInitialized] = useState(false);
 
-  const fetchCompanies = async (page = 1, perPage = 10): Promise<CompanyPagination> => {
+  // Usar useCallback para evitar que la función se recree en cada render
+  const fetchCompanies = useCallback(async (page = 1, perPage = 10): Promise<CompanyPagination> => {
+    if (!isAuthenticated) {
+      const emptyResponse: CompanyPagination = {
+        items: [],
+        total: 0,
+        current_page: page,
+        per_page: perPage
+      };
+      return emptyResponse;
+    }
+
+    // Solo permitir una solicitud activa a la vez
+    if (isLoading) {
+      const emptyResponse: CompanyPagination = {
+        items: companies,
+        total: companies.length,
+        current_page: page,
+        per_page: perPage
+      };
+      return emptyResponse;
+    }
+    
     setIsLoading(true);
     setError(null);
 
@@ -46,21 +71,26 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
       throw err;
     }
-  };
+  }, []);
 
-  const getCompanyById = (id: string): Company | null => {
+  // Usar useCallback para las demás funciones
+  const getCompanyById = useCallback((id: string): Company | null => {
     return companies.find((company) => company.id === id) || null;
-  };
+  }, [companies]);
 
-  const clearError = () => {
+  const clearError = useCallback(() => {
     setError(null);
-  };
+  }, []);
 
   useEffect(() => {
-    fetchCompanies().catch((err) => {
-      console.error("Error al cargar las compañías:", err);
-    });
-  }, []);
+    // Solo cargar compañías si el usuario está autenticado y no se ha inicializado antes
+    if (isAuthenticated && !initialized) {
+      setInitialized(true);
+      fetchCompanies().catch((err) => {
+        console.error("Error al cargar las compañías:", err);
+      });
+    }
+  }, [isAuthenticated, initialized, fetchCompanies]);
 
   const value = {
     companies,

@@ -1,5 +1,4 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 
 import { Button } from "../../shared/components/ui/button";
 import {
@@ -10,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../shared/components/ui/dropdown-menu";
-import { useCompanies } from "../context/CompanyContext";
+import { useCompanySelector } from "../hooks/useCompanySelector";
 import { Company } from "../services/company";
 
 interface CompanySelectorProps {
@@ -19,27 +18,7 @@ interface CompanySelectorProps {
 
 export function CompanySelector({ currentCompanyId }: CompanySelectorProps) {
   const navigate = useNavigate();
-  const { companies, isLoading, error, fetchCompanies } = useCompanies();
-  const [currentCompany, setCurrentCompany] = useState<Company | null>(null);
-
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const result = await fetchCompanies();
-
-        // Encontrar la compañía actual según el ID
-        const company = result.items.find((company) => company.id === currentCompanyId);
-
-        if (company) {
-          setCurrentCompany(company);
-        }
-      } catch (err) {
-        console.error("Error al cargar compañías:", err);
-      }
-    }
-
-    void loadData();
-  }, [currentCompanyId, fetchCompanies]);
+  const { companies, currentCompany, isLoading, error } = useCompanySelector(currentCompanyId);
 
   const handleCompanyChange = (company: Company) => {
     void navigate({
@@ -118,7 +97,7 @@ export function CompanySelector({ currentCompanyId }: CompanySelectorProps) {
         {companies.length === 0 ? (
           <div className="px-2 py-2 text-sm text-slate-500">No tienes compañías disponibles</div>
         ) : (
-          companies.map((company) => (
+          companies.map((company: Company) => (
             <DropdownMenuItem
               key={company.id}
               className={`text-slate-700 cursor-pointer ${
