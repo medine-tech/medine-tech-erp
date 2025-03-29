@@ -41,6 +41,8 @@ export function CompaniesTable({
   const [error, setError] = useState<ApiError | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+    
     async function fetchCompanies() {
       if (isLoading) return;
 
@@ -49,21 +51,30 @@ export function CompaniesTable({
 
       try {
         const response = await companyService.getCompanies(currentPage, perPage);
-        setCompanies(response.items);
-        setPagination({
-          total: response.total,
-          currentPage: response.current_page,
-          perPage: response.per_page,
-        });
-        setIsLoading(false);
+        
+        if (isMounted) {
+          setCompanies(response.items);
+          setPagination({
+            total: response.total,
+            currentPage: response.current_page,
+            perPage: response.per_page,
+          });
+          setIsLoading(false);
+        }
       } catch (err) {
-        setError(err as ApiError);
-        setIsLoading(false);
+        if (isMounted) {
+          setError(err as ApiError);
+          setIsLoading(false);
+        }
       }
     }
 
     void fetchCompanies();
-  }, [currentPage, perPage, isLoading]);
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [currentPage, perPage]); // Eliminado isLoading de las dependencias
 
   const handlePageChange = (page: number) => {
     onPageChange(page);
