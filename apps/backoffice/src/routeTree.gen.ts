@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
+import { Route as FirstCompanyImport } from './routes/first-company'
 import { Route as R404Import } from './routes/$404'
 import { Route as IndexImport } from './routes/index'
 import { Route as CompanyIdDashboardImport } from './routes/$companyId.dashboard'
@@ -28,6 +29,12 @@ const RegisterRoute = RegisterImport.update({
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FirstCompanyRoute = FirstCompanyImport.update({
+  id: '/first-company',
+  path: '/first-company',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -67,6 +74,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof R404Import
       parentRoute: typeof rootRoute
     }
+    '/first-company': {
+      id: '/first-company'
+      path: '/first-company'
+      fullPath: '/first-company'
+      preLoaderRoute: typeof FirstCompanyImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -96,6 +110,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$404': typeof R404Route
+  '/first-company': typeof FirstCompanyRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/$companyId/dashboard': typeof CompanyIdDashboardRoute
@@ -104,6 +119,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$404': typeof R404Route
+  '/first-company': typeof FirstCompanyRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/$companyId/dashboard': typeof CompanyIdDashboardRoute
@@ -113,6 +129,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/$404': typeof R404Route
+  '/first-company': typeof FirstCompanyRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/$companyId/dashboard': typeof CompanyIdDashboardRoute
@@ -120,13 +137,26 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$404' | '/login' | '/register' | '/$companyId/dashboard'
+  fullPaths:
+    | '/'
+    | '/$404'
+    | '/first-company'
+    | '/login'
+    | '/register'
+    | '/$companyId/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$404' | '/login' | '/register' | '/$companyId/dashboard'
+  to:
+    | '/'
+    | '/$404'
+    | '/first-company'
+    | '/login'
+    | '/register'
+    | '/$companyId/dashboard'
   id:
     | '__root__'
     | '/'
     | '/$404'
+    | '/first-company'
     | '/login'
     | '/register'
     | '/$companyId/dashboard'
@@ -136,6 +166,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   R404Route: typeof R404Route
+  FirstCompanyRoute: typeof FirstCompanyRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   CompanyIdDashboardRoute: typeof CompanyIdDashboardRoute
@@ -144,6 +175,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   R404Route: R404Route,
+  FirstCompanyRoute: FirstCompanyRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   CompanyIdDashboardRoute: CompanyIdDashboardRoute,
@@ -161,6 +193,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/$404",
+        "/first-company",
         "/login",
         "/register",
         "/$companyId/dashboard"
@@ -171,6 +204,9 @@ export const routeTree = rootRoute
     },
     "/$404": {
       "filePath": "$404.tsx"
+    },
+    "/first-company": {
+      "filePath": "first-company.tsx"
     },
     "/login": {
       "filePath": "login.tsx"

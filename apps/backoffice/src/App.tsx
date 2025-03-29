@@ -1,5 +1,5 @@
-import { AuthProvider } from "./lib/context/AuthContext";
-import { RouterWithAuth } from "./lib/router";
+import { AuthProvider } from "./sections/auth/context/AuthContext";
+import { RouterWithAuth } from "./sections/shared/router";
 
 function App() {
   return (
