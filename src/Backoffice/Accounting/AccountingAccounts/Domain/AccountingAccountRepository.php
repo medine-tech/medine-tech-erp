@@ -10,5 +10,9 @@ interface AccountingAccountRepository
 
     public function find(string $id): ?AccountingAccount;
 
+    /**
+     * @param array<string, mixed> $filters
+     * @return array{items: array<int, AccountingAccount>, total: int, perPage: int, currentPage: int}
+     */
     public function search(array $filters): array;
 }

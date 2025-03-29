@@ -14,6 +14,10 @@ use Tests\Shared\Domain\TestUtils;
 
 final class AggregateRootSimilarComparator extends Comparator
 {
+    /**
+     * @param mixed $expected
+     * @param mixed $actual
+     */
     public function accepts($expected, $actual): bool
     {
         $aggregateRootClass = AggregateRoot::class;
@@ -21,6 +25,13 @@ final class AggregateRootSimilarComparator extends Comparator
         return $expected instanceof $aggregateRootClass && $actual instanceof $aggregateRootClass;
     }
 
+    /**
+     * @param AggregateRoot $expected
+     * @param AggregateRoot $actual
+     * @param float $delta
+     * @param bool $canonicalize
+     * @param bool $ignoreCase
+     */
     public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false): void
     {
         $actualEntity = clone $actual;

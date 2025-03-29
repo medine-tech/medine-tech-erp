@@ -6,6 +6,9 @@ namespace MedineTech\Auth\Companies\Application\Search;
 
 final readonly class AuthCompaniesSearcherResponse
 {
+    /**
+     * @param array<int, mixed> $items
+     */
     public function __construct(
         private array $items,
         private int $total,
@@ -14,6 +17,9 @@ final readonly class AuthCompaniesSearcherResponse
     ) {
     }
 
+    /**
+     * @return array<int, mixed>
+     */
     public function items(): array
     {
         return $this->items;

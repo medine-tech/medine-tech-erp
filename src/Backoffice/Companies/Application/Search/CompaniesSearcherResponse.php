@@ -6,6 +6,12 @@ namespace MedineTech\Backoffice\Companies\Application\Search;
 
 final readonly class CompaniesSearcherResponse
 {
+    /**
+     * @param array<int, array<string, mixed>> $items
+     * @param int $total
+     * @param int $perPage
+     * @param int $currentPage
+     */
     public function __construct(
         private array $items,
         private int $total,
@@ -14,6 +20,9 @@ final readonly class CompaniesSearcherResponse
     ) {
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function items(): array
     {
         return $this->items;

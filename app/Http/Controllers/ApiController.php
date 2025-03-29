@@ -100,6 +100,18 @@ abstract class ApiController extends Controller
      *     InvalidUserId::class => Response::HTTP_BAD_REQUEST,
      * ];
      */
+    /**
+     * Define exception mapping for specific controller.
+     * Override this method in child controllers to add specific exception mappings.
+     *
+     * Example:
+     * return [
+     *     UserNotFound::class => Response::HTTP_NOT_FOUND,
+     *     InvalidUserId::class => Response::HTTP_BAD_REQUEST,
+     * ];
+     * 
+     * @return array<class-string, int>
+     */
     protected function exceptions(): array
     {
         return [];

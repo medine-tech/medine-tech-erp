@@ -28,6 +28,10 @@ final class AccountingAccountModel extends Model
         'company_id'
     ];
 
+    /**
+     * @param Builder<AccountingAccountModel> $builder
+     * @param array<string, mixed> $filters
+     */
     public function scopeFromFilters(Builder $builder, array $filters): void
     {
         (new AccountingAccountFilters())->apply($builder, $filters);

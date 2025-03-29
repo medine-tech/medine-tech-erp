@@ -49,11 +49,8 @@ final class EloquentUserRepository implements UserRepository
             return null;
         }
 
-        $userData = $model->toArray();
-        $userData['password'] = $model->password;
-
         $fromDatabase = $this->fromDatabase();
-        return $fromDatabase($userData);
+        return $fromDatabase($model);
     }
 
     public function nextId(): int
@@ -63,14 +60,20 @@ final class EloquentUserRepository implements UserRepository
 
     public function findByEmail(string $email): ?User
     {
-        $result = UserModel::where('email', $email)
-            ->get();
-
-        return $result
-            ->map($this->fromDatabase())
-            ->first();
+        $model = UserModel::where('email', $email)->first();
+        
+        if (null === $model) {
+            return null;
+        }
+        
+        $fromDatabase = $this->fromDatabase();
+        return $fromDatabase($model);
     }
 
+    /**
+     * @param array<string, mixed> $filters
+     * @return array{items: array<int, \MedineTech\Backoffice\Users\Domain\User>, total: int, perPage: int, currentPage: int}
+     */
     public function search(array $filters): array
     {
         $paginator = UserModel::fromFilters($filters)
@@ -84,14 +87,19 @@ final class EloquentUserRepository implements UserRepository
         ];
     }
 
+    /**
+     * @return Closure(UserModel): User
+     */
     private function fromDatabase(): Closure
     {
-        return fn(array $user) => User::fromPrimitives([
-            'id' => $user['id'],
-            'name' => $user['name'],
-            'email' => $user['email'],
-            'password' => $user['password'] ?? "",
-            "defaultCompanyId" => $user['default_company_id'] ?? "",
-        ]);
+        return function (UserModel $user) {
+            return User::fromPrimitives([
+                'id' => $user['id'],
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'password' => $user['password'] ?? "",
+                "defaultCompanyId" => $user['default_company_id'] ?? "",
+            ]);
+        };
     }
 }

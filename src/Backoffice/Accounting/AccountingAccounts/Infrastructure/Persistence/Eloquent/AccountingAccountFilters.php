@@ -7,13 +7,17 @@ namespace MedineTech\Backoffice\Accounting\AccountingAccounts\Infrastructure\Per
 use MedineTech\Shared\Infrastructure\Persistence\Eloquent\EloquentFilters;
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @extends EloquentFilters<AccountingAccountModel>
+ */
 final class AccountingAccountFilters extends EloquentFilters
 {
+    /**
+     * @param string|array<int, string> $value
+     */
     protected function companyId($value): void
     {
         $value = $this->getValue($value);
-        $this->builder->whereHas("company_users", function (Builder $companyUsers) use ($value) {
-            $companyUsers->whereIn("company_id", $value);
-        });
+        $this->builder->whereIn('company_id', $value);
     }
 }

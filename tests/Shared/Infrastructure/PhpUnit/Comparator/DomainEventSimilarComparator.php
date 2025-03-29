@@ -14,8 +14,13 @@ use SebastianBergmann\Comparator\ComparisonFailure;
 
 final class DomainEventSimilarComparator extends Comparator
 {
+    /** @var array<int, string> */
     private static array $ignoredAttributes = ['eventId', 'occurredOn'];
 
+    /**
+     * @param mixed $expected
+     * @param mixed $actual
+     */
     public function accepts($expected, $actual): bool
     {
         $domainEventRootClass = DomainEvent::class;
@@ -23,6 +28,13 @@ final class DomainEventSimilarComparator extends Comparator
         return $expected instanceof $domainEventRootClass && $actual instanceof $domainEventRootClass;
     }
 
+    /**
+     * @param mixed $expected
+     * @param mixed $actual
+     * @param float $delta
+     * @param bool $canonicalize
+     * @param bool $ignoreCase
+     */
     public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false): void
     {
         if (!$this->areSimilar($expected, $actual)) {

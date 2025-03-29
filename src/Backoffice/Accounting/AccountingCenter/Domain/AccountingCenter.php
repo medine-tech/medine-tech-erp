@@ -60,6 +60,9 @@ final class AccountingCenter extends AggregateRoot
         return $accountingCenter;
     }
 
+    /**
+     * @param array<string, mixed> $row
+     */
     public static function fromPrimitives(array $row): self
     {
         return new self(
@@ -75,6 +78,9 @@ final class AccountingCenter extends AggregateRoot
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toPrimitives(): array
     {
         return [

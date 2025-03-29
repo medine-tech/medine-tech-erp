@@ -51,6 +51,11 @@ final class EloquentRoleRepository implements RoleRepository
         return $fromDatabase($data);
     }
 
+    /**
+     * @param array<string, mixed> $filters
+     * @param int $perPage
+     * @return array{items: array<int, Role>, total: int, perPage: int, currentPage: int}
+     */
     public function search(array $filters, int $perPage = 20): array
     {
         $paginator = RoleModel::fromFilters($filters)

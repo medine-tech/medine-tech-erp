@@ -15,6 +15,10 @@ use function Lambdish\Phunctional\instance_of;
 
 final class DomainEventArraySimilarComparator extends Comparator
 {
+    /**
+     * @param mixed $expected
+     * @param mixed $actual
+     */
     public function accepts($expected, $actual): bool
     {
         return is_array($expected)
@@ -23,6 +27,13 @@ final class DomainEventArraySimilarComparator extends Comparator
                 && all(instance_of(DomainEvent::class), $actual));
     }
 
+    /**
+     * @param array<int, DomainEvent> $expected
+     * @param array<int, DomainEvent> $actual
+     * @param float $delta
+     * @param bool $canonicalize
+     * @param bool $ignoreCase
+     */
     public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = false, $ignoreCase = false): void
     {
         if (!$this->contains($expected, $actual) || count($expected) !== count($actual)) {
@@ -36,6 +47,10 @@ final class DomainEventArraySimilarComparator extends Comparator
         }
     }
 
+    /**
+     * @param array<int, DomainEvent> $expectedArray
+     * @param array<int, DomainEvent> $actualArray
+     */
     private function contains(array $expectedArray, array $actualArray): bool
     {
         $exists = static fn(DomainEvent $expected): bool => any(

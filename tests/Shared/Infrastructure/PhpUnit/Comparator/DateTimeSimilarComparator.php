@@ -11,12 +11,22 @@ use SebastianBergmann\Comparator\ObjectComparator;
 
 final class DateTimeSimilarComparator extends ObjectComparator
 {
+    /**
+     * @param mixed $expected
+     * @param mixed $actual
+     */
     public function accepts($expected, $actual): bool
     {
         return $expected instanceof DateTimeInterface && $actual instanceof DateTimeInterface;
     }
 
     /**
+     * @param DateTimeInterface $expected
+     * @param DateTimeInterface $actual
+     * @param float $delta
+     * @param bool $canonicalize
+     * @param bool $ignoreCase
+     * @param array<mixed> $processed
      * @throws \DateMalformedIntervalStringException
      */
     public function assertEquals(
@@ -30,10 +40,21 @@ final class DateTimeSimilarComparator extends ObjectComparator
         $normalizedDelta   = $delta === 0.0 ? 10 : $delta;
         $intervalWithDelta = new DateInterval(sprintf('PT%sS', abs($normalizedDelta)));
 
-        $expectedLower = clone $expected;
-        $expectedUpper = clone $expected;
+        // Convert to DateTimeImmutable to use add/sub methods (not available in DateTimeInterface)
+        $expectedLowerObj = 
+            ($expected instanceof \DateTimeImmutable) ? 
+            clone $expected : 
+            \DateTimeImmutable::createFromInterface($expected);
+            
+        $expectedUpperObj = 
+            ($expected instanceof \DateTimeImmutable) ? 
+            clone $expected : 
+            \DateTimeImmutable::createFromInterface($expected);
 
-        if ($actual < $expectedLower->sub($intervalWithDelta) || $actual > $expectedUpper->add($intervalWithDelta)) {
+        $lowerBound = $expectedLowerObj->sub($intervalWithDelta);
+        $upperBound = $expectedUpperObj->add($intervalWithDelta);
+
+        if ($actual < $lowerBound || $actual > $upperBound) {
             throw new ComparisonFailure(
                 $expected,
                 $actual,

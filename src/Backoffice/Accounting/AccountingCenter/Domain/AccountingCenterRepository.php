@@ -10,5 +10,9 @@ interface AccountingCenterRepository
 
     public function find(string $id): ?AccountingCenter;
 
+    /**
+     * @param array<string, mixed> $filters
+     * @return array{items: array<int, AccountingCenter>, total: int, perPage: int, currentPage: int}
+     */
     public function search(array $filters): array;
 }

@@ -24,6 +24,9 @@ final class AccountingCenterCreatedDomainEvent extends DomainEvent
         parent::__construct($aggregateId, $eventId, $occurredOn);
     }
 
+    /**
+     * @param array<string, mixed> $body
+     */
     public static function fromPrimitives(
         string $aggregateId,
         array  $body,
@@ -51,6 +54,9 @@ final class AccountingCenterCreatedDomainEvent extends DomainEvent
         return "backoffice.accounting.accounting-center.created";
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toPrimitives(): array
     {
         return [

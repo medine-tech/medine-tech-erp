@@ -35,6 +35,11 @@ final readonly class Utils
         }
     }
 
+    /**
+     * @param array<string, mixed> $values
+     * @return string
+     * @throws \RuntimeException
+     */
     public static function jsonEncode(array $values): string
     {
         try {
@@ -45,6 +50,11 @@ final readonly class Utils
         }
     }
 
+    /**
+     * @param string $json
+     * @return array<string, mixed>
+     * @throws \RuntimeException
+     */
     public static function jsonDecode(string $json): array
     {
         try {
@@ -64,6 +74,11 @@ final readonly class Utils
         return lcfirst(str_replace('_', '', ucwords($text, '_')));
     }
 
+    /**
+     * @param array<string, mixed> $array
+     * @param string $prepend
+     * @return array<string, mixed>
+     */
     public static function dot(array $array, string $prepend = ''): array
     {
         $results = [];
@@ -78,6 +93,12 @@ final readonly class Utils
         return $results;
     }
 
+    /**
+     * @param string $path
+     * @param string $fileType
+     * @return array<int, string>
+     * @throws \RuntimeException
+     */
     public static function filesIn(string $path, string $fileType): array
     {
         $files = scandir($path);

@@ -38,6 +38,9 @@ final class CompanyUser extends AggregateRoot
         return $this->userId;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toPrimitives(): array
     {
         return [
@@ -46,6 +49,10 @@ final class CompanyUser extends AggregateRoot
         ];
     }
 
+    /**
+     * @param array<string, mixed> $primitives
+     * @return self
+     */
     public static function fromPrimivites(array $primitives): CompanyUser
     {
         return new self(

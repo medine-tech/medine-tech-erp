@@ -16,6 +16,9 @@ final readonly class InMemorySymfonyEventBus implements EventBus
 {
     private MessageBus $bus;
 
+    /**
+     * @param iterable<\MedineTech\Shared\Domain\Bus\Event\DomainEventSubscriber> $subscribers
+     */
     public function __construct(iterable $subscribers)
     {
         $this->bus = new MessageBus(

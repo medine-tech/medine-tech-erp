@@ -6,8 +6,14 @@ namespace MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Persi
 use Illuminate\Database\Eloquent\Builder;
 use MedineTech\Shared\Infrastructure\Persistence\Eloquent\EloquentFilters;
 
+/**
+ * @extends EloquentFilters<AccountingCenterModel>
+ */
 final class AccountingCenterFilters extends EloquentFilters
 {
+    /**
+     * @param string|array<int, string> $value
+     */
     protected function companyId($value): void
     {
         $value = (array) $this->getValue($value);

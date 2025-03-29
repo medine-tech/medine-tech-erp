@@ -11,6 +11,9 @@ use MedineTech\Backoffice\CompanyUsers\Infrastructure\Persistence\Eloquent\Compa
 use MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Persistence\Eloquent\AccountingCenterFilters;
 
 
+/**
+ * @method \Illuminate\Database\Eloquent\Relations\HasMany<\MedineTech\Backoffice\CompanyUsers\Infrastructure\Persistence\Eloquent\CompanyUserModel, \MedineTech\Backoffice\Accounting\AccountingCenter\Infrastructure\Persistence\Eloquent\AccountingCenterModel> company_users()
+ */
 final class AccountingCenterModel extends Model
 {
     protected $table = 'backoffice__accounting__accounting_centers';
@@ -31,11 +34,19 @@ final class AccountingCenterModel extends Model
         'company_id'
     ];
 
+    /**
+     * @phpstan-return HasMany<CompanyUserModel, AccountingCenterModel>
+     * @phpstan-ignore-next-line
+     */
     public function company_users(): HasMany
     {
         return $this->hasMany(CompanyUserModel::class, 'accounting_center_id', 'id');
     }
 
+    /**
+     * @param Builder<AccountingCenterModel> $builder
+     * @param array<string, mixed> $filters
+     */
     public function scopeFromFilters(Builder $builder, array $filters): void
     {
         (new AccountingCenterFilters())->apply($builder, $filters);

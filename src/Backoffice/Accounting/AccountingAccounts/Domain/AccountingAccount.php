@@ -66,9 +66,11 @@ final class AccountingAccount extends AggregateRoot
         return $accountingAccount;
     }
 
+    /**
+     * @param array<string, mixed> $row
+     */
     public static function fromPrimitives(array $row): self
     {
-
         return new self(
             (string)$row['id'],
             (string)$row['code'],
@@ -83,6 +85,9 @@ final class AccountingAccount extends AggregateRoot
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toPrimitives(): array
     {
         return [

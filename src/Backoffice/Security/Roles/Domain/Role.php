@@ -58,6 +58,10 @@ final class Role extends AggregateRoot
         return $role;
     }
 
+    /**
+     * @param array<string, mixed> $primitives
+     * @return self
+     */
     public static function fromPrimitives(array $primitives): self
     {
         return new self(
@@ -73,6 +77,9 @@ final class Role extends AggregateRoot
         );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toPrimitives(): array
     {
         return [

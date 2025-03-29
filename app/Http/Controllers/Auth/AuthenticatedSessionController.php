@@ -110,6 +110,9 @@ class AuthenticatedSessionController extends ApiController
         });
     }
 
+    /**
+     * @return array<class-string, int>
+     */
     protected function exceptions(): array
     {
         return [

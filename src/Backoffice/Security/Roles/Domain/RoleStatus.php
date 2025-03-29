@@ -11,6 +11,7 @@ class RoleStatus
     public const ACTIVE = 'active';
     public const INACTIVE = 'inactive';
 
+    /** @var array<string, string> */
     private static array $statusName = [
         self::ACTIVE => 'Activo',
         self::INACTIVE => 'Inactivo'

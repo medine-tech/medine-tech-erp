@@ -15,7 +15,7 @@ use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
 final class RolePermissionDeleterTest extends UnitTestCase
 {
     #[Test]
-    public function it_should_delete_role_permission()
+    public function it_should_delete_role_permission(): void
     {
         $rolePermission = RolePermissionMother::create();
 

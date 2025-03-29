@@ -19,10 +19,19 @@ use Tests\Shared\Infrastructure\PhpUnit\Comparator\DomainEventSimilarComparator;
 
 final class ConstraintIsSimilar extends Constraint
 {
+    /**
+     * @param mixed $value
+     * @param float $delta
+     */
     public function __construct(private $value, private $delta = 0.0)
     {
     }
 
+    /**
+     * @param mixed $other
+     * @param string $description
+     * @param bool $returnResult
+     */
     public function evaluate($other, $description = '', $returnResult = false): bool
     {
         if ($this->value === $other) {
@@ -72,7 +81,7 @@ final class ConstraintIsSimilar extends Constraint
             );
         }
 
-        if ($this->delta !== 0) {
+        if (abs($this->delta) > 0.0000001) {
             $delta = sprintf(
                 ' with delta <%F>',
                 $this->delta

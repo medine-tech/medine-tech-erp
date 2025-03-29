@@ -23,6 +23,9 @@ abstract class UserUnitTestCase extends UnitTestCase
         return $this->repository = $this->mock(UserRepository::class);
     }
 
+    /**
+     * @param \MedineTech\Backoffice\Users\Domain\User $user
+     */
     protected function shouldSaveUser($user): void
     {
         $this->repository()
@@ -32,6 +35,10 @@ abstract class UserUnitTestCase extends UnitTestCase
             ->andReturn($user->id());
     }
 
+    /**
+     * @param int $id
+     * @param \MedineTech\Backoffice\Users\Domain\User $user
+     */
     protected function shouldFindUser(int $id, $user): void
     {
         $this->repository()
