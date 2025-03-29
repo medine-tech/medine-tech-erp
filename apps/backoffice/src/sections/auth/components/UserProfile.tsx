@@ -41,64 +41,68 @@ export function UserProfile() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center gap-2 text-slate-700 hover:text-slate-900 pl-3 pr-2"
+          className="flex items-center gap-2 text-foreground hover:text-primary transition-all duration-200 border-border/30 hover:border-primary/30 hover:bg-primary/5 dark:hover:bg-primary/10 dark:border-border/20 p-2 h-9 min-w-[42px] rounded-full"
           disabled={isLoading}
         >
           {/* Icono de usuario */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
+            width="18"
+            height="18"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="mr-1"
+            className={`${userName.length > 0 ? 'mr-1.5' : ''} text-primary/80`}
           >
             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
           </svg>
 
           {/* Nombre del usuario */}
-          <span className="text-sm font-medium max-w-[150px] truncate">
-            {isLoading ? "Cargando..." : userName}
-          </span>
+          {(userName.length > 0 || isLoading) && (
+            <span className="text-sm font-medium max-w-[120px] truncate">
+              {isLoading ? "Cargando..." : userName}
+            </span>
+          )}
 
           {/* Icono de flecha */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="ml-1"
-          >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
+          {(userName.length > 0 || isLoading) && (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="ml-0.5 opacity-70"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          )}
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel className="text-slate-500 font-normal text-xs">
+      <DropdownMenuContent align="end" className="w-56 bg-card/95 backdrop-blur-sm border border-border/30 shadow-md dark:shadow-primary/20 dark:border-primary/20 rounded-lg p-1 animate-in fade-in-80 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
+        <DropdownMenuLabel className="text-muted-foreground font-medium text-xs px-2 py-1.5">
           Mi cuenta
         </DropdownMenuLabel>
 
         {user && (
-          <div className="px-2 py-1.5">
-            <p className="text-sm font-medium text-slate-900 truncate">{userName}</p>
-            <p className="text-xs text-slate-500 truncate">{userEmail}</p>
+          <div className="px-3 py-2 rounded-md bg-muted/30 dark:bg-primary/10 mx-1 my-1 border-l-2 border-primary/70">
+            <p className="text-sm font-medium text-foreground truncate">{userName}</p>
+            <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
           </div>
         )}
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem className="text-slate-700 cursor-pointer">
+        <DropdownMenuItem className="text-foreground cursor-pointer rounded-md transition-all duration-150 py-2 my-0.5 px-2 mx-1 hover:bg-primary/10 dark:hover:bg-primary/30 dark:hover:text-primary-foreground hover:translate-x-1 hover:border-l-2 hover:border-primary/70 group">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -109,7 +113,7 @@ export function UserProfile() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="mr-2"
+            className="mr-2 group-hover:text-primary dark:group-hover:text-primary-foreground transition-colors duration-150"
           >
             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
@@ -118,7 +122,7 @@ export function UserProfile() {
         </DropdownMenuItem>
 
         <DropdownMenuItem 
-          className="text-slate-700 cursor-pointer"
+          className="text-foreground cursor-pointer rounded-md transition-all duration-150 py-2 my-0.5 px-2 mx-1 hover:bg-primary/10 dark:hover:bg-primary/30 dark:hover:text-primary-foreground hover:translate-x-1 hover:border-l-2 hover:border-primary/70 group"
           onClick={() => navigate({ to: "/$companyId/companies/list", params: { companyId: companyId || "" } })}
         >
           <svg
@@ -131,7 +135,7 @@ export function UserProfile() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="mr-2"
+            className="mr-2 group-hover:text-primary dark:group-hover:text-primary-foreground transition-colors duration-150"
           >
             <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
             <path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4" />
@@ -141,7 +145,7 @@ export function UserProfile() {
           <span>Lista de Compañías</span>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="text-slate-700 cursor-pointer">
+        <DropdownMenuItem className="text-foreground cursor-pointer rounded-md transition-all duration-150 py-2 my-0.5 px-2 mx-1 hover:bg-primary/10 dark:hover:bg-primary/30 dark:hover:text-primary-foreground hover:translate-x-1 hover:border-l-2 hover:border-primary/70 group">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -152,7 +156,7 @@ export function UserProfile() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="mr-2"
+            className="mr-2 group-hover:text-primary dark:group-hover:text-primary-foreground transition-colors duration-150"
           >
             <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
             <circle cx="12" cy="12" r="3" />
@@ -163,7 +167,7 @@ export function UserProfile() {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
-          className="text-red-600 cursor-pointer focus:text-red-700"
+          className="text-red-600 dark:text-red-400 cursor-pointer hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-md transition-all duration-150 py-2 my-0.5 px-2 mx-1 hover:translate-x-1 hover:border-l-2 hover:border-red-500/70 group"
           onClick={handleLogout}
           disabled={isLoading}
         >
@@ -177,7 +181,7 @@ export function UserProfile() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="mr-2"
+            className="mr-2 group-hover:text-primary dark:group-hover:text-primary-foreground transition-colors duration-150"
           >
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
             <polyline points="16 17 21 12 16 7" />
