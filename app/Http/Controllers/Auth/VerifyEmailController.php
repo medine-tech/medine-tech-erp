@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\ApiController;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,15 +58,19 @@ class VerifyEmailController extends ApiController
     public function __invoke(EmailVerificationRequest $request): JsonResponse
     {
         return $this->execute(function () use ($request) {
-            if ($request->user()->hasVerifiedEmail()) {
+
+            /** @var MustVerifyEmail $user */
+            $user = $request->user();
+
+            if ($user->hasVerifiedEmail()) {
                 return new JsonResponse([
                     'status' => 'verified',
                     'message' => 'Email already verified'
                 ], Response::HTTP_OK);
             }
 
-            if ($request->user()->markEmailAsVerified()) {
-                event(new Verified($request->user()));
+            if ($user->markEmailAsVerified()) {
+                event(new Verified($user));
             }
 
             return new JsonResponse([

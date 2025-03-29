@@ -27,6 +27,8 @@ final class UserByEmailFinderTest extends UnitTestCase
 
         /** @var UserRepository&MockInterface $userRepository */
         $finder = new UserByEmailFinder($userRepository);
-        ($finder)(new UserByEmailFinderRequest($user->email()));
+        ($finder)(new UserByEmailFinderRequest(
+            $user->email()
+        ));
     }
 }

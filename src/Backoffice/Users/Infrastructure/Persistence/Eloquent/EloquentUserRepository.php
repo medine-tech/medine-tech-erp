@@ -26,16 +26,16 @@ final class EloquentUserRepository implements UserRepository
             return $model->id;
         }
 
-        $model = UserModel::create([
-            'id' => $user->id(),
-            'name' => $user->name(),
-            'email' => $user->email(),
-            'password' => $user->password(),
-            'default_company_id' => $user->defaultCompanyId(),
-        ]);
-
-        if (null === $model) {
-            throw new RuntimeException("Failed to save user");
+        try {
+             UserModel::create([
+                'id' => $user->id(),
+                'name' => $user->name(),
+                'email' => $user->email(),
+                'password' => $user->password(),
+                'default_company_id' => $user->defaultCompanyId(),
+            ]);
+        } catch (\Exception $e) {
+            throw new RuntimeException("Failed to save user: " . $e->getMessage(), 0, $e);
         }
 
         return $user->id();
@@ -86,7 +86,7 @@ final class EloquentUserRepository implements UserRepository
 
     private function fromDatabase(): Closure
     {
-        return fn(UserModel $user) => User::fromPrimitives([
+        return fn(array $user) => User::fromPrimitives([
             'id' => $user['id'],
             'name' => $user['name'],
             'email' => $user['email'],

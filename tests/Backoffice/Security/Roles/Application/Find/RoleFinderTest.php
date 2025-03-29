@@ -20,11 +20,11 @@ class RoleFinderTest extends RoleUnitTestCase
         $id = 1;
         $role = RoleMother::create($id);
 
-        /** @var RoleRepository&MockInterface $repository */
-        $repository = $this->repository();
+        /** @var RoleRepository&MockInterface $roleRepository */
+        $roleRepository = $this->repository();
         $this->shouldFind($role->id(), $role);
 
-        $finder = new RoleFinder($repository);
+        $finder = new RoleFinder($roleRepository);
         ($finder)(new RoleFinderRequest($role->id()));
     }
 }

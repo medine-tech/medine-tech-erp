@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Accounting\AccountingAccounts\Application\Update;
 
+use Mockery\MockInterface;
 use Tests\Backoffice\Accounting\AccountingAccounts\AccountingAccountUnitTestCase;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Update\AccountingAccountUpdater;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Update\AccountingAccountUpdaterRequest;
@@ -16,7 +17,7 @@ use Tests\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountMothe
 
 final class AccountingAccountUpdaterTest extends AccountingAccountUnitTestCase
 {
-    #[test]
+    #[Test]
     public function it_should_update_an_accounting_account(): void
     {
         $id = Uuid::random()->value();
@@ -38,12 +39,12 @@ final class AccountingAccountUpdaterTest extends AccountingAccountUnitTestCase
         $originalAccountingAccount->changeParentId($parentId);
         $originalAccountingAccount->changeUpdaterId($updaterId);
 
-        /* @var AccountingAccountRepository $accountingAccountRepository */
-        $repository = $this->repository();
+        /** @var AccountingAccountRepository&MockInterface $accountingAccountRepository */
+        $accountingAccountRepository = $this->repository();
         $this->shouldFind($originalAccountingAccount->id(), $originalAccountingAccount);
         $this->shouldSave($originalAccountingAccount);
 
-        $updater = new AccountingAccountUpdater($repository);
+        $updater = new AccountingAccountUpdater($accountingAccountRepository);
         ($updater)(new AccountingAccountUpdaterRequest(
             $originalAccountingAccount->id(),
             $newName,
