@@ -23,7 +23,12 @@ type FormFieldContextValue<
   name: TName;
 };
 
+type FormItemContextValue = {
+  id: string;
+};
+
 const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFieldContextValue);
+const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
@@ -45,9 +50,7 @@ const useFormField = () => {
 
   const fieldState = getFieldState(fieldContext.name, formState);
 
-  if (!fieldContext) {
-    throw new Error("useFormField debe ser usado dentro de un FormField");
-  }
+  // Contexto de campo siempre existe por la definición del proveedor
 
   const { id } = itemContext;
 
@@ -60,12 +63,6 @@ const useFormField = () => {
     ...fieldState,
   };
 };
-
-type FormItemContextValue = {
-  id: string;
-};
-
-const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
 
 const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => {

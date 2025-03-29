@@ -11,7 +11,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  isLoading?: boolean;
   pagination?: {
     pageCount: number;
     pageIndex: number;
@@ -23,7 +22,6 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  isLoading,
   pagination,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
@@ -40,7 +38,7 @@ export function DataTable<TData, TValue>({
         : undefined,
     },
     manualPagination: !!pagination,
-    pageCount: pagination?.pageCount || -1,
+    pageCount: pagination?.pageCount ?? -1,
   });
 
   return (
