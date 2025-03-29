@@ -28,10 +28,8 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       setError(null);
       clearError();
 
-      // Obtenemos el ID de la empresa por defecto del modelo de negocio
-      const companyId = "1";
+      const companyId = crypto.randomUUID();
 
-      // Llamada a la API para registrar al usuario y la primera compañía
       await authService.register({
         companyId,
         companyName: values.companyName,
@@ -52,7 +50,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         // Redirigir al dashboard usando el ID de compañía devuelto por la API
         void navigate({ to: "/$companyId/dashboard", params: { companyId: defaultCompanyId } });
       }
-    } catch (err) {
+    } catch (_err) {
       setIsLoading(false);
       setError("Error al registrar el usuario. Inténtelo de nuevo.");
     }
@@ -65,9 +63,9 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         <p className="text-gray-500">Ingrese sus datos para registrarse</p>
       </div>
 
-      {(error || authError) && (
+      {(error ?? authError) && (
         <div className="bg-destructive/15 p-3 rounded-md text-destructive text-sm">
-          {error || (authError && authError.detail)}
+          {error ?? (authError && authError.detail)}
         </div>
       )}
 
