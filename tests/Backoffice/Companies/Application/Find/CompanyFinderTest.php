@@ -16,7 +16,7 @@ use Tests\Backoffice\Companies\Domain\CompanyMother;
 
 class CompanyFinderTest extends CompanyUnitTestCase
 {
-    #[test]
+    #[Test]
     public function it_should_find_a_company(): void
     {
         $id = Uuid::random()->value();

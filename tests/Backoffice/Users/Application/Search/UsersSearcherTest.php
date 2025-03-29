@@ -33,6 +33,8 @@ final class UsersSearcherTest extends UnitTestCase
 
         /** @var UserRepository&MockInterface $userRepository */
         $searcher = new UsersSearcher($userRepository);
-        ($searcher)(new UsersSearcherRequest($filters));
+        ($searcher)(new UsersSearcherRequest(
+            $filters
+        ));
     }
 }

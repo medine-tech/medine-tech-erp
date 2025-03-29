@@ -9,6 +9,7 @@ use MedineTech\Backoffice\Accounting\AccountingAccounts\Application\Create\Accou
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountCreatedDomainEvent;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountRepository;
 use MedineTech\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountStatus;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -44,7 +45,7 @@ final class AccountingAccountCreatorTest extends UnitTestCase
         );
         $this->shouldPublishDomainEvent($domainEvent);
 
-        /* @var AccountingAccountRepository $accountingAccountRepository */
+        /** @var AccountingAccountRepository&MockInterface $accountingAccountRepository */
         $creator = new AccountingAccountCreator(
             $accountingAccountRepository,
             $eventBus

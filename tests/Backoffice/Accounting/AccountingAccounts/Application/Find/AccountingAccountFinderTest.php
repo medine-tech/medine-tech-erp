@@ -15,7 +15,7 @@ use Tests\Backoffice\Accounting\AccountingAccounts\Domain\AccountingAccountMothe
 
 class AccountingAccountFinderTest extends AccountingAccountUnitTestCase
 {
-    #[test]
+    #[Test]
     public function it_should_find_an_accounting_account(): void
     {
         $id = Uuid::random()->value();

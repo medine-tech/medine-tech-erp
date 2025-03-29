@@ -16,6 +16,11 @@ abstract class UnitTestCase extends TestCase
 {
     private MockInterface|EventBus|null $eventBus = null;
 
+    /**
+     * @template T of object
+     * @param class-string<T> $className
+     * @return T&MockInterface
+     */
     protected function mock(string $className): MockInterface
     {
         return Mockery::mock($className);

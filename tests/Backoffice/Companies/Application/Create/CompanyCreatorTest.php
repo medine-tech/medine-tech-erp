@@ -10,6 +10,7 @@ use MedineTech\Backoffice\Companies\Domain\CompanyCreatedDomainEvent;
 use MedineTech\Backoffice\Companies\Domain\CompanyRepository;
 use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreator;
 use MedineTech\Backoffice\CompanyUsers\Application\Create\CompanyUserCreatorRequest;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Backoffice\Companies\Domain\CompanyMother;
 use Tests\Shared\Infrastructure\PhpUnit\UnitTestCase;
@@ -46,8 +47,8 @@ final class CompanyCreatorTest extends UnitTestCase
         );
         $this->shouldPublishDomainEvent($domainEvent);
 
-        /* @var CompanyRepository $companyRepository */
-        /* @var CompanyUserCreator $userCompanyCreator */
+        /** @var CompanyRepository&MockInterface $companyRepository */
+        /** @var CompanyUserCreator&MockInterface $userCompanyCreator */
         $creator = new CompanyCreator(
             $companyRepository,
             $userCompanyCreator,

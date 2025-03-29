@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Backoffice\Accounting\AccountingCenter\Application\Create;
 
+use Mockery\MockInterface;
 use Tests\Backoffice\Accounting\AccountingCenter\Domain\AccountingCenterMother;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\AccountingCenterCreator;
 use MedineTech\Backoffice\Accounting\AccountingCenter\Application\Create\AccountingCenterCreatorRequest;
@@ -41,10 +42,13 @@ final class AccountingCenterCreatorTest extends UnitTestCase
         );
 
         $this->shouldPublishDomainEvent($domainEvent);
-
         $eventBus = $this->eventBus();
 
-        $creator = new AccountingCenterCreator($repository, $eventBus);
+        /** @var AccountingCenterRepository&MockInterface $repository */
+        $creator = new AccountingCenterCreator(
+            $repository,
+            $eventBus
+        );
 
         ($creator)(new AccountingCenterCreatorRequest(
             $accountingCenter->id(),

@@ -38,7 +38,6 @@ final class RoleUpdaterTest extends RoleUnitTestCase
         $this->shouldFind($originalRole->id(), $originalRole);
         $this->shouldSave($originalRole);
 
-
         $updater = new RoleUpdater($roleRepository);
 
         ($updater)(new RoleUpdaterRequest(

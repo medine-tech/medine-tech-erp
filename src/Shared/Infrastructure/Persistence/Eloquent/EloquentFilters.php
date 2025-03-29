@@ -13,14 +13,14 @@ abstract class EloquentFilters
     public function apply(Builder $builder, array $filters): void
     {
         $this->builder = $builder;
-        $filters = array_filter($filters);
+        $filters = array_filter($filters, fn($value) => $value !== null);
 
         foreach ($filters as $key => $value) {
             if (!method_exists($this, $key)) {
                 continue;
             }
 
-            call_user_func_array([$this, $key], array_filter([$value]));
+            call_user_func_array([$this, $key], [$value]);
         }
     }
 
