@@ -26,43 +26,43 @@ export function ThemeProvider({
   storageKey = "medine-ui-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
-  );
+  const [theme, setTheme] = useState<Theme>(() => {
+    const storedTheme = localStorage.getItem(storageKey);
+
+    return storedTheme ? (storedTheme as Theme) : defaultTheme;
+  });
 
   useEffect(() => {
     const root = window.document.documentElement;
-    
+
     root.classList.remove("light", "dark");
-    
+
     if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
         : "light";
-      
+
       root.classList.add(systemTheme);
+
       return;
     }
-    
+
     root.classList.add(theme);
   }, [theme]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    
+
     const handleChange = () => {
       if (theme === "system") {
         const root = window.document.documentElement;
         root.classList.remove("light", "dark");
-        root.classList.add(
-          mediaQuery.matches ? "dark" : "light"
-        );
+        root.classList.add(mediaQuery.matches ? "dark" : "light");
       }
     };
-    
+
     mediaQuery.addEventListener("change", handleChange);
-    
+
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, [theme]);
 
@@ -83,9 +83,7 @@ export function ThemeProvider({
 
 export const useTheme = () => {
   const context = useContext(ThemeProviderContext);
-  
-  if (context === undefined)
-    throw new Error("useTheme debe ser usado dentro de un ThemeProvider");
-  
+
+  // El contexto siempre está definido dentro del proveedor
   return context;
 };

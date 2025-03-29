@@ -2,7 +2,6 @@ import { useNavigate } from "@tanstack/react-router";
 import React from "react";
 
 import { Form, FormField } from "../../shared/components/form";
-import { Checkbox } from "../../shared/components/ui/checkbox";
 import { registerSchema } from "../lib/validations";
 
 interface RegisterFormProps {
@@ -53,7 +52,6 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           email: "",
           password: "",
           confirmPassword: "",
-          termsAccepted: false,
         }}
       >
         <FormField name="name" label="Nombre completo" placeholder="Ingrese su nombre completo" />
@@ -79,18 +77,6 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           type="password"
           placeholder="********"
         />
-
-        <div className="flex items-center space-x-2 mt-4">
-          <FormField name="termsAccepted" label="">
-            <Checkbox />
-          </FormField>
-          <label className="text-sm">
-            Acepto los{" "}
-            <a href="/terms" className="text-primary hover:underline">
-              términos y condiciones
-            </a>
-          </label>
-        </div>
 
         <button
           type="submit"

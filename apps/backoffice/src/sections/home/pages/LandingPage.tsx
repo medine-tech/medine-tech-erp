@@ -1,7 +1,6 @@
 import medineLogoSrc from "../../../assets/medine-logo.svg";
 import { Link } from "../../shared/components/Link";
 import { Button } from "../../shared/components/ui/button";
-import { ThemeSwitch } from "../../shared/components/ui/theme-switch";
 import {
   Card,
   CardContent,
@@ -10,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../../shared/components/ui/card";
+import { ThemeSwitch } from "../../shared/components/ui/theme-switch";
 
 export function LandingPage() {
   return (
@@ -70,7 +70,11 @@ export function LandingPage() {
                 </p>
               </CardContent>
               <CardFooter>
-                <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/80" size="lg" asChild>
+                <Button
+                  className="w-full bg-accent text-accent-foreground hover:bg-accent/80"
+                  size="lg"
+                  asChild
+                >
                   <Link to="/login">Iniciar Sesión</Link>
                 </Button>
               </CardFooter>

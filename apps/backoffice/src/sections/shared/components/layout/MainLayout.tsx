@@ -1,5 +1,6 @@
 import { Outlet } from "@tanstack/react-router";
 import React from "react";
+
 import { ThemeSwitch } from "../ui/theme-switch";
 
 export function MainLayout({ children }: { children?: React.ReactNode }) {
@@ -21,8 +22,8 @@ export function MainLayout({ children }: { children?: React.ReactNode }) {
             </div>
             <ul className="space-y-1.5">
               <li>
-                <a 
-                  href="/dashboard" 
+                <a
+                  href="/dashboard"
                   className="flex items-center p-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent/20 hover:text-sidebar-primary
                            group transition-colors duration-200"
                 >
@@ -33,8 +34,8 @@ export function MainLayout({ children }: { children?: React.ReactNode }) {
                 </a>
               </li>
               <li>
-                <a 
-                  href="/companies" 
+                <a
+                  href="/companies"
                   className="flex items-center p-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent/20 hover:text-sidebar-primary
                            group transition-colors duration-200"
                 >
@@ -45,8 +46,8 @@ export function MainLayout({ children }: { children?: React.ReactNode }) {
                 </a>
               </li>
               <li>
-                <a 
-                  href="/accounting" 
+                <a
+                  href="/accounting"
                   className="flex items-center p-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent/20 hover:text-sidebar-primary
                            group transition-colors duration-200"
                 >
@@ -57,8 +58,8 @@ export function MainLayout({ children }: { children?: React.ReactNode }) {
                 </a>
               </li>
               <li>
-                <a 
-                  href="/inventory" 
+                <a
+                  href="/inventory"
                   className="flex items-center p-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent/20 hover:text-sidebar-primary
                            group transition-colors duration-200"
                 >
@@ -69,8 +70,8 @@ export function MainLayout({ children }: { children?: React.ReactNode }) {
                 </a>
               </li>
               <li>
-                <a 
-                  href="/users" 
+                <a
+                  href="/users"
                   className="flex items-center p-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent/20 hover:text-sidebar-primary
                            group transition-colors duration-200"
                 >
@@ -97,7 +98,9 @@ export function MainLayout({ children }: { children?: React.ReactNode }) {
               <ThemeSwitch />
               <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-card hover:bg-accent/10 transition-all cursor-pointer">
                 <span className="text-sm font-medium">Usuario</span>
-                <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary-foreground font-medium text-sm">U</div>
+                <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary-foreground font-medium text-sm">
+                  U
+                </div>
               </div>
             </div>
           </header>

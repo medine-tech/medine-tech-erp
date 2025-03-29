@@ -1,4 +1,5 @@
-import { Moon, Sun, Laptop } from "lucide-react";
+import { Laptop, Moon, Sun } from "lucide-react";
+
 import { useTheme } from "../../context/ThemeContext";
 
 export function ThemeSwitch() {
@@ -22,10 +23,10 @@ export function ThemeSwitch() {
     <div className="p-0.5 rounded-full bg-card/80 backdrop-blur-sm border border-border/30 shadow-sm hover:shadow-md transition-all duration-300">
       <div className="flex items-center justify-between p-0.5 relative">
         {/* Indicador activo con posicionamiento absoluto mejorado */}
-        <div 
-          className={`absolute ${getIndicatorPosition()} w-1/3 h-full rounded-full bg-primary/20 transition-all duration-300 ease-in-out`} 
+        <div
+          className={`absolute ${getIndicatorPosition()} w-1/3 h-full rounded-full bg-primary/20 transition-all duration-300 ease-in-out`}
         />
-        
+
         <button
           onClick={() => setTheme("light")}
           className={`relative z-10 rounded-full p-1.5 transition-colors duration-300 flex items-center justify-center flex-1
@@ -35,7 +36,7 @@ export function ThemeSwitch() {
           <Sun className="h-4 w-4" strokeWidth={theme === "light" ? 2.5 : 1.5} />
           <span className="sr-only">Modo Claro</span>
         </button>
-        
+
         <button
           onClick={() => setTheme("system")}
           className={`relative z-10 rounded-full p-1.5 transition-colors duration-300 flex items-center justify-center flex-1
@@ -45,7 +46,7 @@ export function ThemeSwitch() {
           <Laptop className="h-4 w-4" strokeWidth={theme === "system" ? 2.5 : 1.5} />
           <span className="sr-only">Usar configuración del sistema</span>
         </button>
-        
+
         <button
           onClick={() => setTheme("dark")}
           className={`relative z-10 rounded-full p-1.5 transition-colors duration-300 flex items-center justify-center flex-1
