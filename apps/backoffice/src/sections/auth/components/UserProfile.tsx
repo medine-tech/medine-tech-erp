@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { Button } from "../../shared/components/ui/button";
@@ -14,6 +14,7 @@ import { useAuth } from "../context/AuthContext";
 
 export function UserProfile() {
   const { userInfo: user, logout } = useAuth();
+  const { companyId } = useParams({ from: "/$companyId" });
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -114,6 +115,30 @@ export function UserProfile() {
             <circle cx="12" cy="7" r="4" />
           </svg>
           <span>Mi perfil</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem 
+          className="text-slate-700 cursor-pointer"
+          onClick={() => navigate({ to: "/$companyId/companies/list", params: { companyId: companyId || "" } })}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="mr-2"
+          >
+            <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
+            <path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4" />
+            <path d="M9 22V12" />
+            <path d="M15 22V12" />
+          </svg>
+          <span>Lista de Compañías</span>
         </DropdownMenuItem>
 
         <DropdownMenuItem className="text-slate-700 cursor-pointer">
