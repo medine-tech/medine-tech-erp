@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate, useParams, useRouterState } from "@tanstack/react-router";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ControllerRenderProps, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -27,21 +27,26 @@ const companySchema = z.object({
 type CompanyFormValues = z.infer<typeof companySchema>;
 
 function CompanyFormPageComponent() {
-  // Obtener el companyId y el id de la compañía a editar si existe
+  // Determinamos si estamos en modo edición basado en la URL actual
   const routerState = useRouterState();
-  const routePath = routerState.matches[routerState.matches.length - 1].routeId;
-  const isEditMode = routePath.includes("/edit/$id");
-
-  // Obtenemos los parámetros de forma no condicional
-  const editParams = useParams({ from: "/$companyId/companies/edit/$id" });
-  const createParams = useParams({ from: "/$companyId/companies/create" });
-
-  // Después de llamar a los hooks, usamos lógica condicional
-  const companyId = isEditMode
-    ? (editParams.companyId as string)
-    : (createParams.companyId as string);
-
-  const companyIdToEdit = isEditMode ? (editParams.id as string) : "";
+  const currentRoute = routerState.matches[routerState.matches.length - 1].routeId;
+  const isEditMode = currentRoute.includes("/edit");
+  
+  // Obtenemos los parámetros desde el objeto de estado del enrutador
+  // Utilizamos type assertion porque sabemos qué parámetros deben estar disponibles
+  // basados en la definición de nuestras rutas
+  type RouteParams = {
+    companyId?: string;
+    id?: string;
+  };
+  
+  const routeParams = routerState.matches.reduce<RouteParams>((params, match) => {
+    return { ...params, ...match.params };
+  }, {});
+  
+  // Extraemos los parámetros necesarios con valores por defecto
+  const companyId = routeParams.companyId || "";
+  const companyIdToEdit = isEditMode ? (routeParams.id || "") : "";
 
   const navigate = useNavigate();
   const { toast } = useToast();
