@@ -20,11 +20,8 @@ import { useToast } from "../../shared/hooks/useToast";
 import { companyService } from "../services/company";
 
 const companySchema = z.object({
+  id: z.string().uuid("El ID debe ser un UUID válido"),
   name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
-  tax_id: z.string().min(5, "El RIF/NIT debe tener al menos 5 caracteres"),
-  email: z.string().email("Ingrese un correo electrónico válido"),
-  phone: z.string().min(10, "El teléfono debe tener al menos 10 caracteres"),
-  address: z.string().min(5, "La dirección debe tener al menos 5 caracteres"),
 });
 
 type CompanyFormValues = z.infer<typeof companySchema>;
@@ -38,11 +35,8 @@ export function CompanyFormPage() {
   const form = useForm<CompanyFormValues>({
     resolver: zodResolver(companySchema),
     defaultValues: {
+      id: crypto.randomUUID(), // Generar un UUID por defecto
       name: "",
-      tax_id: "",
-      email: "",
-      phone: "",
-      address: "",
     },
   });
 
@@ -94,10 +88,13 @@ export function CompanyFormPage() {
         <div className="bg-card shadow-md rounded-lg p-6 max-w-2xl mx-auto">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {/* Campo ID oculto, autogenerado con crypto */}
+              <input type="hidden" {...form.register("id")} />
+
               <FormField
                 control={form.control}
                 name="name"
-                render={({ field }) => (
+                render={({ field }: { field: any }) => (
                   <FormItem>
                     <FormLabel>Nombre</FormLabel>
                     <FormControl>
@@ -108,61 +105,7 @@ export function CompanyFormPage() {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="tax_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>RIF/NIT</FormLabel>
-                    <FormControl>
-                      <Input placeholder="RIF o NIT de la compañía" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Correo Electrónico</FormLabel>
-                    <FormControl>
-                      <Input placeholder="correo@ejemplo.com" type="email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Teléfono</FormLabel>
-                    <FormControl>
-                      <Input placeholder="+58 412 1234567" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Dirección</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Dirección de la compañía" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/* Solo se mantiene el campo de nombre como visible */}
 
               <div className="flex justify-end gap-4">
                 <Button

@@ -5,12 +5,8 @@ import { API_BASE_URL } from "../../shared/config/constants.ts";
 
 // Interfaz para la compañía
 export interface Company {
-  id: string;
-  name: string;
-  tax_id?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
+  id: string; // UUID requerido
+  name: string; // Nombre requerido
 }
 
 // Interfaz para la paginación de compañías
@@ -98,7 +94,7 @@ export const companyService = {
   // Crear una nueva compañía
   async createCompany(
     companyId: string,
-    data: Omit<Company, "id">
+    data: Company
   ): Promise<Company> {
     try {
       const token = authService.getToken();
@@ -106,6 +102,12 @@ export const companyService = {
         throw new Error("No hay sesión de usuario");
       }
 
+      // Solo enviamos los campos requeridos por la API: id y name
+      const payload = {
+        id: data.id,
+        name: data.name,
+      };
+      
       const response = await fetch(`${API_BASE_URL}/backoffice/${companyId}/companies`, {
         method: "POST",
         headers: {
@@ -113,7 +115,7 @@ export const companyService = {
           "Content-Type": "application/json",
           accept: "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
