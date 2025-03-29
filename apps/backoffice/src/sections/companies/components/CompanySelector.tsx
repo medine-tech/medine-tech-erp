@@ -10,7 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../shared/components/ui/dropdown-menu";
-import { Company, useCompanies } from "../hooks/useCompanies";
+import { useCompanies } from "../context/CompanyContext";
+import { Company } from "../services/company";
 
 interface CompanySelectorProps {
   currentCompanyId: string;

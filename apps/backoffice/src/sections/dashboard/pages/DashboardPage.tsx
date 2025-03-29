@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-import { UserProfile } from "../../auth/components";
+import { UserProfile } from "../../auth/components/UserProfile";
 import { useAuth } from "../../auth/context/AuthContext";
-import { CompanySelector } from "../../companies/components";
+import { CompanySelector } from "../../companies/components/CompanySelector";
 
 export function DashboardPage() {
   const { companyId } = useParams({ from: "/$companyId/dashboard" });

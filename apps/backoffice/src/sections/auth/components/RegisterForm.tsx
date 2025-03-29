@@ -1,10 +1,11 @@
 import { useNavigate } from "@tanstack/react-router";
 import React from "react";
 
-import { Form, FormField } from "../../shared/components/form";
+import { Form } from "../../shared/components/form/Form";
+import { FormField } from "../../shared/components/form/FormField";
 import { useAuth } from "../context/AuthContext";
 import { firstCompanySchema } from "../lib/validations";
-import { authService } from "../services";
+import { authService } from "../services/auth";
 
 interface RegisterFormProps {
   onSuccess?: () => void;

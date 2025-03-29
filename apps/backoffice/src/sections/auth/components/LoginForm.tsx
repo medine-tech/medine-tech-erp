@@ -1,7 +1,8 @@
 import { useNavigate } from "@tanstack/react-router";
 import React from "react";
 
-import { Form, FormField } from "../../shared/components/form";
+import { Form } from "../../shared/components/form/Form";
+import { FormField } from "../../shared/components/form/FormField";
 import { useAuth } from "../context/AuthContext";
 import { loginSchema } from "../lib/validations";
 

@@ -2,7 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 
 import medineLogoSrc from "../../../assets/medine-logo.svg";
 import { Link } from "../../shared/components/Link";
-import { RegisterForm } from "../components";
+import { RegisterForm } from "../components/RegisterForm";
 
 export function RegisterPage() {
   const navigate = useNavigate();

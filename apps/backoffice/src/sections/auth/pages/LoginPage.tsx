@@ -3,9 +3,9 @@ import { useEffect } from "react";
 
 import medineLogoSrc from "../../../assets/medine-logo.svg";
 import { Link } from "../../shared/components/Link";
-import { LoginForm } from "../components";
+import { LoginForm } from "../components/LoginForm";
 import { useAuth } from "../context/AuthContext";
-import { authService } from "../services";
+import { authService } from "../services/auth";
 
 export function LoginPage() {
   const { isAuthenticated } = useAuth();
