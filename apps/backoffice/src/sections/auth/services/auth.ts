@@ -110,7 +110,7 @@ export const authService = {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            accept: "application/json",
           },
         });
       } catch (error) {
@@ -188,7 +188,7 @@ export const authService = {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          accept: "application/json",
         },
       });
 

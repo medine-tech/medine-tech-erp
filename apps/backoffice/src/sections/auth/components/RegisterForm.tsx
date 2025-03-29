@@ -1,11 +1,10 @@
 import { useNavigate } from "@tanstack/react-router";
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
 
 import { Form, FormField } from "../../shared/components/form";
 import { useAuth } from "../context/AuthContext";
-import { authService } from "../services";
 import { firstCompanySchema } from "../lib/validations";
+import { authService } from "../services";
 
 interface RegisterFormProps {
   onSuccess?: () => void;
@@ -29,8 +28,8 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       setError(null);
       clearError();
 
-      // Generamos un UUID para la compañía
-      const companyId = uuidv4();
+      // Obtenemos el ID de la empresa por defecto del modelo de negocio
+      const companyId = "1";
 
       // Llamada a la API para registrar al usuario y la primera compañía
       await authService.register({
@@ -43,14 +42,15 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       });
 
       // Iniciar sesión automáticamente después del registro
-      await login(values.email, values.password);
+      const defaultCompanyId = await login(values.email, values.password);
 
       setIsLoading(false);
 
       if (onSuccess) {
         onSuccess();
       } else {
-        void navigate({ to: "/login" });
+        // Redirigir al dashboard usando el ID de compañía devuelto por la API
+        void navigate({ to: "/$companyId/dashboard", params: { companyId: defaultCompanyId } });
       }
     } catch (err) {
       setIsLoading(false);
@@ -75,7 +75,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         schema={firstCompanySchema}
         onSubmit={handleSubmit}
         defaultValues={{
-          companyId: uuidv4(),
+          companyId: crypto.randomUUID(),
           companyName: "",
           name: "",
           email: "",
@@ -83,17 +83,13 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           password_confirmation: "",
         }}
       >
-        <FormField 
-          name="companyName" 
-          label="Nombre de la Empresa" 
-          placeholder="Ingrese el nombre de su empresa" 
+        <FormField
+          name="companyName"
+          label="Nombre de la Empresa"
+          placeholder="Ingrese el nombre de su empresa"
         />
 
-        <FormField 
-          name="name" 
-          label="Nombre completo" 
-          placeholder="Ingrese su nombre completo" 
-        />
+        <FormField name="name" label="Nombre completo" placeholder="Ingrese su nombre completo" />
 
         <FormField
           name="email"

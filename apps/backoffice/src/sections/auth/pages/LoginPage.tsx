@@ -5,6 +5,7 @@ import medineLogoSrc from "../../../assets/medine-logo.svg";
 import { Link } from "../../shared/components/Link";
 import { LoginForm } from "../components";
 import { useAuth } from "../context/AuthContext";
+import { authService } from "../services";
 
 export function LoginPage() {
   const { isAuthenticated } = useAuth();
@@ -21,7 +22,8 @@ export function LoginPage() {
         return;
       }
 
-      void navigate({ to: "/$companyId/dashboard", params: { companyId: "1" } });
+      const defaultCompanyId = authService.getDefaultCompanyId() || "";
+      void navigate({ to: "/$companyId/dashboard", params: { companyId: defaultCompanyId } });
     }
   }, [isAuthenticated, navigate, returnTo]);
 
@@ -32,7 +34,8 @@ export function LoginPage() {
       return;
     }
 
-    void navigate({ to: "/$companyId/dashboard", params: { companyId: "1" } });
+    const defaultCompanyId = authService.getDefaultCompanyId() || "";
+    void navigate({ to: "/$companyId/dashboard", params: { companyId: defaultCompanyId } });
   };
 
   return (

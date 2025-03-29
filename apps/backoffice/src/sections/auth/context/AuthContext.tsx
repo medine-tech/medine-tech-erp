@@ -78,6 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         authService.saveAuthInfo(response.token, response.default_company_id, rememberMe);
 
         try {
+          console.log("console1");
           const userData = await authService.fetchUserInfo();
           setUserInfo(userData);
         } catch (fetchError) {
