@@ -60,27 +60,46 @@ export function CompanyFormPage() {
   
   // Cargar datos de la compañía si estamos en modo edición
   useEffect(() => {
-    if (isEditMode && companyIdToEdit) {
+    // Flag para evitar que se ejecute más de una vez
+    let isMounted = true;
+    
+    if (isEditMode && companyIdToEdit && isMounted) {
       const fetchCompanyDetails = async () => {
+        // Evitamos llamadas repetidas
+        if (isLoading) return;
+        
         setIsLoading(true);
         try {
           const company = await companyService.getCompany(companyId, companyIdToEdit);
-          form.setValue("id", company.id);
-          form.setValue("name", company.name);
+          
+          // Solo actualizamos los valores si el componente sigue montado
+          if (isMounted) {
+            form.setValue("id", company.id);
+            form.setValue("name", company.name);
+          }
         } catch (error) {
-          toast({
-            title: "Error",
-            description: "No se pudo cargar la información de la compañía",
-            variant: "destructive",
-          });
+          if (isMounted) {
+            toast({
+              title: "Error",
+              description: "No se pudo cargar la información de la compañía",
+              variant: "destructive",
+            });
+          }
         } finally {
-          setIsLoading(false);
+          if (isMounted) {
+            setIsLoading(false);
+          }
         }
       };
       
       fetchCompanyDetails();
     }
-  }, [companyId, companyIdToEdit, form, isEditMode, toast]);
+    
+    // Cleanup function para evitar actualizaciones si el componente se desmonta
+    return () => {
+      isMounted = false;
+    };
+  }, []);  // Eliminamos todas las dependencias para que solo se ejecute al montar
 
   async function onSubmit(data: CompanyFormValues) {
     setIsSubmitting(true);
