@@ -97,7 +97,10 @@ final class CompaniesGetController extends ApiController
 
             $filters = (array)$request->query();
             $filters["userId"] = $user->id;
-            $response = ($this->searcher)(new CompaniesSearcherRequest($filters));
+            $response = ($this->searcher)(new CompaniesSearcherRequest(
+                $filters,
+                $request->integer("per_page", 1),
+            ));
 
             return new JsonResponse([
                 'items' => map(function (CompanySearcherResponse $response) {

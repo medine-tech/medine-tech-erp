@@ -19,11 +19,12 @@ final class CompaniesSearcherTest extends UnitTestCase
     {
         $company = CompanyMother::create();
         $filters = ["name" => $company->name(),];
+        $perPage = 10;
 
         $companyRepository = $this->mock(CompanyRepository::class);
         $companyRepository->shouldReceive('search')
             ->once()
-            ->with($filters)
+            ->with($filters, $perPage)
             ->andReturn([
                 "items" => [$company],
                 "total" => 1,
@@ -33,6 +34,6 @@ final class CompaniesSearcherTest extends UnitTestCase
 
         /** @var CompanyRepository&MockInterface $companyRepository */
         $searcher = new CompaniesSearcher($companyRepository);
-        ($searcher)(new CompaniesSearcherRequest($filters));
+        ($searcher)(new CompaniesSearcherRequest($filters, $perPage));
     }
 }

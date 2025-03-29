@@ -17,7 +17,10 @@ class CompaniesSearcher
 
     public function __invoke(CompaniesSearcherRequest $request): CompaniesSearcherResponse
     {
-        $result = $this->repository->search($request->filters());
+        $result = $this->repository->search(
+            $request->filters(),
+            $request->perPage()
+        );
 
         return new CompaniesSearcherResponse(
             map(function (Company $company) {

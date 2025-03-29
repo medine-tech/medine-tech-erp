@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace MedineTech\Backoffice\Companies\Application\Search;
 
-final class CompaniesSearcherRequest
+final readonly class CompaniesSearcherRequest
 {
-    /** @var array<string, mixed> */
-    private array $filters;
-
     /**
      * @param array<string, mixed> $filters
      */
     public function __construct(
-        array $filters,
+        private array $filters,
+        private int $perPage
     ) {
-        $this->filters = $filters;
     }
 
     /**
@@ -24,5 +21,10 @@ final class CompaniesSearcherRequest
     public function filters(): array
     {
         return $this->filters;
+    }
+
+    public function perPage(): int
+    {
+        return $this->perPage;
     }
 }
