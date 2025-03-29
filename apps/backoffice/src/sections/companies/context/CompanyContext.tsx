@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 
-import { ApiError } from "../../auth/services/auth";
 import { useAuth } from "../../auth/context/AuthContext";
+import { ApiError } from "../../auth/services/auth";
 import { Company, CompanyPagination, companyService } from "../services/company";
 
 interface CompanyContextType {
@@ -9,7 +9,11 @@ interface CompanyContextType {
   currentCompany: Company | null;
   isLoading: boolean;
   error: ApiError | null;
-  fetchCompanies: (companyId: string, page?: number, perPage?: number) => Promise<CompanyPagination>;
+  fetchCompanies: (
+    companyId: string,
+    page?: number,
+    perPage?: number,
+  ) => Promise<CompanyPagination>;
   getCompanyById: (id: string) => Company | null;
   setCurrentCompany: (company: Company | null) => void;
   clearError: () => void;
@@ -35,48 +39,56 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
   const [initialized, setInitialized] = useState(false);
 
   // Usar useCallback para evitar que la función se recree en cada render
-  const fetchCompanies = useCallback(async (companyId: string, page = 1, perPage = 10): Promise<CompanyPagination> => {
-    if (!isAuthenticated) {
-      const emptyResponse: CompanyPagination = {
-        items: [],
-        total: 0,
-        current_page: page,
-        per_page: perPage
-      };
-      return emptyResponse;
-    }
+  const fetchCompanies = useCallback(
+    async (companyId: string, page = 1, perPage = 10): Promise<CompanyPagination> => {
+      if (!isAuthenticated) {
+        const emptyResponse: CompanyPagination = {
+          items: [],
+          total: 0,
+          current_page: page,
+          per_page: perPage,
+        };
 
-    // Solo permitir una solicitud activa a la vez
-    if (isLoading) {
-      const emptyResponse: CompanyPagination = {
-        items: companies,
-        total: companies.length,
-        current_page: page,
-        per_page: perPage
-      };
-      return emptyResponse;
-    }
-    
-    setIsLoading(true);
-    setError(null);
+        return emptyResponse;
+      }
 
-    try {
-      const response = await companyService.getCompanies(companyId, page, perPage);
-      setCompanies(response.items);
-      setIsLoading(false);
+      // Solo permitir una solicitud activa a la vez
+      if (isLoading) {
+        const emptyResponse: CompanyPagination = {
+          items: companies,
+          total: companies.length,
+          current_page: page,
+          per_page: perPage,
+        };
 
-      return response;
-    } catch (err) {
-      setError(err as ApiError);
-      setIsLoading(false);
-      throw err;
-    }
-  }, []);
+        return emptyResponse;
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await companyService.getCompanies(companyId, page, perPage);
+        setCompanies(response.items);
+        setIsLoading(false);
+
+        return response;
+      } catch (err) {
+        setError(err as ApiError);
+        setIsLoading(false);
+        throw err;
+      }
+    },
+    [],
+  );
 
   // Usar useCallback para las demás funciones
-  const getCompanyById = useCallback((id: string): Company | null => {
-    return companies.find((company) => company.id === id) || null;
-  }, [companies]);
+  const getCompanyById = useCallback(
+    (id: string): Company | null => {
+      return companies.find((company) => company.id === id) || null;
+    },
+    [companies],
+  );
 
   const clearError = useCallback(() => {
     setError(null);
@@ -86,12 +98,14 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
     // Solo cargar compañías si el usuario está autenticado y no se ha inicializado antes
     if (isAuthenticated && !initialized) {
       setInitialized(true);
-      
+
       // Obtener companyId de la URL usando TanStack Router
-      const pathParams = window.location.pathname.split('/');
-      const companyIdIndex = pathParams.findIndex(segment => segment !== '' && !isNaN(Number(segment)));
-      const companyId = companyIdIndex !== -1 ? pathParams[companyIdIndex] : '';
-      
+      const pathParams = window.location.pathname.split("/");
+      const companyIdIndex = pathParams.findIndex(
+        (segment) => segment !== "" && !isNaN(Number(segment)),
+      );
+      const companyId = companyIdIndex !== -1 ? pathParams[companyIdIndex] : "";
+
       fetchCompanies(companyId).catch((err) => {
         console.error("Error al cargar las compañías:", err);
       });

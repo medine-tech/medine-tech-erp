@@ -1,6 +1,6 @@
-import { useParams, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { Link, useParams } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
 import { UserProfile } from "../../auth/components/UserProfile";
 import { Breadcrumb } from "../../shared/components/ui/breadcrumb";
@@ -25,13 +25,9 @@ export function CompaniesListPage() {
 
       <div className="container mx-auto py-8 px-4">
         <div className="mb-6">
-          <Breadcrumb
-            segments={[
-              { label: "Compañías" },
-            ]}
-          />
+          <Breadcrumb segments={[{ label: "Compañías" }]} />
         </div>
-        
+
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Listado de Compañías</h2>
           <Link to="/$companyId/companies/create" params={{ companyId }}>
@@ -41,10 +37,10 @@ export function CompaniesListPage() {
             </Button>
           </Link>
         </div>
-        
+
         <div className="bg-card shadow-md rounded-lg p-6">
-          <CompaniesTable 
-            companyId={companyId || ""} 
+          <CompaniesTable
+            companyId={companyId || ""}
             currentPage={currentPage}
             perPage={perPage}
             onPageChange={setCurrentPage}

@@ -87,8 +87,8 @@ export const companyService = {
   // Obtener la lista de compañías del usuario actual
   async getCompanies(
     companyId: string,
-    page: number = 1, 
-    perPage: number = 10
+    page: number = 1,
+    perPage: number = 10,
   ): Promise<CompanyPagination> {
     try {
       const token = authService.getToken();
@@ -128,10 +128,7 @@ export const companyService = {
   },
 
   // Crear una nueva compañía
-  async createCompany(
-    companyId: string,
-    data: Company
-  ): Promise<Company> {
+  async createCompany(companyId: string, data: Company): Promise<Company> {
     try {
       const token = authService.getToken();
       if (!token) {
@@ -143,7 +140,7 @@ export const companyService = {
         id: data.id,
         name: data.name,
       };
-      
+
       const response = await fetch(`${API_BASE_URL}/backoffice/${companyId}/companies`, {
         method: "POST",
         headers: {
@@ -178,7 +175,7 @@ export const companyService = {
   async updateCompany(
     companyId: string,
     id: string,
-    data: Partial<Omit<Company, "id">>
+    data: Partial<Omit<Company, "id">>,
   ): Promise<Company> {
     try {
       const token = authService.getToken();

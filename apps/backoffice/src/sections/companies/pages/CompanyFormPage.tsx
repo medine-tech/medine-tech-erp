@@ -1,8 +1,8 @@
-import { useParams, useNavigate, useRouterState } from "@tanstack/react-router";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate, useParams, useRouterState } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useEffect } from "react";
 
 import { UserProfile } from "../../auth/components/UserProfile";
 import { Breadcrumb } from "../../shared/components/ui/breadcrumb";
@@ -31,11 +31,11 @@ export function CompanyFormPage() {
   const routerState = useRouterState();
   const routePath = routerState.matches[routerState.matches.length - 1].routeId;
   const isEditMode = routePath.includes("/edit/$id");
-  
+
   // Obtenemos los parámetros según la ruta
   let companyId = "";
   let companyIdToEdit = "";
-  
+
   if (isEditMode) {
     const editParams = useParams({ from: "/$companyId/companies/edit/$id" });
     companyId = editParams.companyId as string;
@@ -44,7 +44,7 @@ export function CompanyFormPage() {
     const createParams = useParams({ from: "/$companyId/companies/create" });
     companyId = createParams.companyId as string;
   }
-  
+
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,21 +57,23 @@ export function CompanyFormPage() {
       name: "",
     },
   });
-  
+
   // Cargar datos de la compañía si estamos en modo edición
   useEffect(() => {
     // Flag para evitar que se ejecute más de una vez
     let isMounted = true;
-    
+
     if (isEditMode && companyIdToEdit && isMounted) {
       const fetchCompanyDetails = async () => {
         // Evitamos llamadas repetidas
-        if (isLoading) return;
-        
+        if (isLoading) {
+          return;
+        }
+
         setIsLoading(true);
         try {
           const company = await companyService.getCompany(companyId, companyIdToEdit);
-          
+
           // Solo actualizamos los valores si el componente sigue montado
           if (isMounted) {
             form.setValue("id", company.id);
@@ -91,15 +93,15 @@ export function CompanyFormPage() {
           }
         }
       };
-      
+
       fetchCompanyDetails();
     }
-    
+
     // Cleanup function para evitar actualizaciones si el componente se desmonta
     return () => {
       isMounted = false;
     };
-  }, []);  // Eliminamos todas las dependencias para que solo se ejecute al montar
+  }, []); // Eliminamos todas las dependencias para que solo se ejecute al montar
 
   async function onSubmit(data: CompanyFormValues) {
     setIsSubmitting(true);
@@ -155,9 +157,11 @@ export function CompanyFormPage() {
         </div>
 
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">{isEditMode ? "Editar Compañía" : "Crear Compañía"}</h2>
+          <h2 className="text-2xl font-bold">
+            {isEditMode ? "Editar Compañía" : "Crear Compañía"}
+          </h2>
         </div>
-        
+
         <div className="bg-card shadow-md rounded-lg p-6 max-w-2xl mx-auto">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -184,7 +188,9 @@ export function CompanyFormPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate({ to: "/$companyId/companies/list", params: { companyId } })}
+                  onClick={() =>
+                    navigate({ to: "/$companyId/companies/list", params: { companyId } })
+                  }
                 >
                   Cancelar
                 </Button>

@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 
 import { ApiError } from "../../auth/services/auth";
+import { Button } from "../../shared/components/ui/button";
 import {
   Table,
   TableBody,
@@ -10,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "../../shared/components/ui/table";
-import { Button } from "../../shared/components/ui/button";
 import { Company, companyService } from "../services/company";
 
 interface CompaniesTableProps {
@@ -43,16 +43,18 @@ export function CompaniesTable({
 
   useEffect(() => {
     let isMounted = true;
-    
+
     async function fetchCompanies() {
-      if (isLoading) return;
+      if (isLoading) {
+        return;
+      }
 
       setIsLoading(true);
       setError(null);
 
       try {
         const response = await companyService.getCompanies(companyId, currentPage, perPage);
-        
+
         if (isMounted) {
           setCompanies(response.items);
           setPagination({
@@ -71,7 +73,7 @@ export function CompaniesTable({
     }
 
     void fetchCompanies();
-    
+
     return () => {
       isMounted = false;
     };
@@ -106,9 +108,25 @@ export function CompaniesTable({
               <TableRow>
                 <TableCell colSpan={3} className="h-24 text-center">
                   <div className="flex justify-center items-center h-full">
-                    <svg className="animate-spin h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin h-5 w-5 text-primary"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     <span className="ml-2">Cargando...</span>
                   </div>
@@ -121,25 +139,19 @@ export function CompaniesTable({
                   <TableCell className="font-medium">{company.name}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <Link 
-                        to="/$companyId/companies/edit/$id" 
+                      <Link
+                        to="/$companyId/companies/edit/$id"
                         params={{ companyId, id: company.id }}
                       >
-                        <Button
-                          variant="outline"
-                          size="sm"
-                        >
+                        <Button variant="outline" size="sm">
                           Ver
                         </Button>
                       </Link>
-                      <Link 
-                        to="/$companyId/companies/edit/$id" 
+                      <Link
+                        to="/$companyId/companies/edit/$id"
                         params={{ companyId, id: company.id }}
                       >
-                        <Button
-                          variant="outline"
-                          size="sm"
-                        >
+                        <Button variant="outline" size="sm">
                           Editar
                         </Button>
                       </Link>
@@ -162,7 +174,7 @@ export function CompaniesTable({
         <div className="text-sm text-muted-foreground">
           Mostrando {companies.length} de {pagination.total} compañías
         </div>
-        
+
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"

@@ -1,6 +1,7 @@
-import * as React from "react";
-import { ChevronRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { ChevronRight } from "lucide-react";
+import * as React from "react";
+
 import { cn } from "../../lib/utils";
 
 interface BreadcrumbProps extends React.ComponentProps<"nav"> {
@@ -19,14 +20,11 @@ export function Breadcrumb({
   ...props
 }: BreadcrumbProps) {
   return (
-    <nav
-      aria-label="Breadcrumb"
-      className={cn("flex items-center text-sm", className)}
-      {...props}
-    >
+    <nav aria-label="Breadcrumb" className={cn("flex items-center text-sm", className)} {...props}>
       <ol className="flex items-center gap-1.5">
         {segments.map((segment, index) => {
           const isLastItem = index === segments.length - 1;
+
           return (
             <li key={index} className="flex items-center gap-1.5">
               {segment.href && !isLastItem ? (
