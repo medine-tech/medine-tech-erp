@@ -2,10 +2,10 @@ import { Link, useParams } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
+import { CompaniesTable } from "../../../sections/companies/components/CompaniesTable";
 import { UserProfile } from "../../auth/components/UserProfile";
 import { Breadcrumb } from "../../shared/components/ui/breadcrumb";
 import { Button } from "../../shared/components/ui/button";
-import { CompaniesTable } from "../components/CompaniesTable";
 
 export function CompaniesListPage() {
   const { companyId } = useParams({ from: "/$companyId/companies/list" });

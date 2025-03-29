@@ -1,12 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { ControllerRenderProps, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { UserProfile } from "../../auth/components/UserProfile";
-import { Breadcrumb } from "../../shared/components/ui/breadcrumb";
-import { Button } from "../../shared/components/ui/button";
 import {
   Form,
   FormControl,
@@ -14,9 +11,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../shared/components/ui/form";
-import { Input } from "../../shared/components/ui/input";
-import { useToast } from "../../shared/hooks/useToast";
+} from "../../../sections/shared/components/ui/form";
+import { Input } from "../../../sections/shared/components/ui/input";
+import { useToast } from "../../../sections/shared/hooks/useToast";
+import { UserProfile } from "../../auth/components/UserProfile";
+import { Breadcrumb } from "../../shared/components/ui/breadcrumb";
+import { Button } from "../../shared/components/ui/button";
 import { companyService } from "../services/company";
 
 const companySchema = z.object({
@@ -26,24 +26,22 @@ const companySchema = z.object({
 
 type CompanyFormValues = z.infer<typeof companySchema>;
 
-export function CompanyFormPage() {
+function CompanyFormPageComponent() {
   // Obtener el companyId y el id de la compañía a editar si existe
   const routerState = useRouterState();
   const routePath = routerState.matches[routerState.matches.length - 1].routeId;
   const isEditMode = routePath.includes("/edit/$id");
 
-  // Obtenemos los parámetros según la ruta
-  let companyId = "";
-  let companyIdToEdit = "";
+  // Obtenemos los parámetros de forma no condicional
+  const editParams = useParams({ from: "/$companyId/companies/edit/$id" });
+  const createParams = useParams({ from: "/$companyId/companies/create" });
 
-  if (isEditMode) {
-    const editParams = useParams({ from: "/$companyId/companies/edit/$id" });
-    companyId = editParams.companyId as string;
-    companyIdToEdit = editParams.id as string;
-  } else {
-    const createParams = useParams({ from: "/$companyId/companies/create" });
-    companyId = createParams.companyId as string;
-  }
+  // Después de llamar a los hooks, usamos lógica condicional
+  const companyId = isEditMode
+    ? (editParams.companyId as string)
+    : (createParams.companyId as string);
+
+  const companyIdToEdit = isEditMode ? (editParams.id as string) : "";
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -63,7 +61,7 @@ export function CompanyFormPage() {
     // Flag para evitar que se ejecute más de una vez
     let isMounted = true;
 
-    if (isEditMode && companyIdToEdit && isMounted) {
+    if (isEditMode && companyIdToEdit) {
       const fetchCompanyDetails = async () => {
         // Evitamos llamadas repetidas
         if (isLoading) {
@@ -79,7 +77,7 @@ export function CompanyFormPage() {
             form.setValue("id", company.id);
             form.setValue("name", company.name);
           }
-        } catch (error) {
+        } catch (_error) {
           if (isMounted) {
             toast({
               title: "Error",
@@ -94,7 +92,7 @@ export function CompanyFormPage() {
         }
       };
 
-      fetchCompanyDetails();
+      void fetchCompanyDetails();
     }
 
     // Cleanup function para evitar actualizaciones si el componente se desmonta
@@ -121,8 +119,8 @@ export function CompanyFormPage() {
           description: "Compañía creada correctamente",
         });
       }
-      navigate({ to: "/$companyId/companies/list", params: { companyId } });
-    } catch (error) {
+      void navigate({ to: "/$companyId/companies/list", params: { companyId } });
+    } catch (_error) {
       toast({
         title: "Error",
         description: isEditMode
@@ -171,7 +169,11 @@ export function CompanyFormPage() {
               <FormField
                 control={form.control}
                 name="name"
-                render={({ field }: { field: any }) => (
+                render={({
+                  field,
+                }: {
+                  field: ControllerRenderProps<CompanyFormValues, "name">;
+                }) => (
                   <FormItem>
                     <FormLabel>Nombre</FormLabel>
                     <FormControl>
@@ -205,3 +207,5 @@ export function CompanyFormPage() {
     </div>
   );
 }
+
+export { CompanyFormPageComponent as CompanyFormPage };

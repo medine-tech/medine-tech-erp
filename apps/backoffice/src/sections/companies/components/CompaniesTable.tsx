@@ -26,7 +26,7 @@ export function CompaniesTable({
   currentPage,
   perPage,
   onPageChange,
-  onPerPageChange,
+  onPerPageChange: _onPerPageChange,
 }: CompaniesTableProps) {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [pagination, setPagination] = useState<{
@@ -77,7 +77,7 @@ export function CompaniesTable({
     return () => {
       isMounted = false;
     };
-  }, [currentPage, perPage]); // Eliminado isLoading de las dependencias
+  }, [currentPage, perPage, companyId, isLoading]);
 
   const handlePageChange = (page: number) => {
     onPageChange(page);

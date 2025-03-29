@@ -64,6 +64,7 @@ export default [
       // Disable problematic rules
       "import/no-unresolved": "off",
       "import/no-duplicates": "off", // Desactivamos esta regla que causa problemas con TypeScript
+      "check-file/folder-naming-convention": "off",
       "prettier/prettier": ["error", { printWidth: 100, useTabs: false, tabWidth: 2 }],
 
       // Add Vite React template rules

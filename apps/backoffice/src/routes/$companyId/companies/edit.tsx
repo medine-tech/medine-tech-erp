@@ -1,6 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { lazy } from "react";
 
-import { CompanyFormPage } from "../../../sections/companies/pages/CompanyFormPage";
+// Usando importación dinámica para resolver problemas de resolución de módulos
+const CompanyFormPage = lazy(() =>
+  import("../../../sections/companies/pages/CompanyFormPage").then((module) => ({
+    default: module.CompanyFormPage,
+  })),
+);
 
 export const Route = createFileRoute("/$companyId/companies/edit")({
   component: CompanyFormPage,

@@ -3,7 +3,12 @@ import { useEffect, useState } from "react";
 import { ApiError, authService } from "../../auth/services/auth";
 import { Company } from "../services/company";
 
-export function useCompanySelector(currentCompanyId: string) {
+export function useCompanySelector(currentCompanyId: string): {
+  companies: Company[];
+  currentCompany: Company | null;
+  isLoading: boolean;
+  error: ApiError | null;
+} {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [currentCompany, setCurrentCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +52,7 @@ export function useCompanySelector(currentCompanyId: string) {
     return () => {
       isMounted = false;
     };
-  }, [currentCompanyId]);
+  }, [currentCompanyId, isLoading]);
 
   return {
     companies,

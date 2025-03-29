@@ -79,13 +79,13 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
         throw err;
       }
     },
-    [],
+    [companies, isAuthenticated, isLoading],
   );
 
   // Usar useCallback para las demás funciones
   const getCompanyById = useCallback(
     (id: string): Company | null => {
-      return companies.find((company) => company.id === id) || null;
+      return companies.find((company) => company.id === id) ?? null;
     },
     [companies],
   );

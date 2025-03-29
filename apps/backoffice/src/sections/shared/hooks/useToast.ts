@@ -6,7 +6,10 @@ type ToastType = {
   variant?: "default" | "destructive";
 };
 
-export function useToast() {
+export function useToast(): {
+  toast: (props: ToastType) => void;
+  dismiss: (toastId?: string) => void;
+} {
   const showToast = ({ title, description, variant = "default" }: ToastType) => {
     if (variant === "destructive") {
       toast.error(description, {
@@ -19,7 +22,16 @@ export function useToast() {
     }
   };
 
+  const dismissToast = (toastId?: string) => {
+    if (toastId) {
+      toast.dismiss(toastId);
+    } else {
+      toast.dismiss();
+    }
+  };
+
   return {
     toast: showToast,
+    dismiss: dismissToast,
   };
 }
