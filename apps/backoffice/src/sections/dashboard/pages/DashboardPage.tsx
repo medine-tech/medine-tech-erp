@@ -2,13 +2,13 @@ import { useNavigate, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import { UserProfile } from "../../auth/components";
-import { useAuth } from "../../auth/hooks/useAuth";
+import { useAuth } from "../../auth/context/AuthContext";
 import { CompanySelector } from "../../companies/components";
 
 export function DashboardPage() {
   const { companyId } = useParams({ from: "/$companyId/dashboard" });
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, loading: isLoading } = useAuth();
   const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   useEffect(() => {

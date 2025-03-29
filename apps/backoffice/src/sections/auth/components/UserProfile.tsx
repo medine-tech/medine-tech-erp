@@ -10,10 +10,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../shared/components/ui/dropdown-menu";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/AuthContext";
 
 export function UserProfile() {
-  const { user, logout } = useAuth();
+  const { userInfo: user, logout } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,12 +21,14 @@ export function UserProfile() {
   const userName = user?.name ?? "Usuario";
   const userEmail = user?.email ?? "";
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
       setIsLoading(true);
-      await logout();
+      // La función logout es de tipo void, no devuelve una promesa
+      logout();
+      // Marcamos explicitamente que ignoramos la promesa de navegación
       void navigate({ to: "/login" });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error al cerrar sesión:", error);
     } finally {
       setIsLoading(false);
