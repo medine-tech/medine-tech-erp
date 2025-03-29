@@ -1,6 +1,7 @@
 import medineLogoSrc from "../../../assets/medine-logo.svg";
 import { Link } from "../../shared/components/Link";
 import { Button } from "../../shared/components/ui/button";
+import { ThemeSwitch } from "../../shared/components/ui/theme-switch";
 import {
   Card,
   CardContent,
@@ -12,38 +13,39 @@ import {
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       {/* Header */}
-      <header className="bg-slate-900 text-white py-4 px-6 shadow-md">
+      <header className="bg-primary/90 dark:bg-slate-900 text-primary-foreground py-4 px-6 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <img src={medineLogoSrc} alt="Medine Logo" className="h-10 w-auto" />
             <span className="text-xl font-bold">MEDINE</span>
           </div>
-          <nav>
+          <nav className="flex items-center space-x-4">
             <ul className="flex gap-6">
               <li>
-                <a href="#caracteristicas" className="hover:text-sky-400 transition-colors">
+                <a href="#caracteristicas" className="hover:text-accent transition-colors">
                   Características
                 </a>
               </li>
               <li>
-                <a href="#plataforma" className="hover:text-sky-400 transition-colors">
+                <a href="#plataforma" className="hover:text-accent transition-colors">
                   Plataforma
                 </a>
               </li>
               <li>
-                <a href="#contacto" className="hover:text-sky-400 transition-colors">
+                <a href="#contacto" className="hover:text-accent transition-colors">
                   Soporte
                 </a>
               </li>
             </ul>
+            <ThemeSwitch />
           </nav>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="flex-grow bg-gradient-to-b from-slate-800 to-slate-900 text-white">
+      <section className="flex-grow bg-gradient-to-b from-primary/80 to-primary text-primary-foreground dark:from-slate-800 dark:to-slate-900">
         <div className="container mx-auto py-20 px-4 flex flex-col items-center">
           <h1 className="text-4xl md:text-5xl font-bold text-center mb-6">
             Backoffice Administrativo
@@ -54,42 +56,42 @@ export function LandingPage() {
           </p>
 
           <div className="grid md:grid-cols-2 gap-8 w-full max-w-4xl">
-            <Card className="bg-white/10 border-slate-700 shadow-xl backdrop-blur-sm hover:shadow-sky-900/20 hover:border-sky-800/50 transition-all duration-300">
+            <Card className="bg-card/10 border-border shadow-xl backdrop-blur-sm hover:shadow-primary/20 hover:border-primary/50 transition-all duration-300">
               <CardHeader>
-                <CardTitle className="text-white">Iniciar Sesión</CardTitle>
-                <CardDescription className="text-slate-300">
+                <CardTitle className="text-card-foreground">Iniciar Sesión</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   Accede a tu cuenta existente
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-slate-300">
+                <p className="text-muted-foreground">
                   Ingresa con tus credenciales para acceder a todas las herramientas y
                   funcionalidades del panel administrativo.
                 </p>
               </CardContent>
               <CardFooter>
-                <Button className="w-full bg-sky-600 text-white hover:bg-sky-700" size="lg" asChild>
+                <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/80" size="lg" asChild>
                   <Link to="/login">Iniciar Sesión</Link>
                 </Button>
               </CardFooter>
             </Card>
 
-            <Card className="bg-white/10 border-slate-700 shadow-xl backdrop-blur-sm hover:shadow-sky-900/20 hover:border-sky-800/50 transition-all duration-300">
+            <Card className="bg-card/10 border-border shadow-xl backdrop-blur-sm hover:shadow-primary/20 hover:border-primary/50 transition-all duration-300">
               <CardHeader>
-                <CardTitle className="text-white">Crear Cuenta</CardTitle>
-                <CardDescription className="text-slate-300">
+                <CardTitle className="text-card-foreground">Crear Cuenta</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   Regístrate como nuevo usuario
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-slate-300">
+                <p className="text-muted-foreground">
                   Crea una nueva cuenta para comenzar a utilizar nuestro sistema de gestión
                   empresarial avanzado.
                 </p>
               </CardContent>
               <CardFooter>
                 <Button
-                  className="w-full bg-transparent border border-sky-600 hover:bg-sky-900/20"
+                  className="w-full bg-transparent border border-accent hover:bg-accent/20"
                   size="lg"
                   asChild
                 >
@@ -102,16 +104,16 @@ export function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="caracteristicas" className="py-16 bg-white">
+      <section id="caracteristicas" className="py-16 bg-card text-card-foreground">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-10">Características Principales</h2>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-sky-100 flex items-center justify-center">
+            <div className="text-center p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow bg-background">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-sky-600"
+                  className="h-8 w-8 text-accent"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -125,16 +127,16 @@ export function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-3">Análisis y Reportes</h3>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Obtén informes detallados y visualizaciones para tomar decisiones basadas en datos.
               </p>
             </div>
 
-            <div className="text-center p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-sky-100 flex items-center justify-center">
+            <div className="text-center p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow bg-background">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-sky-600"
+                  className="h-8 w-8 text-accent"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -148,17 +150,17 @@ export function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-3">Seguridad Avanzada</h3>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Protección de datos con múltiples capas de seguridad y controles de acceso
                 personalizados.
               </p>
             </div>
 
-            <div className="text-center p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-sky-100 flex items-center justify-center">
+            <div className="text-center p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow bg-background">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-sky-600"
+                  className="h-8 w-8 text-accent"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -172,7 +174,7 @@ export function LandingPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-3">Gestión de Usuarios</h3>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Administra permisos y roles para cada miembro de tu equipo con facilidad.
               </p>
             </div>
@@ -181,14 +183,14 @@ export function LandingPage() {
       </section>
 
       {/* Platform Section */}
-      <section id="plataforma" className="py-16 bg-slate-100">
+      <section id="plataforma" className="py-16 bg-muted/50 text-foreground">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Nuestra Plataforma</h2>
 
           <div className="flex flex-col md:flex-row items-center gap-12">
             <div className="md:w-1/2">
               <h3 className="text-2xl font-semibold mb-4">Diseñada Para Tu Negocio</h3>
-              <p className="text-gray-700 mb-6">
+              <p className="text-muted-foreground mb-6">
                 Nuestra plataforma integra todas las herramientas que necesitas para gestionar tu
                 empresa de manera eficiente. Desde la gestión financiera hasta el seguimiento de
                 inventario, todo en un solo lugar.
