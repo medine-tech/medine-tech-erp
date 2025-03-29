@@ -1,7 +1,10 @@
-import { useParams } from "@tanstack/react-router";
+import { useParams, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { Plus } from "lucide-react";
 
 import { UserProfile } from "../../auth/components/UserProfile";
+import { Breadcrumb } from "../../shared/components/ui/breadcrumb";
+import { Button } from "../../shared/components/ui/button";
 import { CompaniesTable } from "../components/CompaniesTable";
 
 export function CompaniesListPage() {
@@ -21,8 +24,22 @@ export function CompaniesListPage() {
       </header>
 
       <div className="container mx-auto py-8 px-4">
+        <div className="mb-6">
+          <Breadcrumb
+            segments={[
+              { label: "Compañías" },
+            ]}
+          />
+        </div>
+        
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Listado de Compañías</h2>
+          <Link to="/$companyId/companies/create" params={{ companyId }}>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Crear Compañía
+            </Button>
+          </Link>
         </div>
         
         <div className="bg-card shadow-md rounded-lg p-6">

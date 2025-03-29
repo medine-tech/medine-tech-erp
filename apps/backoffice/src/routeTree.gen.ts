@@ -20,6 +20,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as CompanyIdDashboardImport } from './routes/$companyId/dashboard'
 import { Route as CompanyIdCompaniesRouteImport } from './routes/$companyId/companies/route'
 import { Route as CompanyIdCompaniesListImport } from './routes/$companyId/companies/list'
+import { Route as CompanyIdCompaniesCreateImport } from './routes/$companyId/companies/create'
 
 // Create/Update Routes
 
@@ -74,6 +75,12 @@ const CompanyIdCompaniesRouteRoute = CompanyIdCompaniesRouteImport.update({
 const CompanyIdCompaniesListRoute = CompanyIdCompaniesListImport.update({
   id: '/list',
   path: '/list',
+  getParentRoute: () => CompanyIdCompaniesRouteRoute,
+} as any)
+
+const CompanyIdCompaniesCreateRoute = CompanyIdCompaniesCreateImport.update({
+  id: '/create',
+  path: '/create',
   getParentRoute: () => CompanyIdCompaniesRouteRoute,
 } as any)
 
@@ -137,6 +144,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompanyIdDashboardImport
       parentRoute: typeof CompanyIdRouteImport
     }
+    '/$companyId/companies/create': {
+      id: '/$companyId/companies/create'
+      path: '/create'
+      fullPath: '/$companyId/companies/create'
+      preLoaderRoute: typeof CompanyIdCompaniesCreateImport
+      parentRoute: typeof CompanyIdCompaniesRouteImport
+    }
     '/$companyId/companies/list': {
       id: '/$companyId/companies/list'
       path: '/list'
@@ -150,11 +164,13 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface CompanyIdCompaniesRouteRouteChildren {
+  CompanyIdCompaniesCreateRoute: typeof CompanyIdCompaniesCreateRoute
   CompanyIdCompaniesListRoute: typeof CompanyIdCompaniesListRoute
 }
 
 const CompanyIdCompaniesRouteRouteChildren: CompanyIdCompaniesRouteRouteChildren =
   {
+    CompanyIdCompaniesCreateRoute: CompanyIdCompaniesCreateRoute,
     CompanyIdCompaniesListRoute: CompanyIdCompaniesListRoute,
   }
 
@@ -186,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/$companyId/companies': typeof CompanyIdCompaniesRouteRouteWithChildren
   '/$companyId/dashboard': typeof CompanyIdDashboardRoute
+  '/$companyId/companies/create': typeof CompanyIdCompaniesCreateRoute
   '/$companyId/companies/list': typeof CompanyIdCompaniesListRoute
 }
 
@@ -198,6 +215,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/$companyId/companies': typeof CompanyIdCompaniesRouteRouteWithChildren
   '/$companyId/dashboard': typeof CompanyIdDashboardRoute
+  '/$companyId/companies/create': typeof CompanyIdCompaniesCreateRoute
   '/$companyId/companies/list': typeof CompanyIdCompaniesListRoute
 }
 
@@ -211,6 +229,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/$companyId/companies': typeof CompanyIdCompaniesRouteRouteWithChildren
   '/$companyId/dashboard': typeof CompanyIdDashboardRoute
+  '/$companyId/companies/create': typeof CompanyIdCompaniesCreateRoute
   '/$companyId/companies/list': typeof CompanyIdCompaniesListRoute
 }
 
@@ -225,6 +244,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/$companyId/companies'
     | '/$companyId/dashboard'
+    | '/$companyId/companies/create'
     | '/$companyId/companies/list'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -236,6 +256,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/$companyId/companies'
     | '/$companyId/dashboard'
+    | '/$companyId/companies/create'
     | '/$companyId/companies/list'
   id:
     | '__root__'
@@ -247,6 +268,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/$companyId/companies'
     | '/$companyId/dashboard'
+    | '/$companyId/companies/create'
     | '/$companyId/companies/list'
   fileRoutesById: FileRoutesById
 }
@@ -313,12 +335,17 @@ export const routeTree = rootRoute
       "filePath": "$companyId/companies/route.tsx",
       "parent": "/$companyId",
       "children": [
+        "/$companyId/companies/create",
         "/$companyId/companies/list"
       ]
     },
     "/$companyId/dashboard": {
       "filePath": "$companyId/dashboard.tsx",
       "parent": "/$companyId"
+    },
+    "/$companyId/companies/create": {
+      "filePath": "$companyId/companies/create.tsx",
+      "parent": "/$companyId/companies"
     },
     "/$companyId/companies/list": {
       "filePath": "$companyId/companies/list.tsx",
