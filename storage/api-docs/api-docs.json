@@ -1950,14 +1950,14 @@
                 ]
             }
         },
-        "/api/backoffice/companies": {
+        "/api/backoffice/{tenant}/companies": {
             "get": {
                 "tags": [
                     "Backoffice - Companies"
                 ],
                 "summary": "Retrieve a list of companies",
                 "description": "Returns a paginated list of companies for authorized users. Accepts optional query parameters for filtering.",
-                "operationId": "23448a5f0cab918418fe7a7e0c04d180",
+                "operationId": "0c58c513067577d717aae607fbf2218f",
                 "parameters": [
                     {
                         "name": "page",
@@ -2082,7 +2082,7 @@
                     "Backoffice - Companies"
                 ],
                 "summary": "Create a new company",
-                "operationId": "35b0e8a71551ee33733c335eb0d61459",
+                "operationId": "77d6e58ec2719b6df2983c0214f0aca0",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -2195,14 +2195,14 @@
                 ]
             }
         },
-        "/api/backoffice/companies/{id}": {
+        "/api/backoffice/{tenant}/companies/{id}": {
             "get": {
                 "tags": [
                     "Backoffice - Companies"
                 ],
                 "summary": "Get a company by ID",
                 "description": "Returns the details of a company based on the provided ID.",
-                "operationId": "a9c25cc6842ae778409fd59fc4f07517",
+                "operationId": "8ce2fdc6a4d6b3e9565080ac09e8b091",
                 "parameters": [
                     {
                         "name": "id",
@@ -2321,7 +2321,7 @@
                     "Backoffice - Companies"
                 ],
                 "summary": "Update an existing company",
-                "operationId": "8f489807d5084c8a4aad42f3fc47a9a7",
+                "operationId": "774f02f6c5438876c4512464fc9b5fa4",
                 "parameters": [
                     {
                         "name": "id",

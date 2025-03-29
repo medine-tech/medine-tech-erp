@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Post(
- *     path="/api/backoffice/companies",
+ *     path="/api/backoffice/{tenant}/companies",
  *     tags={"Backoffice - Companies"},
  *     summary="Create a new company",
  *     security={ {"bearerAuth": {} } },

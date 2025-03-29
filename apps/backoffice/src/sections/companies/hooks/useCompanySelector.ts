@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { ApiError } from "../../auth/services/auth";
-import { Company, companyService } from "../services/company";
+import { ApiError, authService } from "../../auth/services/auth";
+import { Company } from "../services/company";
 
 export function useCompanySelector(currentCompanyId: string) {
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -20,7 +20,7 @@ export function useCompanySelector(currentCompanyId: string) {
       setIsLoading(true);
 
       try {
-        const response = await companyService.getCompanies();
+        const response = await authService.getCompanies();
 
         if (isMounted) {
           setCompanies(response.items);

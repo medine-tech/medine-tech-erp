@@ -50,7 +50,7 @@ export function CompaniesTable({
       setError(null);
 
       try {
-        const response = await companyService.getCompanies(currentPage, perPage);
+        const response = await companyService.getCompanies(companyId, currentPage, perPage);
         
         if (isMounted) {
           setCompanies(response.items);

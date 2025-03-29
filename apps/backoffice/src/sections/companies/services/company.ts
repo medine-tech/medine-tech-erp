@@ -49,7 +49,11 @@ export const companyService = {
   },
 
   // Obtener la lista de compañías del usuario actual
-  async getCompanies(page: number = 1, perPage: number = 10): Promise<CompanyPagination> {
+  async getCompanies(
+    companyId: string,
+    page: number = 1, 
+    perPage: number = 10
+  ): Promise<CompanyPagination> {
     try {
       const token = authService.getToken();
       if (!token) {
@@ -57,7 +61,7 @@ export const companyService = {
       }
 
       const response = await fetch(
-        `${API_BASE_URL}/auth/companies?page=${page}&per_page=${perPage}`,
+        `${API_BASE_URL}/backoffice/${companyId}/companies?page=${page}&per_page=${perPage}`,
         {
           method: "GET",
           headers: {

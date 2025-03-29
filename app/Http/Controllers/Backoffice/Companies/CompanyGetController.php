@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Get(
- *     path="/api/backoffice/companies/{id}",
+ *     path="/api/backoffice/{tenant}/companies/{id}",
  *     tags={"Backoffice - Companies"},
  *     summary="Get a company by ID",
  *     description="Returns the details of a company based on the provided ID.",

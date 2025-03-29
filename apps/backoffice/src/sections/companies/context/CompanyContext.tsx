@@ -9,7 +9,7 @@ interface CompanyContextType {
   currentCompany: Company | null;
   isLoading: boolean;
   error: ApiError | null;
-  fetchCompanies: (page?: number, perPage?: number) => Promise<CompanyPagination>;
+  fetchCompanies: (companyId: string, page?: number, perPage?: number) => Promise<CompanyPagination>;
   getCompanyById: (id: string) => Company | null;
   setCurrentCompany: (company: Company | null) => void;
   clearError: () => void;
@@ -35,7 +35,7 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
   const [initialized, setInitialized] = useState(false);
 
   // Usar useCallback para evitar que la función se recree en cada render
-  const fetchCompanies = useCallback(async (page = 1, perPage = 10): Promise<CompanyPagination> => {
+  const fetchCompanies = useCallback(async (companyId: string, page = 1, perPage = 10): Promise<CompanyPagination> => {
     if (!isAuthenticated) {
       const emptyResponse: CompanyPagination = {
         items: [],
@@ -61,7 +61,7 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
     setError(null);
 
     try {
-      const response = await companyService.getCompanies(page, perPage);
+      const response = await companyService.getCompanies(companyId, page, perPage);
       setCompanies(response.items);
       setIsLoading(false);
 
@@ -86,7 +86,13 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
     // Solo cargar compañías si el usuario está autenticado y no se ha inicializado antes
     if (isAuthenticated && !initialized) {
       setInitialized(true);
-      fetchCompanies().catch((err) => {
+      
+      // Obtener companyId de la URL usando TanStack Router
+      const pathParams = window.location.pathname.split('/');
+      const companyIdIndex = pathParams.findIndex(segment => segment !== '' && !isNaN(Number(segment)));
+      const companyId = companyIdIndex !== -1 ? pathParams[companyIdIndex] : '';
+      
+      fetchCompanies(companyId).catch((err) => {
         console.error("Error al cargar las compañías:", err);
       });
     }

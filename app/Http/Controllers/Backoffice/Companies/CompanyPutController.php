@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @OA\Put(
- *     path="/api/backoffice/companies/{id}",
+ *     path="/api/backoffice/{tenant}/companies/{id}",
  *     tags={"Backoffice - Companies"},
  *     summary="Update an existing company",
  *     security={ {"bearerAuth": {} } },

@@ -17,7 +17,7 @@ use function Lambdish\Phunctional\map;
 
 /**
  * @OA\Get(
- *     path="/api/backoffice/companies",
+ *     path="/api/backoffice/{tenant}/companies",
  *     tags={"Backoffice - Companies"},
  *     summary="Retrieve a list of companies",
  *     description="Returns a paginated list of companies for authorized users. Accepts optional query parameters for filtering.",

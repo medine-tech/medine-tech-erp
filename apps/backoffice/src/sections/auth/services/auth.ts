@@ -1,3 +1,5 @@
+import { CompanyPagination } from "@/sections/companies/services/company.ts";
+
 import { API_BASE_URL } from "../../shared/config/constants.ts";
 
 // Tipos para la API de autenticación
@@ -219,5 +221,43 @@ export const authService = {
   // Guardar la información del usuario en el localStorage
   saveUserInfo(userInfo: UserInfo): void {
     localStorage.setItem("user_info", JSON.stringify(userInfo));
+  },
+
+  async getCompanies(page: number = 1, perPage: number = 10): Promise<CompanyPagination> {
+    try {
+      const token = authService.getToken();
+      if (!token) {
+        throw new Error("No hay sesión de usuario");
+      }
+
+      const response = await fetch(
+        `${API_BASE_URL}/auth/companies?page=${page}&per_page=${perPage}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            accept: "application/json",
+          },
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        const apiError: ApiError = {
+          title: errorData.title || "Error",
+          status: response.status,
+          detail: errorData.details || "Ha ocurrido un error al obtener las compañías",
+          errors: errorData.errors,
+        };
+        throw apiError;
+      }
+
+      return (await response.json()) as CompanyPagination;
+    } catch (error) {
+      if ((error as ApiError).status) {
+        throw error;
+      }
+      throw new Error("Ha ocurrido un error al obtener las compañías");
+    }
   },
 };
